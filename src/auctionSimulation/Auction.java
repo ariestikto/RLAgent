@@ -52,6 +52,10 @@ public class Auction {
 					distribution[i] += Snippet.round(securedAmount,2);
 					payout[i] += Snippet.round(currentBid*securedAmount,2);
 				}
+				if (distribution[i] > bid[i]) {
+					payout[i] = payout[i]-((distribution[i]-bid[i])*currentBid);
+					distribution[i] = bid[i];
+				}
 				System.out.println((i+1)+". Bid: " +bid[i]+ ",\tClinched Electricity: " +distribution[i]+ ",\tTotal Payout: " +payout[i]);
 			}
 			currentBid += 1;
