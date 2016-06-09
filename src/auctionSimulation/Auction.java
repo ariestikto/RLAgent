@@ -18,7 +18,7 @@ public class Auction {
 	public Auction(double dailySupply, double currentBid) {
 		NormalDistribution supplyDist = new NormalDistribution(dailySupply, 1);
 		
-		this.dailySupply = Snippet.round(supplyDist.sample(),2);;
+		this.dailySupply = Snippet.round(supplyDist.sample());;
 		this.currentBid = currentBid;
 	}
 
@@ -42,15 +42,19 @@ public class Auction {
 		do {
 			demand  = 0;
 			for (int i = 0; i < users.length; i++) {
-				bid[i] = users[i].getBid(currentBid);
-				demand += Snippet.round(bid[i],2);
+				bid[i] = users[i].getBid(currentBid, bid[i]);
+				demand += Snippet.round(bid[i]);
 			}
 			System.out.println("\nRound " +(currentBid-4) + ", Demand: " + demand + ", Price: " + currentBid);
 			for (int i = 0; i < users.length; i++) {
+				if (bid[i] == 0) {
+					distribution[i] = 0;
+					payout[i] = 0;
+				}
 				if (demand - bid[i] < dailySupply) {
-					securedAmount = Snippet.round(dailySupply-(demand-bid[i])-distribution[i],2);
-					distribution[i] += Snippet.round(securedAmount,2);
-					payout[i] += Snippet.round(currentBid*securedAmount,2);
+					securedAmount = Snippet.round(dailySupply-(demand-bid[i])-distribution[i]);
+					distribution[i] += Snippet.round(securedAmount);
+					payout[i] += Snippet.round(currentBid*securedAmount);
 				}
 				if (distribution[i] > bid[i]) {
 					payout[i] = payout[i]-((distribution[i]-bid[i])*currentBid);

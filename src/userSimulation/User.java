@@ -4,7 +4,6 @@
 package userSimulation;
 
 import java.util.UUID;
-import org.apache.commons.math3.distribution.NormalDistribution;
 import marketFramework.Snippet;
 	
 /**
@@ -13,22 +12,36 @@ import marketFramework.Snippet;
  */
 public class User {
 	private String UID;
-	private double dailyDistance;
-	private Car carType;
-	private double budget;
-	private double currentElectricity;
-	private double currentExpenses;
-	private double[] preferences; 
+	private int userType;
+	private int userStrategy;
+	private double dailyNeeds = 0;
+	private double unitBudget = 0;
+	private double currentElectricity = 0;
+	private double currentExpenses = 0;
+	private double[] preferences;
 	private Bid bid;
 	
-	public User(double dailyDistance, double budget, Car carType) {
+//	EV user only
+	private Car car;
+	private boolean isEVUser = false;
+	
+//	EV user constructor
+	public User(double dailyDistance, double unitBudget, int userType, int userStrategy, Car car) {
 		UID = UUID.randomUUID().toString().replaceAll("-", "").substring(0,7);
-		this.preferences = new double []{dailyDistance, budget};
-		this.dailyDistance = 0;
-		this.carType = carType;
-		this.budget = 0;
-		this.currentElectricity = 0;
-		this.currentExpenses = 0;
+		this.userType = userType;
+		this.userStrategy = userStrategy;
+		this.preferences = new double []{dailyDistance, unitBudget};
+		this.car = car;
+		this.isEVUser = true;
+		this.bid = new Bid();
+		this.setDailyPreferences();
+	}
+//	other constructor
+	public User(double dailyNeeds, double unitBudget, int userType, int userStrategy) {
+		UID = UUID.randomUUID().toString().replaceAll("-", "").substring(0,7);
+		this.userType = userType;
+		this.userStrategy = userStrategy;
+		this.preferences = new double []{dailyNeeds, unitBudget};
 		this.bid = new Bid();
 		this.setDailyPreferences();
 	}
@@ -40,14 +53,16 @@ public class User {
 		return currentElectricity;
 	}
 	public void setDailyPreferences() {
-		NormalDistribution dist = new NormalDistribution(this.preferences[0], 1);
-		NormalDistribution budget = new NormalDistribution(this.preferences[1], 1);
-		this.dailyDistance = Snippet.round(dist.sample(),2);
-		this.budget = Snippet.round(budget.sample(),2);
+		if (isEVUser) {
+			this.dailyNeeds = Snippet.normDist(preferences[0]*this.car.getConsumption());
+		} else {
+			this.dailyNeeds = Snippet.normDist(preferences[0]);
+		}
+		this.unitBudget = Snippet.normDist(preferences[1]);
 	}
-	public double getBid(double currentBid) {
-		bid.calculateBid(currentBid, currentElectricity, dailyDistance, budget, carType);
-		return Snippet.round(bid.getAmount(),2);
+	public double getBid(double currentBid, double lastBid) {
+		bid.calculateBid(userStrategy, currentBid, lastBid, currentElectricity, dailyNeeds, unitBudget);
+		return Snippet.round(bid.getAmount());
 	}
 	public void addElectricity(double electricity) {
 		this.currentElectricity = this.currentElectricity + electricity;
@@ -58,4 +73,5 @@ public class User {
 	public void resetExpense() {
 		this.currentExpenses = 0;
 	}
+	
 }

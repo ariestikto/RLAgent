@@ -22,6 +22,11 @@ public class Car {
 	public void setType(int type) {
 		this.type = type;
 		switch (type) {
+		case 0:
+			this.consumption = 0;
+			this.batteryCapacity = 0;
+			this.carName = "Non EV User";
+			break;
 		case 1:
 			this.consumption = 0.129;
 			this.batteryCapacity = 18.8;
