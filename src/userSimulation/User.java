@@ -4,6 +4,8 @@
 package userSimulation;
 
 import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
 import marketFramework.Snippet;
 	
 /**
@@ -20,6 +22,7 @@ public class User {
 	private double currentExpenses = 0;
 	private double[] preferences;
 	private Bid bid;
+	private List<ElectricityBundle> clinched = new ArrayList<ElectricityBundle>();
 	
 //	EV user only
 	private Car car;
@@ -73,5 +76,48 @@ public class User {
 	public void resetExpense() {
 		this.currentExpenses = 0;
 	}
-	
+	public void resetAuction() {
+		this.clinched.clear();
+	}
+	public void clinchElectricity(double amount, double price) {
+		ElectricityBundle clinch = new ElectricityBundle(amount, price);
+		this.clinched.add(clinch);
+	}
+	public double gainedElectricity() {
+		double electricity = 0;
+		if(clinched.isEmpty()) {
+			return 0;
+		}
+		for (ElectricityBundle temp : clinched) {
+			electricity += temp.getAmount();
+	    }
+		return Snippet.round(electricity);
+	}
+	public double payout() {
+		double payout = 0;
+		if(clinched.isEmpty()) {
+			return 0;
+		}
+		for (ElectricityBundle temp : clinched) {
+			payout += temp.getPrice()*temp.getAmount();
+	    }
+		return Snippet.round(payout);
+	}
+	public void auctionResult(double finalBid) {
+		double amount = 0;
+		int i = 0;
+		double difference = 0;
+		if (this.gainedElectricity() > finalBid) {
+			while (amount < finalBid) {
+				amount += this.clinched.get(i).getAmount();
+				i += 1;
+			}
+				this.clinched.subList(i, this.clinched.size()).clear();
+				if (!this.clinched.isEmpty()) {
+					difference = this.gainedElectricity() - finalBid;
+					ElectricityBundle last = this.clinched.get(this.clinched.size()-1);
+					last.setAmount(last.getAmount()-difference);
+				}
+		}
+	}
 }

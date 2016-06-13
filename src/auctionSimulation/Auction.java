@@ -32,41 +32,46 @@ public class Auction {
 	
 	public void runAuction(User[] users){
 		double demand;
-		double securedAmount;
-		double[] payout = new double[users.length];
-		double[] distribution = new double[users.length];
+		double securedAmount = 0;
 		double[] bid = new double[users.length];
+		double payout = 0;
+		double distribution = 0;
 		double finalDistribution = 0;
  		
 		System.out.println("Supply: " + dailySupply);
+		for (int i = 0; i < users.length; i++) {
+			users[i].resetAuction();
+		}
 		do {
 			demand  = 0;
 			for (int i = 0; i < users.length; i++) {
 				bid[i] = users[i].getBid(currentBid, bid[i]);
-				demand += Snippet.round(bid[i]);
+				demand += bid[i];
 			}
-			System.out.println("\nRound " +(currentBid-4) + ", Demand: " + demand + ", Price: " + currentBid);
+			System.out.println("\nRound " +(currentBid-4) + ", Demand: " + Snippet.round(demand) + ", Price: " + currentBid);
 			for (int i = 0; i < users.length; i++) {
+				payout = 0;
+				distribution = 0;
+				
 				if (bid[i] == 0) {
-					distribution[i] = 0;
-					payout[i] = 0;
+					users[i].resetAuction();
 				}
 				if (demand - bid[i] < dailySupply) {
-					securedAmount = Snippet.round(dailySupply-(demand-bid[i])-distribution[i]);
-					distribution[i] += Snippet.round(securedAmount);
-					payout[i] += Snippet.round(currentBid*securedAmount);
+					securedAmount = dailySupply-(demand-bid[i])-users[i].gainedElectricity();
+					distribution = securedAmount;
+					payout = currentBid;
 				}
-				if (distribution[i] > bid[i]) {
-					payout[i] = payout[i]-((distribution[i]-bid[i])*currentBid);
-					distribution[i] = bid[i];
-				}
-				System.out.println((i+1)+". Bid: " +bid[i]+ ",\tClinched Electricity: " +distribution[i]+ ",\tTotal Payout: " +payout[i]);
+				users[i].clinchElectricity(distribution, payout);
+				System.out.println((i+1)+". Bid: " +bid[i]+ ",\tClinched Electricity: " +users[i].gainedElectricity()+ ",\tTotal Payout: " +users[i].payout());
 			}
 			currentBid += 1;
 		} while (demand > dailySupply);
-		for (int i = 0; i < distribution.length; i++) {
-			finalDistribution += distribution[i];
+		System.out.println("\nfinal Results");
+		for (int i = 0; i < users.length; i++) {
+			users[i].auctionResult(bid[i]);
+			finalDistribution += users[i].gainedElectricity();
+			System.out.println((i+1)+". Bid: " +bid[i]+ ",\tClinched Electricity: " +users[i].gainedElectricity()+ ",\tTotal Payout: " +users[i].payout());
 		}
-		System.out.println("Distributed Electricity: " + finalDistribution);
+		System.out.println("Distributed Electricity: " + Snippet.round(finalDistribution));
 	}
 }
