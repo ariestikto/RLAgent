@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.List;
 import java.util.ArrayList;
 import marketFramework.Snippet;
+import marketFramework.Time;
 	
 /**
  * @author pa1g15
@@ -27,7 +28,7 @@ public class User {
 //	EV user only
 	private Car car;
 	private boolean isEVUser = false;
-	
+	private boolean isShop = false;
 //	EV user constructor
 	public User(double dailyDistance, double unitBudget, int userType, int userStrategy, Car car) {
 		UID = UUID.randomUUID().toString().replaceAll("-", "").substring(0,7);
@@ -51,6 +52,16 @@ public class User {
 	
 	public String getUID() {
 		return UID;
+	}
+	public void setShop(int isShop) {
+		if (isShop == 1) {
+			this.isShop = true;
+		} else {
+			this.isShop = false;
+		}
+	}
+	public boolean getShop() {
+		return isShop;
 	}
 	public double getCurrentElectricity() {
 		return currentElectricity;
@@ -99,7 +110,7 @@ public class User {
 			return 0;
 		}
 		for (ElectricityBundle temp : clinched) {
-			payout += temp.getPrice()*temp.getAmount();
+			payout += temp.getUnitPrice()*temp.getAmount();
 	    }
 		return Snippet.round(payout);
 	}
@@ -118,6 +129,15 @@ public class User {
 					ElectricityBundle last = this.clinched.get(this.clinched.size()-1);
 					last.setAmount(last.getAmount()-difference);
 				}
+		}
+	}
+	public void generatePreferences(Time time) {
+		switch (this.userType) {
+		case 1:
+			this.preferences[0] = UserModel.EVUserA(time, this).getAmount();
+			this.preferences[1] = UserModel.EVUserA(time, this).getUnitPrice();
+			this.setDailyPreferences();
+			break;
 		}
 	}
 }

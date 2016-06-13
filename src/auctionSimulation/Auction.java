@@ -6,7 +6,7 @@ package auctionSimulation;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import marketFramework.Snippet;
 import userSimulation.User;
-
+import marketFramework.Time;
 /**
  * @author pa1g15
  *
@@ -30,7 +30,7 @@ public class Auction {
 		return currentBid;
 	}
 	
-	public void runAuction(User[] users){
+	public void runAuction(User[] users, Time t){
 		double demand;
 		double securedAmount = 0;
 		double[] bid = new double[users.length];
@@ -41,6 +41,7 @@ public class Auction {
 		System.out.println("Supply: " + dailySupply);
 		for (int i = 0; i < users.length; i++) {
 			users[i].resetAuction();
+			users[i].generatePreferences(t);
 		}
 		do {
 			demand  = 0;
@@ -53,13 +54,14 @@ public class Auction {
 				payout = 0;
 				distribution = 0;
 				
-				if (bid[i] == 0) {
+				if (bid[i] != 0) {
+					if (demand - bid[i] < dailySupply) {
+						securedAmount = dailySupply-(demand-bid[i])-users[i].gainedElectricity();
+						distribution = securedAmount;
+						payout = currentBid;
+					}
+				} else {
 					users[i].resetAuction();
-				}
-				if (demand - bid[i] < dailySupply) {
-					securedAmount = dailySupply-(demand-bid[i])-users[i].gainedElectricity();
-					distribution = securedAmount;
-					payout = currentBid;
 				}
 				users[i].clinchElectricity(distribution, payout);
 				System.out.println((i+1)+". Bid: " +bid[i]+ ",\tClinched Electricity: " +users[i].gainedElectricity()+ ",\tTotal Payout: " +users[i].payout());

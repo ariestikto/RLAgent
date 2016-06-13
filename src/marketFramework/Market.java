@@ -20,8 +20,9 @@ public class Market {
 	public static void main(String[] args) {
 		User[] users = new User[AUCTION_PARTICIPANT];
 		Auction a = new Auction(ELECTRICITY_SUPPLY, START_PRICE);
+		Time t = new Time();
 		
 		users = Snippet.createUsers();
-		a.runAuction(users);
+		a.runAuction(users, t);
 	}
 }

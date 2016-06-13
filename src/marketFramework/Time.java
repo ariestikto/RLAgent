@@ -24,16 +24,18 @@ public class Time {
 	public String getDayName() {
 		return dayName;
 	}
-	
+	public int getWeather() {
+		return weather;
+	}
 	public void setWeather() {
-		int random = 1 + (int)(Math.random() * ((100 - 1) + 1));
-		if (random < 81) {
+		int random = 1 + (int)(Math.random() * ((1000 - 1) + 1));
+		if (random < 810) {
 			// 1 = sunny weather
 			this.weather = 1;
-		} else if (random < 96) {
+		} else if (random < 960) {
 			// 2 = rainy weather
 			this.weather = 2;
-		} else if (random < 98) {
+		} else if (random < 980) {
 			// 3 = foggy weather
 			this.weather = 3;
 		} else {
