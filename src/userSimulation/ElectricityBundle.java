@@ -10,14 +10,19 @@ package userSimulation;
 public class ElectricityBundle {
 
 	private double amount;
-	private double price;
+	private double unit_price;
 	/**
 	 * 
 	 */
-	public ElectricityBundle(double amount, double price) {
+	public ElectricityBundle() {
+		// TODO Auto-generated constructor stub
+		this.amount = 0;
+		this.unit_price = 0;
+	}
+	public ElectricityBundle(double amount, double unit_price) {
 		// TODO Auto-generated constructor stub
 		this.amount = amount;
-		this.price = price;
+		this.unit_price = unit_price;
 	}
 	/**
 	 * @return the amount
@@ -32,15 +37,15 @@ public class ElectricityBundle {
 		this.amount = amount;
 	}
 	/**
-	 * @return the price
+	 * @return the unit_price
 	 */
-	public double getPrice() {
-		return price;
+	public double getUnitPrice() {
+		return unit_price;
 	}
 	/**
 	 * @param price the price to set
 	 */
-	public void setPrice(double price) {
-		this.price = price;
+	public void setUnitPrice(double unit_price) {
+		this.unit_price = unit_price;
 	}
 }
