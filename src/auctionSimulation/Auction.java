@@ -39,17 +39,13 @@ public class Auction {
 		double finalDistribution = 0;
  		
 		System.out.println("Supply: " + dailySupply);
-		for (int i = 0; i < users.length; i++) {
-			users[i].resetAuction();
-			users[i].generatePreferences(t);
-		}
 		do {
 			demand  = 0;
 			for (int i = 0; i < users.length; i++) {
 				bid[i] = users[i].getBid(currentBid, bid[i]);
 				demand += bid[i];
 			}
-			System.out.println("\nRound " +(currentBid-4) + ", Demand: " + Snippet.round(demand) + ", Price: " + currentBid);
+//			System.out.println("\nRound " +(currentBid-4) + ", Demand: " + Snippet.round(demand) + ", Price: " + currentBid);
 			for (int i = 0; i < users.length; i++) {
 				payout = 0;
 				distribution = 0;
@@ -64,16 +60,20 @@ public class Auction {
 					users[i].resetAuction();
 				}
 				users[i].clinchElectricity(distribution, payout);
-				System.out.println((i+1)+". Bid: " +bid[i]+ ",\tClinched Electricity: " +users[i].gainedElectricity()+ ",\tTotal Payout: " +users[i].payout());
+//				System.out.println((i+1)+". Bid: " +bid[i]+ ",\tClinched Electricity: " +users[i].gainedElectricity()+ ",\tTotal Payout: " +users[i].payout());
 			}
 			currentBid += 1;
 		} while (demand > dailySupply);
-		System.out.println("\nfinal Results");
+		System.out.println("Final Results");
+		System.out.println("Last Price: " + (currentBid-1));
 		for (int i = 0; i < users.length; i++) {
 			users[i].auctionResult(bid[i]);
+			users[i].addElectricity(users[i].gainedElectricity());
+			users[i].addExpenses(users[i].payout());
 			finalDistribution += users[i].gainedElectricity();
-			System.out.println((i+1)+". Bid: " +bid[i]+ ",\tClinched Electricity: " +users[i].gainedElectricity()+ ",\tTotal Payout: " +users[i].payout());
+			System.out.println((i+1) + " Clinched Electricity: " +users[i].gainedElectricity()+ ",\tTotal Payout: " +users[i].payout());
 		}
-		System.out.println("Distributed Electricity: " + Snippet.round(finalDistribution));
+		
+		System.out.println("Distributed Electricity: " + Snippet.round(finalDistribution) + "\n");
 	}
 }

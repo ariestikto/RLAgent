@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ArrayList;
 import marketFramework.Snippet;
 import marketFramework.Time;
+import agent.Bid;
 	
 /**
  * @author pa1g15
@@ -21,8 +22,8 @@ public class User {
 	private double unitBudget = 0;
 	private double currentElectricity = 0;
 	private double currentExpenses = 0;
-	private double[] preferences;
-	private Bid bid;
+	private double[] preferences = new double []{0, 0};
+	private Bid bid = new Bid();
 	private List<ElectricityBundle> clinched = new ArrayList<ElectricityBundle>();
 	
 //	EV user only
@@ -30,24 +31,18 @@ public class User {
 	private boolean isEVUser = false;
 	private boolean isShop = false;
 //	EV user constructor
-	public User(double dailyDistance, double unitBudget, int userType, int userStrategy, Car car) {
+	public User(int userType, int userStrategy, Car car) {
 		UID = UUID.randomUUID().toString().replaceAll("-", "").substring(0,7);
 		this.userType = userType;
 		this.userStrategy = userStrategy;
-		this.preferences = new double []{dailyDistance, unitBudget};
 		this.car = car;
 		this.isEVUser = true;
-		this.bid = new Bid();
-		this.setDailyPreferences();
 	}
 //	other constructor
-	public User(double dailyNeeds, double unitBudget, int userType, int userStrategy) {
+	public User(int userType, int userStrategy) {
 		UID = UUID.randomUUID().toString().replaceAll("-", "").substring(0,7);
 		this.userType = userType;
 		this.userStrategy = userStrategy;
-		this.preferences = new double []{dailyNeeds, unitBudget};
-		this.bid = new Bid();
-		this.setDailyPreferences();
 	}
 	
 	public String getUID() {
@@ -70,11 +65,7 @@ public class User {
 		return car;
 	}
 	public void setDailyPreferences() {
-		if (isEVUser) {
-			this.dailyNeeds = Snippet.normDist(preferences[0]*this.car.getConsumption());
-		} else {
-			this.dailyNeeds = Snippet.normDist(preferences[0]);
-		}
+		this.dailyNeeds = Snippet.normDist(preferences[0]);
 		this.unitBudget = Snippet.normDist(preferences[1]);
 	}
 	public double getBid(double currentBid, double lastBid) {
@@ -82,10 +73,26 @@ public class User {
 		return Snippet.round(bid.getAmount());
 	}
 	public void addElectricity(double electricity) {
-		this.currentElectricity = this.currentElectricity + electricity;
+		this.currentElectricity += electricity;
+		if (isEVUser) {
+			if (currentElectricity > car.getBatteryCapacity()) {
+				this.currentElectricity = car.getBatteryCapacity();
+			}
+			
+		}
+	}
+	public void useElectricity() {
+		if (isEVUser) {
+			this.currentElectricity -= this.dailyNeeds;
+			if (currentElectricity < 0) {
+				this.currentElectricity = 0;
+			}
+		} else {
+			this.currentElectricity = 0;
+		}
 	}
 	public void addExpenses(double expense) {
-		this.currentExpenses = this.currentExpenses + expense;
+		this.currentExpenses += expense;
 	}
 	public void resetExpense() {
 		this.currentExpenses = 0;
@@ -136,13 +143,22 @@ public class User {
 	}
 	public void generatePreferences(Time time) {
 		ElectricityBundle preferences = new ElectricityBundle();
-		preferences = UserModel.EVUserA(time, this);
 		switch (this.userType) {
 		case 1:
-			this.preferences[0] = preferences.getAmount();
-			this.preferences[1] = preferences.getUnitPrice()/this.preferences[0];
-			this.setDailyPreferences();
+			preferences = UserModel.EVUserA(time, this);
+			break;
+		case 2:
+			preferences = UserModel.EVUserB(time, this);
+			break;
+		case 3:
+			preferences = UserModel.CompanyBuyer();
+			break;
+		case 4:
+			preferences = UserModel.OtherUser(time);
 			break;
 		}
+		this.preferences[0] = preferences.getAmount();
+		this.preferences[1] = preferences.getUnitPrice();
+		this.setDailyPreferences();
 	}
 }

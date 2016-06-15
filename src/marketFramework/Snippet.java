@@ -17,21 +17,42 @@ public class Snippet {
 
 	    BigDecimal bd = new BigDecimal(value);
 	    bd = bd.setScale(2, RoundingMode.HALF_UP);
-	    return bd.doubleValue();
+	    if (bd.doubleValue() > 0.01) {
+	    	return bd.doubleValue();
+		} else {
+			return 0;
+		}
+	    
 	}
 	public static User[] createUsers() {
 		User[] users = new User[Market.AUCTION_PARTICIPANT];
 		
-		users[0] = new User(73, 16.3, 1, 2, new Car(4));
-		users[1] = new User(80, 24.5, 2, 3, new Car(1));
-		users[2] = new User(30, 50, 2, 3);
-		users[3] = new User(10, 8, 3, 1);
-		users[4] = new User(4, 7, 3, 4);
+		users[0] = new User(1, 2, new Car(4));
+		users[1] = new User(2, 3, new Car(1));
+		users[2] = new User(3, 3);
+		users[3] = new User(4, 1);
+		users[4] = new User(4, 4);
 		
 		return users;
 	}
 	public static double normDist(double mean) {
-		NormalDistribution dist = new NormalDistribution(mean, 1);
-		return round(dist.sample());
+		if (mean > 0) {
+			NormalDistribution dist = new NormalDistribution(mean, 1);
+			return round(dist.sample());
+		} else {
+			return 0;
+		}
+	}
+	public static void startOfDay(User[] users, Time t) {
+		for (int i = 0; i < users.length; i++) {
+			users[i].resetAuction();
+			users[i].generatePreferences(t);
+		}
+	}
+	public static void endOfDay (User[] users) {
+		for (int i = 0; i < users.length; i++) {
+			users[i].useElectricity();
+			users[i].resetExpense();
+		}
 	}
 }

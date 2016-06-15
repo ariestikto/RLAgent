@@ -2,7 +2,6 @@
  * 
  */
 package marketFramework;
-import userSimulation.User;
 /**
  * @author pa1g15
  *
@@ -16,7 +15,7 @@ public class Time {
 		this.day = 1;
 		this.dayName = "Monday";
 		this.weather = 1;
-		setWeather();
+		randomizeWeather();
 	}	
 	public int getDay() {
 		return day;
@@ -27,7 +26,7 @@ public class Time {
 	public int getWeather() {
 		return weather;
 	}
-	public void setWeather() {
+	public void randomizeWeather() {
 		int random = 1 + (int)(Math.random() * ((1000 - 1) + 1));
 		if (random < 810) {
 			// 1 = sunny weather
@@ -43,9 +42,9 @@ public class Time {
 			this.weather = 4;
 		}
 	}
-	public void advanceTime(User[] users) {
+	public void advanceTime() {
 			this.day += 1;
-			setWeather();
+			randomizeWeather();
 			switch (day%7) {
 			case 0:
 				this.dayName = "Sunday";

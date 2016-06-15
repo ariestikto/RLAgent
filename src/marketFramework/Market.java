@@ -11,7 +11,7 @@ import userSimulation.User;
  */
 public class Market {
 	public static final double START_PRICE = 5; // p/kWh
-	public static final double ELECTRICITY_SUPPLY = 50; // kWh
+	public static final double ELECTRICITY_SUPPLY = 60; // kWh
 	public static final int AUCTION_PARTICIPANT = 5;
 	public static final int TOTAL_CAR_TYPE = 7;
 	/**
@@ -23,6 +23,12 @@ public class Market {
 		Time t = new Time();
 		
 		users = Snippet.createUsers();
-		a.runAuction(users, t);
+		for (int i = 0; i < 7; i++) {
+			System.out.println("Day: " + (i+1) + ", " + t.getDayName() + ", Weather: " + t.getWeather());
+			Snippet.startOfDay(users, t);
+			a.runAuction(users, t);
+			Snippet.endOfDay(users);
+			t.advanceTime();
+		}
 	}
 }
