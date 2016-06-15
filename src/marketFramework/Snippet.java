@@ -23,7 +23,7 @@ public class Snippet {
 		User[] users = new User[Market.AUCTION_PARTICIPANT];
 		
 		users[0] = new User(73, 16.3, 1, 2, new Car(4));
-		users[1] = new User(80, 24.5, 1, 3, new Car(1));
+		users[1] = new User(80, 24.5, 2, 3, new Car(1));
 		users[2] = new User(30, 50, 2, 3);
 		users[3] = new User(10, 8, 3, 1);
 		users[4] = new User(4, 7, 3, 4);

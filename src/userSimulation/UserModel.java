@@ -3,6 +3,7 @@
  */
 package userSimulation;
 
+import marketFramework.Snippet;
 import marketFramework.Time;
 import java.util.List;
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ import java.util.ArrayList;
  */
 public class UserModel {
 	public static ElectricityBundle EVUserA(Time time, User user) {
-		double dayNeeds = 0;
-		double dayUnitBudget = 0;
+		double dayNeeds = 0; //km
+		double dayBudget = 0; //p/km
 		String task;
 		ElectricityBundle preferences = new ElectricityBundle();
 		String day;
@@ -22,14 +23,14 @@ public class UserModel {
 		int random2 = 1 + (int)(Math.random() * ((1000 - 1) + 1));
 		int randomWeather1 = 1 + (int)(Math.random() * ((1000 - 1) + 1));
 		int randomWeather2 = 1 + (int)(Math.random() * ((1000 - 1) + 1));
-		double taskWork = 30;
-		double taskHospital = 10;
-		double taskShopping = 13;
-		double taskHangout = 15 + (Math.random() * ((20 - 15) + 1));
-		double taskTrip = 50 + (Math.random() * ((150 - 50) + 1));
-		double highBudget = 18.6;
-		double normalBudget = 13.9;
-		double lowBudget = 7.1;
+		double taskWork = Snippet.normDist(30);
+		double taskHospital = Snippet.normDist(10);
+		double taskShopping = Snippet.normDist(13);
+		double taskHangout = Snippet.normDist(15 + (Math.random() * ((20 - 15) + 1)));
+		double taskTrip = Snippet.normDist(50 + (Math.random() * ((150 - 50) + 1)));
+		double highBudget = Snippet.normDist(18.6);
+		double normalBudget = Snippet.normDist(13.9);
+		double lowBudget = Snippet.normDist(7.1);
 		
 		
 		day = time.getDayName();
@@ -100,61 +101,62 @@ public class UserModel {
 				case 1: //sunny
 					if (task == "work") {
 						dayNeeds += taskWork;
-						dayUnitBudget += normalBudget;
+						dayBudget += normalBudget*taskWork;
 					} else if (task == "hospital") {
 						dayNeeds += taskHospital;
-						dayUnitBudget += highBudget;
+						dayBudget += highBudget*taskHospital;
 					} else if (task == "shopping") {
 						dayNeeds += taskShopping;
-						dayUnitBudget += normalBudget;
+						dayBudget += normalBudget*taskShopping;
 					} else if (task == "hangout") {
 						dayNeeds += taskHangout;
-						dayUnitBudget += lowBudget;
+						dayBudget += lowBudget*taskHangout;
 					} else if (task == "trip") {
 						dayNeeds += taskTrip;
-						dayUnitBudget += lowBudget;
+						dayBudget += lowBudget*taskTrip;
 					}
 					break;
 				case 2: //rainy
 					if (task == "work") {
 						dayNeeds += taskWork*1.2;
-						dayUnitBudget += normalBudget;
+						dayBudget += normalBudget*taskWork*1.2;
 					} else if (task == "hospital") {
 						dayNeeds += taskHospital*1.2;
-						dayUnitBudget += highBudget;
+						dayBudget += highBudget*taskHospital*1.2;
 					} else if (task == "shopping") {
 						dayNeeds += taskShopping*1.2;
-						dayUnitBudget += normalBudget;
+						dayBudget += normalBudget*taskShopping*1.2;
 					} else if (task == "hangout") {
 						if (randomWeather1 > 200) {
 							dayNeeds += taskHangout*1.2;
-							dayUnitBudget += lowBudget;
+							dayBudget += lowBudget*taskHangout*1.2;
 						}
 					} else if (task == "trip") {
 						if (randomWeather1 > 200) {
-							dayUnitBudget += lowBudget;
+							dayNeeds += taskTrip*1.2;
+							dayBudget += lowBudget*taskTrip*1.2;
 						}
 					}
 					break;
 				case 3: //foggy
 					if (task == "work") {
 						dayNeeds += taskWork;
-						dayUnitBudget += normalBudget;
+						dayBudget += normalBudget*taskWork;
 					} else if (task == "hospital") {
 						dayNeeds += taskHospital;
-						dayUnitBudget += highBudget;
+						dayBudget += highBudget*taskHospital;
 					} else if (task == "shopping") {
 						dayNeeds += taskShopping;
-						dayUnitBudget += normalBudget;
+						dayBudget += normalBudget*taskShopping;
 					} else if (task == "hangout") {
 						if (randomWeather1 > 700) {
 							dayNeeds += taskHangout;
-							dayUnitBudget += lowBudget;
+							dayBudget += lowBudget*taskHangout;
 						}
 					} else if (task == "trip") {
 						if (randomWeather1 > 700) {
 							dayNeeds += taskTrip;
-							dayUnitBudget += lowBudget;
+							dayBudget += lowBudget*taskTrip;
 						}
 					}
 					break;
@@ -162,34 +164,33 @@ public class UserModel {
 					if (task == "work") {
 						if (randomWeather2 > 100) {
 							dayNeeds += taskWork*1.5;
-							dayUnitBudget += normalBudget;
+							dayBudget += normalBudget*taskWork*1.5;
 						}
 					} else if (task == "hospital") {
 						dayNeeds += taskHospital*1.5;
-						dayUnitBudget += highBudget;
+						dayBudget += highBudget*taskHospital*1.5;
 					} else if (task == "shopping") {
 						if (randomWeather2 > 100) {
 							dayNeeds += taskShopping*1.5;
-							dayUnitBudget += normalBudget;
+							dayBudget += normalBudget*taskShopping*1.5;
 						}
 					} else if (task == "hangout") {
 						if (randomWeather1 > 800) {
 							dayNeeds += taskHangout*1.5;
-							dayUnitBudget += lowBudget;
+							dayBudget += lowBudget*taskHangout*1.5;
 						}
 					} else if (task == "trip") {
 						if (randomWeather1 > 800) {
 							dayNeeds += taskTrip*1.5;
-							dayUnitBudget += lowBudget;
+							dayBudget += lowBudget*taskTrip*1.5;
 						}
 					}
 					break;
 				}
 			}
 		}
-		dayUnitBudget = dayUnitBudget/dayNeeds;
 		preferences.setAmount(dayNeeds);
-		preferences.setUnitPrice(dayUnitBudget);
+		preferences.setUnitPrice(dayBudget);
 		return preferences;
 	}
 }

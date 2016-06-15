@@ -66,6 +66,9 @@ public class User {
 	public double getCurrentElectricity() {
 		return currentElectricity;
 	}
+	public Car getCar() {
+		return car;
+	}
 	public void setDailyPreferences() {
 		if (isEVUser) {
 			this.dailyNeeds = Snippet.normDist(preferences[0]*this.car.getConsumption());
@@ -132,10 +135,12 @@ public class User {
 		}
 	}
 	public void generatePreferences(Time time) {
+		ElectricityBundle preferences = new ElectricityBundle();
+		preferences = UserModel.EVUserA(time, this);
 		switch (this.userType) {
 		case 1:
-			this.preferences[0] = UserModel.EVUserA(time, this).getAmount();
-			this.preferences[1] = UserModel.EVUserA(time, this).getUnitPrice();
+			this.preferences[0] = preferences.getAmount();
+			this.preferences[1] = preferences.getUnitPrice()/this.preferences[0];
 			this.setDailyPreferences();
 			break;
 		}
