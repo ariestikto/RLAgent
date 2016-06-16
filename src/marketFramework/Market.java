@@ -3,6 +3,8 @@
  */
 package marketFramework;
 
+import java.awt.TextArea;
+
 import auctionSimulation.Auction;
 import userSimulation.User;
 /**
@@ -19,14 +21,14 @@ public class Market {
 	 */
 	public static void main(String[] args) {
 		User[] users = new User[AUCTION_PARTICIPANT];
-		Auction a = new Auction(ELECTRICITY_SUPPLY, START_PRICE);
+		Auction a = new Auction();
 		Time t = new Time();
 		
 		users = Snippet.createUsers();
 		for (int i = 0; i < 7; i++) {
 			System.out.println("Day: " + (i+1) + ", " + t.getDayName() + ", Weather: " + t.getWeather());
 			Snippet.startOfDay(users, t);
-			a.runAuction(users, t);
+//			a.runAuction(users, t);
 			Snippet.endOfDay(users);
 			t.advanceTime();
 		}

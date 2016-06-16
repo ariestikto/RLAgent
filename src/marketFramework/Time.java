@@ -12,8 +12,8 @@ public class Time {
 	private int weather;
 	
 	public Time() {
-		this.day = 1;
-		this.dayName = "Monday";
+		this.day = 0;
+		this.dayName = "Sunday";
 		this.weather = 1;
 		randomizeWeather();
 	}	
@@ -41,6 +41,24 @@ public class Time {
 			// 4 = snow weather
 			this.weather = 4;
 		}
+	}
+	public String getWeatherName() {
+		String weatherName = "";
+		switch (weather) {
+		case 1:
+			weatherName =  "Sunny";
+			break;
+		case 2:
+			weatherName =  "Rainy";
+			break;
+		case 3:
+			weatherName =  "Fog";
+			break;
+		case 4:
+			weatherName =  "Snow";
+			break;
+		}
+		return weatherName;
 	}
 	public void advanceTime() {
 			this.day += 1;

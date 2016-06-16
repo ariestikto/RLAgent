@@ -48,7 +48,7 @@ public class Car {
 		case 4:
 			this.consumption = 0.12; 
 			this.batteryCapacity = 30;
-			this.carName = "Nissan Leaf (3okWh Acenta)";
+			this.carName = "Nissan Leaf (30 kWh Acenta)";
 			break;
 			
 		case 5:

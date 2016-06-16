@@ -27,7 +27,7 @@ public class User {
 	private List<ElectricityBundle> clinched = new ArrayList<ElectricityBundle>();
 	
 //	EV user only
-	private Car car;
+	private Car car = new Car(0);
 	private boolean isEVUser = false;
 	private boolean isShop = false;
 //	EV user constructor
@@ -64,6 +64,12 @@ public class User {
 	public Car getCar() {
 		return car;
 	}
+	public double getDailyNeeds() {
+		return dailyNeeds;
+	}
+	public double getBudget() {
+		return Snippet.round(dailyNeeds*unitBudget);
+	}
 	public void setDailyPreferences() {
 		this.dailyNeeds = Snippet.normDist(preferences[0]);
 		this.unitBudget = Snippet.normDist(preferences[1]);
@@ -78,7 +84,6 @@ public class User {
 			if (currentElectricity > car.getBatteryCapacity()) {
 				this.currentElectricity = car.getBatteryCapacity();
 			}
-			
 		}
 	}
 	public void useElectricity() {
@@ -96,6 +101,9 @@ public class User {
 	}
 	public void resetExpense() {
 		this.currentExpenses = 0;
+	}
+	public double getExpenses() {
+		return currentExpenses;
 	}
 	public void resetAuction() {
 		this.clinched.clear();

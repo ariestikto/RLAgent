@@ -3,7 +3,11 @@
  */
 package auctionSimulation;
 
+import java.awt.TextArea;
+
 import org.apache.commons.math3.distribution.NormalDistribution;
+
+import marketFramework.Market;
 import marketFramework.Snippet;
 import userSimulation.User;
 import marketFramework.Time;
@@ -15,13 +19,15 @@ public class Auction {
 	private double dailySupply;
 	private double currentBid;
 	
-	public Auction(double dailySupply, double currentBid) {
-		NormalDistribution supplyDist = new NormalDistribution(dailySupply, 1);
+	public Auction() {
+		restartAuction();
+	}
+	public void restartAuction() {
+		NormalDistribution supplyDist = new NormalDistribution(Market.ELECTRICITY_SUPPLY, 1);
 		
 		this.dailySupply = Snippet.round(supplyDist.sample());;
-		this.currentBid = currentBid;
+		this.currentBid = Market.START_PRICE;
 	}
-
 	public double getDailySupply() {
 		return dailySupply;
 	}
@@ -30,7 +36,11 @@ public class Auction {
 		return currentBid;
 	}
 	
-	public void runAuction(User[] users, Time t){
+	public void runAuction(User[] users, Time t, TextArea auctionResult, TextArea auctionHistory){
+		auctionResult.setText("");
+		auctionHistory.append(String.format("%-20s\t", "Day: " + t.getDay() + ", " + t.getDayName()) + "\t Weather: " + t.getWeatherName() + "\n");
+		restartAuction();
+		
 		double demand;
 		double securedAmount = 0;
 		double[] bid = new double[users.length];
@@ -38,7 +48,6 @@ public class Auction {
 		double distribution = 0;
 		double finalDistribution = 0;
  		
-		System.out.println("Supply: " + dailySupply);
 		do {
 			demand  = 0;
 			for (int i = 0; i < users.length; i++) {
@@ -64,16 +73,19 @@ public class Auction {
 			}
 			currentBid += 1;
 		} while (demand > dailySupply);
-		System.out.println("Final Results");
-		System.out.println("Last Price: " + (currentBid-1));
+		auctionResult.append("Final Results: \n");
+		auctionResult.append("Last Price: " + (currentBid-1) + "\n");
+		auctionHistory.append("Last Price: " + (currentBid-1) + "\n");
 		for (int i = 0; i < users.length; i++) {
 			users[i].auctionResult(bid[i]);
 			users[i].addElectricity(users[i].gainedElectricity());
 			users[i].addExpenses(users[i].payout());
 			finalDistribution += users[i].gainedElectricity();
-			System.out.println((i+1) + " Clinched Electricity: " +users[i].gainedElectricity()+ ",\tTotal Payout: " +users[i].payout());
+			auctionResult.append(String.format("%-10s\t", users[i].getUID()) + "Electricity Needs: " + users[i].getDailyNeeds() + "\t Gained Electricity: " +users[i].gainedElectricity()+ " \tTotal Payout: " +users[i].payout() + "\n");
+			auctionHistory.append(String.format("%-10s\t", users[i].getUID()) + "Electricity Needs: " + users[i].getDailyNeeds() + "\t Gained Electricity: " +users[i].gainedElectricity()+ " \tTotal Payout: " +users[i].payout() + "\n");
 		}
 		
-		System.out.println("Distributed Electricity: " + Snippet.round(finalDistribution) + "\n");
+		auctionResult.append("Demand: " + Snippet.round(finalDistribution) + "\t Supply: "  + dailySupply + "\n\n");
+		auctionHistory.append("Demand: " + Snippet.round(finalDistribution) + "\t Supply: "  + dailySupply + "\n\n");
 	}
 }
