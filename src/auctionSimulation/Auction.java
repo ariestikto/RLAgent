@@ -54,7 +54,7 @@ public class Auction {
 				bid[i] = users[i].getBid(currentBid, bid[i]);
 				demand += bid[i];
 			}
-//			System.out.println("\nRound " +(currentBid-4) + ", Demand: " + Snippet.round(demand) + ", Price: " + currentBid);
+			auctionResult.append("\nRound " +(int)(currentBid-4) + "\nPrice: " + currentBid + "\t Demand: " + Snippet.round(demand) + "\n");
 			for (int i = 0; i < users.length; i++) {
 				payout = 0;
 				distribution = 0;
@@ -69,11 +69,11 @@ public class Auction {
 					users[i].resetAuction();
 				}
 				users[i].clinchElectricity(distribution, payout);
-//				System.out.println((i+1)+". Bid: " +bid[i]+ ",\tClinched Electricity: " +users[i].gainedElectricity()+ ",\tTotal Payout: " +users[i].payout());
+				auctionResult.append(String.format("%-12s\t", users[i].getUID()) + String.format("%-12s\t", " Bid: " +bid[i]) + "Possible Gained Electricity: " + String.format("%-15s\t", users[i].gainedElectricity())+ "Total Payout: " +users[i].payout() + "\n");
 			}
 			currentBid += 1;
 		} while (demand > dailySupply);
-		auctionResult.append("Final Results: \n");
+		auctionResult.append("\nFinal Results: \n");
 		auctionResult.append("Last Price: " + (currentBid-1) + "\n");
 		auctionHistory.append("Last Price: " + (currentBid-1) + "\n");
 		for (int i = 0; i < users.length; i++) {
@@ -81,8 +81,8 @@ public class Auction {
 			users[i].addElectricity(users[i].gainedElectricity());
 			users[i].addExpenses(users[i].payout());
 			finalDistribution += users[i].gainedElectricity();
-			auctionResult.append(String.format("%-10s\t", users[i].getUID()) + "Electricity Needs: " + users[i].getDailyNeeds() + "\t Gained Electricity: " +users[i].gainedElectricity()+ " \tTotal Payout: " +users[i].payout() + "\n");
-			auctionHistory.append(String.format("%-10s\t", users[i].getUID()) + "Electricity Needs: " + users[i].getDailyNeeds() + "\t Gained Electricity: " +users[i].gainedElectricity()+ " \tTotal Payout: " +users[i].payout() + "\n");
+			auctionResult.append(String.format("%-12s\t", users[i].getUID()) + "Electricity Needs: " + users[i].getDailyNeeds() + "\t Gained Electricity: " +users[i].gainedElectricity()+ " \tTotal Payout: " +users[i].payout() + "\n");
+			auctionHistory.append(String.format("%-12s\t", users[i].getUID()) + "Electricity Needs: " + users[i].getDailyNeeds() + "\t Gained Electricity: " +users[i].gainedElectricity()+ " \tTotal Payout: " +users[i].payout() + "\n");
 		}
 		
 		auctionResult.append("Demand: " + Snippet.round(finalDistribution) + "\t Supply: "  + dailySupply + "\n\n");
