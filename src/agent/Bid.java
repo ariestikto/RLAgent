@@ -4,6 +4,7 @@
 package agent;
 
 import marketFramework.Market;
+import userSimulation.User;
 /**
  * @author pa1g15
  *
@@ -22,23 +23,26 @@ public class Bid {
 		return amount;
 	}
 		
-	public void calculateBid(int userStrategy, double currentBid, double lastBid, double currentElectricity, double dailyNeeds, double unitBudget) {
-		switch (userStrategy) {
+	public void calculateBid(double currentBid, double lastBid, User user) {
+		switch (user.getStrategy()) {
 		case 1:
-			this.amount = randomBid(currentBid, dailyNeeds - currentElectricity, lastBid, unitBudget);
+			this.amount = randomBid(currentBid, user.getDailyNeeds() - user.getCurrentElectricity(), lastBid, user.getBudget());
 			break;
 		case 2:
-			this.amount = SpendBudgetBid(currentBid, dailyNeeds - currentElectricity, unitBudget);
+			this.amount = SpendBudgetBid(currentBid, user.getDailyNeeds() - user.getCurrentElectricity(), user.getBudget());
 			break;
 		case 3:
-			this.amount = MaxBid(currentBid, dailyNeeds - currentElectricity, unitBudget);
+			this.amount = MaxBid(currentBid, user.getDailyNeeds() - user.getCurrentElectricity(), user.getBudget());
 			break;
 		case 4:
-			this.amount = AllOrNothingBid(currentBid, dailyNeeds - currentElectricity, unitBudget);
+			this.amount = AllOrNothingBid(currentBid, user.getDailyNeeds() - user.getCurrentElectricity(), user.getBudget());
 			break;
 		}
+		if (amount < user.gainedElectricity()) {
+			this.amount = user.gainedElectricity();
+		}
 	}
-	public static double randomBid(double currentBid, double dailyNeeds, double lastBid, double unitBudget) {
+	public static double randomBid(double currentBid, double dailyNeeds, double lastBid, double budget) {
 //		strategy 1
 		double bid = 0;
 		if (currentBid == Market.START_PRICE) {
@@ -46,7 +50,7 @@ public class Bid {
 		} else {
 			do {
 				bid = Math.random()*lastBid;
-			} while (bid*currentBid > unitBudget*dailyNeeds);
+			} while (bid*currentBid > budget);
 			if (bid < 0) {
 				bid = 0;
 			}
@@ -54,11 +58,10 @@ public class Bid {
 		
 		return bid;
 	}
-	public static double SpendBudgetBid(double currentBid, double dailyNeeds, double unitBudget) {
+	public static double SpendBudgetBid(double currentBid, double dailyNeeds, double budget) {
 //		strategy 2
 		double bid = 0;
 		double deficit = dailyNeeds;
-		double budget = unitBudget*deficit;
 
 		if (deficit > 0) {
 			if (deficit < budget/currentBid) {
@@ -69,19 +72,19 @@ public class Bid {
 		}
 		return bid;
 	}
-	public static double MaxBid(double currentBid, double dailyNeeds, double unitBudget) {
+	public static double MaxBid(double currentBid, double dailyNeeds, double budget) {
 //		strategy 3
 		double bid = 0;
 		bid = dailyNeeds;
-		while (bid*currentBid > unitBudget*dailyNeeds) {
-			bid *= 0.9;
+		while (bid*currentBid > budget) {
+			bid *= 0.8;
 		}
 		return bid;
 	}
-	public static double AllOrNothingBid(double currentBid, double dailyNeeds, double unitBudget) {
+	public static double AllOrNothingBid(double currentBid, double dailyNeeds, double budget) {
 //		strategy 4
 		double bid = 0;
-		if (currentBid > unitBudget) {
+		if (currentBid > budget) {
 			bid = 0;
 		} else {
 			bid = dailyNeeds;

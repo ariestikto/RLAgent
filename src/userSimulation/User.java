@@ -48,6 +48,9 @@ public class User {
 	public String getUID() {
 		return UID;
 	}
+	public int getStrategy () {
+		return userStrategy;
+	}
 	public void setShop(int isShop) {
 		if (isShop == 1) {
 			this.isShop = true;
@@ -75,7 +78,7 @@ public class User {
 		this.unitBudget = Snippet.normDist(preferences[1]);
 	}
 	public double getBid(double currentBid, double lastBid) {
-		bid.calculateBid(userStrategy, currentBid, lastBid, currentElectricity, dailyNeeds, unitBudget);
+		bid.calculateBid(currentBid, lastBid, this);
 		return Snippet.round(bid.getAmount());
 	}
 	public void addElectricity(double electricity) {
