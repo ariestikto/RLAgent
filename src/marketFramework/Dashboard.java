@@ -220,35 +220,45 @@ public class Dashboard extends JFrame implements ActionListener {
 		userPanel.add(lblExpenses, gbc_lblExpenses);
 		
 		budgetInfo = new JLabel(activeUser.getBudget() + " p");
+		budgetInfo.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints gbc_budgetInfo = new GridBagConstraints();
+		gbc_budgetInfo.fill = GridBagConstraints.HORIZONTAL;
 		gbc_budgetInfo.insets = new Insets(0, 0, 5, 5);
 		gbc_budgetInfo.gridx = 1;
 		gbc_budgetInfo.gridy = 8;
 		userPanel.add(budgetInfo, gbc_budgetInfo);
 		
 		needsInfo = new JLabel(activeUser.getDailyNeeds() + " kWh");
+		needsInfo.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints gbc_needsInfo = new GridBagConstraints();
+		gbc_needsInfo.fill = GridBagConstraints.HORIZONTAL;
 		gbc_needsInfo.insets = new Insets(0, 0, 5, 5);
 		gbc_needsInfo.gridx = 1;
 		gbc_needsInfo.gridy = 10;
 		userPanel.add(needsInfo, gbc_needsInfo);
 		
 		currentelectricityinfo = new JLabel(activeUser.getCurrentElectricity() + " kWh");
+		currentelectricityinfo.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints gbc_currentelectricityinfo = new GridBagConstraints();
+		gbc_currentelectricityinfo.fill = GridBagConstraints.HORIZONTAL;
 		gbc_currentelectricityinfo.insets = new Insets(0, 0, 5, 5);
 		gbc_currentelectricityinfo.gridx = 1;
 		gbc_currentelectricityinfo.gridy = 12;
 		userPanel.add(currentelectricityinfo, gbc_currentelectricityinfo);
 		
 		gainedElectricityInfo = new JLabel(activeUser.gainedElectricity() + " kWh");
+		gainedElectricityInfo.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints gbc_gainedElectricityInfo = new GridBagConstraints();
+		gbc_gainedElectricityInfo.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gainedElectricityInfo.insets = new Insets(0, 0, 5, 5);
 		gbc_gainedElectricityInfo.gridx = 1;
 		gbc_gainedElectricityInfo.gridy = 14;
 		userPanel.add(gainedElectricityInfo, gbc_gainedElectricityInfo);
 		
 		expenseInfo = new JLabel(activeUser.getExpenses() + " p");
+		expenseInfo.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints gbc_expenseInfo = new GridBagConstraints();
+		gbc_expenseInfo.fill = GridBagConstraints.HORIZONTAL;
 		gbc_expenseInfo.insets = new Insets(0, 0, 5, 5);
 		gbc_expenseInfo.gridx = 1;
 		gbc_expenseInfo.gridy = 16;
@@ -290,21 +300,27 @@ public class Dashboard extends JFrame implements ActionListener {
 		userPanel.add(lblBatteryCapacity, gbc_lblBatteryCapacity);
 		
 		carTypeInfo = new JLabel(activeUser.getCar().getCarName());
+		carTypeInfo.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints gbc_carTypeInfo = new GridBagConstraints();
+		gbc_carTypeInfo.fill = GridBagConstraints.HORIZONTAL;
 		gbc_carTypeInfo.insets = new Insets(0, 0, 5, 5);
 		gbc_carTypeInfo.gridx = 7;
 		gbc_carTypeInfo.gridy = 8;
 		userPanel.add(carTypeInfo, gbc_carTypeInfo);
 		
 		carConsumptionInfo = new JLabel(activeUser.getCar().getConsumption() + " kWh/km");
+		carConsumptionInfo.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints gbc_carConsumptionInfo = new GridBagConstraints();
+		gbc_carConsumptionInfo.fill = GridBagConstraints.HORIZONTAL;
 		gbc_carConsumptionInfo.insets = new Insets(0, 0, 5, 5);
 		gbc_carConsumptionInfo.gridx = 7;
 		gbc_carConsumptionInfo.gridy = 10;
 		userPanel.add(carConsumptionInfo, gbc_carConsumptionInfo);
 		
 		carCapacityInfo = new JLabel(activeUser.getCar().getBatteryCapacity() + " kWh");
+		carCapacityInfo.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints gbc_carCapacityInfo = new GridBagConstraints();
+		gbc_carCapacityInfo.fill = GridBagConstraints.HORIZONTAL;
 		gbc_carCapacityInfo.insets = new Insets(0, 0, 5, 5);
 		gbc_carCapacityInfo.gridx = 7;
 		gbc_carCapacityInfo.gridy = 12;
