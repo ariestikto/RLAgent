@@ -23,11 +23,6 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
-import javax.swing.JFormattedTextField;
-import javax.swing.JTextPane;
-import javax.swing.JTable;
-import javax.swing.Box;
-import javax.swing.JScrollPane;
 import java.awt.TextArea;
 
 public class Dashboard extends JFrame implements ActionListener {
@@ -144,7 +139,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		gbl_userPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		userPanel.setLayout(gbl_userPanel);
 		
-		JComboBox UID = new JComboBox(UIDList);
+		JComboBox<String> UID = new JComboBox<>(UIDList);
 		GridBagConstraints gbc_UID = new GridBagConstraints();
 		gbc_UID.insets = new Insets(0, 0, 5, 5);
 		gbc_UID.anchor = GridBagConstraints.NORTHWEST;
@@ -352,7 +347,7 @@ public class Dashboard extends JFrame implements ActionListener {
 	public void bottomPane(JPanel buttonPanel) {
 		String[] timeMenu = {"1 Day", "3 Days", "7 Days", "30 Days", "100 Days"};
 		
-		JComboBox timeChoice = new JComboBox(timeMenu);
+		JComboBox<String> timeChoice = new JComboBox<>(timeMenu);
 		buttonPanel.add(timeChoice);
 		
 		JButton btnAdvanceTime = new JButton("Advance Time");
