@@ -31,7 +31,12 @@ public class Snippet {
 		users[1] = new User(2, 2, new Car(1));
 		users[2] = new User(3, 3);
 		users[3] = new User(4, 1);
-		users[4] = new User(4, 4);
+		users[4] = new User(1, 3, new Car(2));
+		users[5] = new User(1, 2, new Car(5));
+		users[6] = new User(2, 1, new Car(6));
+		users[7] = new User(4, 4);
+		users[8] = new User(4, 2);
+		users[9] = new User(2, 2, new Car(3));
 		
 		return users;
 	}

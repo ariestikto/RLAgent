@@ -21,7 +21,7 @@ public class Reward {
 		} else if (user.payout() > user.getBudget()*1.05) {
 			// too expensive
 			reward = -10;
-		} else if (user.getCurrentElectricity() > (int) (user.getDailyNeeds() + 1)) {
+		} else if ((user.getCurrentElectricity() > (int) (user.getDailyNeeds() + 1)) && (user.getAction().getBidAmount() != 0)) {
 			// too much
 			reward = -1;
 		} else if (user.payout()*0.9 > user.getExpenses()){

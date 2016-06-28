@@ -18,6 +18,8 @@ import marketFramework.Time;
 public class Auction {
 	private double dailySupply;
 	private double currentBid;
+	private String lastAuction;
+	private String currentAuction;
 	
 	public Auction() {
 		restartAuction();
@@ -37,6 +39,7 @@ public class Auction {
 	}
 	
 	public void runAuction(User[] users, Time t, TextArea auctionResult, TextArea auctionHistory){
+		lastAuction = currentAuction;
 		auctionResult.setText("");
 		auctionHistory.append(String.format("%-20s\t", "Day: " + t.getDay() + ", " + t.getDayName()) + "\t Weather: " + t.getWeatherName() + "\n");
 		restartAuction();
@@ -84,10 +87,21 @@ public class Auction {
 			finalDistribution += users[i].gainedElectricity();
 			auctionResult.append(String.format("%-12s\t", users[i].getUID()) + "Electricity Needs: " + Snippet.round(users[i].getDailyNeeds()) + "\t Current Electricity: " + users[i].getCurrentElectricity() + "\t Gained Electricity: " +users[i].gainedElectricity()+ " \tTotal Payout: " +users[i].payout() + "\n");
 			users[i].addElectricity(users[i].gainedElectricity());
-			auctionHistory.append(String.format("%-12s\t", users[i].getUID()) + "Electricity Needs: " + Snippet.round(users[i].getDailyNeeds()) + "\t Current Electricity: " + users[i].getCurrentElectricity() + "\t Gained Electricity: " +users[i].gainedElectricity()+ " \tTotal Payout: " +users[i].payout() + "\n");
+			auctionHistory.append(String.format("%-12s\t", users[i].getUID()) + "Last Bid: " + bid[i] + "\t Electricity Needs: " + Snippet.round(users[i].getDailyNeeds()) + "\t Current Electricity: " + users[i].getCurrentElectricity() + "\t Gained Electricity: " +users[i].gainedElectricity()+ " \tTotal Payout: " +users[i].payout() + "\n");
 		}
 		
 		auctionResult.append("Demand: " + Snippet.round(finalDistribution) + "\t Supply: "  + dailySupply + "\n\n");
 		auctionHistory.append("Demand: " + Snippet.round(finalDistribution) + "\t Supply: "  + dailySupply + "\n\n");
+		currentAuction = auctionResult.getText();
+		
+		if (t.getDay() > 1) {
+			auctionResult.setText("");
+			auctionResult.append("Day " + (t.getDay()-1) + "\n");
+			auctionResult.append(lastAuction + "\n");
+			auctionResult.append("Day " + t.getDay() + "\n");
+			auctionResult.append(currentAuction + "\n");
+		}
+		
+		
 	}
 }

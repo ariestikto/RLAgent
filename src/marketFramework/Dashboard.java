@@ -437,7 +437,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		gbc_lblNeedsPrefVal.gridy = 4;
 		agentPanel.add(lblNeedsPrefVal, gbc_lblNeedsPrefVal);
 		
-		lblAgentBid = new JLabel("Bid:");
+		lblAgentBid = new JLabel("Predicted Needs:");
 		GridBagConstraints gbc_lblAgentBid = new GridBagConstraints();
 		gbc_lblAgentBid.anchor = GridBagConstraints.EAST;
 		gbc_lblAgentBid.insets = new Insets(0, 0, 5, 5);
@@ -469,7 +469,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		gbc_lblBudgetPrefVal.gridy = 5;
 		agentPanel.add(lblBudgetPrefVal, gbc_lblBudgetPrefVal);
 		
-		lblUnitBudget = new JLabel("Unit Budget:");
+		lblUnitBudget = new JLabel("Predicted Unit Budget:");
 		GridBagConstraints gbc_lblUnitBudget = new GridBagConstraints();
 		gbc_lblUnitBudget.anchor = GridBagConstraints.EAST;
 		gbc_lblUnitBudget.insets = new Insets(0, 0, 5, 5);
@@ -593,14 +593,14 @@ public class Dashboard extends JFrame implements ActionListener {
 		carConsumptionInfo.setText(activeUser.getCar().getConsumption() + " kWh/km");
 		carCapacityInfo.setText(activeUser.getCar().getBatteryCapacity() + " kWh");
 	}
-	public void updateAgentPane(double lastNeeds, double lastBudget, State lastState, Action lastAction) {
+	public void updateAgentPane(double lastNeeds, double lastBudget, State lastState, Action lastAction, double lastSpending) {
 		yesterdayLabel .setText("Day " + (t.getDay()-1) + " Agent Results " + "(" + lastState.getDay() + ", " + lastState.getWeatherName() + ")");
 		lblNeedsPrefVal.setText(Snippet.round(lastNeeds) + " kWh");
 		lblCurrentElectricityVal.setText(lastState.getCurrentElectricity() + " kWh");
 		lblBudgetPrefVal.setText(lastBudget + " p");
 		lblAgentBidValue.setText(lastAction.getBidAmount() + " kWh");
 		lblAgentUnitBudget.setText(lastAction.getUnitBudget() + " p");
-		lblAgentSpendingVal.setText(lastAction.getBudget() + " p");
+		lblAgentSpendingVal.setText(lastSpending + " p");
 		lblRewardValue.setText(agent.getReward() + "");
 		lblEvaluatedQVal.setText((int) agent.getAgent().findState(lastState, lastAction).getValue() + "");
 		lblPair.setText(agent.getAgent().getQSize() + " Pair");
@@ -646,6 +646,7 @@ public class Dashboard extends JFrame implements ActionListener {
 				double lastNeeds;
 				State lastState;
 				Action lastAction;
+				double lastSpending;
 				
 				for (int i = 0; i < timeJump; i++) {
 					Snippet.endOfDay(users);
@@ -655,6 +656,7 @@ public class Dashboard extends JFrame implements ActionListener {
 					lastBudget = agent.getBudget();
 					lastState = agent.getState();
 					lastAction = agent.getAction();
+					lastSpending  = agent.payout();
 //					System.out.println("Bid: " + lastAction.getBidAmount() + "\t Unit: " + lastAction.getUnitBudget() + "\t Total: " + lastAction.getBudget());
 					t.advanceTime();
 					Snippet.startOfDay(users, t);
@@ -662,7 +664,7 @@ public class Dashboard extends JFrame implements ActionListener {
 					updateTopPane();
 					updateUserPane();
 					if (t.getDay() > 1) {
-						updateAgentPane(lastNeeds, lastBudget, lastState, lastAction);
+						updateAgentPane(lastNeeds, lastBudget, lastState, lastAction, lastSpending);
 					}
 				}
 			}
