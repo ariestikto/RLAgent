@@ -35,7 +35,14 @@ public class Action {
 	public void setBudget(double budget) {
 		this.budget = Math.round(budget);
 	}
-
+	
+	public int getUnitBudget() {
+		if (bidAmount == 0) {
+			return 0;
+		} else {
+			return (int) (budget/bidAmount);
+		}
+	}
 	public boolean isEqual(Action a) {
 		return ((bidAmount == a.getBidAmount()) && (budget == a.getBudget()));
 	}

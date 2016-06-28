@@ -92,9 +92,15 @@ public class ReinforcementLearning {
 	
 	public Action randomAction(State s, User user) {
 		Action a = new Action();
-		double bid = 0 + (Math.random() * ((user.getCar().getBatteryCapacity() - 0) + 1));
-		double unitBudget = 5 + (Math.random() * ((Market.MAXIMUM_BID - 5) + 1));
-		a.setBidAmount((int) bid);
+		int bid = (int) (0 + (Math.random() * ((user.getCar().getBatteryCapacity() - 0) + 1)));
+		int unitBudget = (int) (5 + (Math.random() * ((Market.MAXIMUM_BID - 5) + 1)));
+		if ((bid - user.getCurrentElectricity()) > 0) {
+			bid = (int) (bid-user.getCurrentElectricity());
+			a.setBidAmount(bid);
+		} else {
+			unitBudget = 0;
+			a.setBidAmount(0);
+		}
 		a.setBudget(bid*unitBudget);
 		return a;
 	}

@@ -120,6 +120,7 @@ public class User {
 				this.currentElectricity = car.getBatteryCapacity();
 			}
 		}
+		this.currentElectricity = Snippet.round(currentElectricity);
 	}
 	public void useElectricity() {
 		double needs = 0;
@@ -140,6 +141,7 @@ public class User {
 		} else {
 			this.currentElectricity = 0;
 		}
+		this.currentElectricity = Snippet.round(currentElectricity);
 	}
 	
 	public void addExpenses(double expense) {
@@ -214,7 +216,7 @@ public class User {
 		}
 		
 		if (userStrategy == 5) {
-			State s = new State(t.getDayName(), t.getWeather());
+			State s = new State(t.getDayName(), t.getWeather(), currentElectricity);
 			Action a = new Action();
 			
 			// Re-evaluate Q
@@ -236,6 +238,7 @@ public class User {
 			}
 			this.lastState = s;
 			this.lastAction = a;
+			System.out.println("Bid: " + lastAction.getBidAmount() + "\t Unit: " + lastAction.getUnitBudget() + "\t Total: " + lastAction.getBudget());
 		}
 		
 		this.dailyValue = 0;
