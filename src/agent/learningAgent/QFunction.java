@@ -1,7 +1,7 @@
 /**
  * 
  */
-package agent;
+package agent.learningAgent;
 
 /**
  * @author pa1g15
@@ -14,7 +14,7 @@ public class QFunction {
 	 */
 	private State state;
 	private Action action;
-	private int value;
+	private double value;
 	
 	public QFunction(State state, Action action) {
 		this.state = state;
@@ -30,11 +30,11 @@ public class QFunction {
 		return action;
 	}
 	
-	public int getValue() {
+	public double getValue() {
 		return value;
 	}
 
-	public void setValue(int value) {
+	public void setValue(double value) {
 		this.value = value;
 	}
 }

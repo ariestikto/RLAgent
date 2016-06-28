@@ -4,7 +4,10 @@
 package agent;
 
 import marketFramework.Market;
+import marketFramework.Time;
 import userSimulation.User;
+import agent.learningAgent.ReinforcementLearning;
+import agent.learningAgent.Action;
 /**
  * @author pa1g15
  *
@@ -23,19 +26,22 @@ public class Bid {
 		return amount;
 	}
 		
-	public void calculateBid(double currentBid, double lastBid, User user) {
+	public void calculateBid(double currentBid, double lastBid, User user, ReinforcementLearning agent, Time t) {
 		switch (user.getStrategy()) {
 		case 1:
 			this.amount = randomBid(currentBid, user.getDailyNeeds() - user.getCurrentElectricity(), lastBid, user.getBudget());
 			break;
 		case 2:
-			this.amount = SpendBudgetBid(currentBid, user.getDailyNeeds() - user.getCurrentElectricity(), user.getBudget());
+			this.amount = TruthfulBid(currentBid, user.getDailyNeeds() - user.getCurrentElectricity(), user.getBudget());
 			break;
 		case 3:
 			this.amount = MaxBid(currentBid, user.getDailyNeeds() - user.getCurrentElectricity(), user.getBudget());
 			break;
 		case 4:
 			this.amount = AllOrNothingBid(currentBid, user.getDailyNeeds() - user.getCurrentElectricity(), user.getBudget());
+			break;
+		case 5:
+			this.amount = RLTRuthfulBid(currentBid, user);
 			break;
 		}
 		if (amount < user.gainedElectricity()) {
@@ -58,7 +64,7 @@ public class Bid {
 		
 		return bid;
 	}
-	public static double SpendBudgetBid(double currentBid, double dailyNeeds, double budget) {
+	public static double TruthfulBid(double currentBid, double dailyNeeds, double budget) {
 //		strategy 2
 		double bid = 0;
 		double deficit = dailyNeeds;
@@ -92,4 +98,19 @@ public class Bid {
 		return bid;
 	}
 	
+	public static double RLTRuthfulBid(double currentBid, User user) {
+//		strategy 5
+		double bid = 0;
+		double deficit = 0;
+		Action a = user.getAction();
+		deficit = a.getBidAmount() - user.getCurrentElectricity();
+		if (deficit > 0) {
+			if (deficit < a.getBudget()/currentBid) {
+				bid = deficit;
+			} else {
+				bid = a.getBudget()/currentBid;
+			}
+		}
+		return bid;
+	}
 }
