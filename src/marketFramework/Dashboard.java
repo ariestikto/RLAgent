@@ -1,31 +1,34 @@
 package marketFramework;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import auctionSimulation.Auction;
-
-import javax.swing.JTabbedPane;
-import javax.swing.JLabel;
-import marketFramework.Time;
-import userSimulation.User;
-import agent.learningAgent.Action;
-import agent.learningAgent.State;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.TextArea;
-import javax.swing.SwingConstants;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.border.EmptyBorder;
+
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+
+import agent.learningAgent.Action;
+import agent.learningAgent.Reward;
+import agent.learningAgent.State;
+import auctionSimulation.Auction;
+import userSimulation.User;
 
 public class Dashboard extends JFrame implements ActionListener {
 
@@ -62,31 +65,29 @@ public class Dashboard extends JFrame implements ActionListener {
 	private TextArea auctionHistory;
 	
 	//agent pane
-	private JLabel yesterdayLabel;
-	private JLabel userPrefTitleLabel;
-	private JLabel lblAgentAction;
-	private JLabel lblNeedsPref;
-	private JLabel lblNeedsPrefVal;
-	private JLabel lblBudgetPref;
-	private JLabel lblBudgetPrefVal;
-	private JLabel lblAgentBid;
-	private JLabel lblAgentSpending;
-	private JLabel lblAgentBidValue;
-	private JLabel lblAgentSpendingVal;
+	private JLabel lblUserUid;
+	private JLabel lblUidval;
+	private JLabel lblState;
+	private JLabel lblDay;
+	private JLabel lblDayvalue;
+	private JLabel lblWeather;
+	private JLabel lblWeathervalue;
+	private JLabel lblElectricityLevel;
+	private JLabel lblElectricitylevelvalue;
+	private JLabel lblAction;
+	private JLabel lblAddedElectricity;
+	private JLabel lblAddedelectricityvalue;
+	private JLabel lblBudgetLevel;
+	private JLabel lblBudgetlevelvalue;
+	private JLabel lblNextstate;
+	private JLabel lblDay_1;
+	private JLabel lblNextdayvalue;
+	private JLabel lblElectricityLevel_1;
+	private JLabel lblNextelectricitylevelvalue;
 	private JLabel lblRewardSignal;
-	private JLabel lblRewardValue;
-//	private JLabel lblMaxQ;
-//	private JLabel lblMaxQValue;
-	private JLabel lblEvaluatedQ;
-	private JLabel lblEvaluatedQVal;
-	private JLabel lblAgentUid;
-	private JLabel lblAgentUIDVal;
-	private JLabel lblExploredStateactionPair;
-	private JLabel lblPair;
-	private JLabel lblUnitBudget;
-	private JLabel lblAgentUnitBudget;
-	private JLabel lblCurrentElectricityPref;
-	private JLabel lblCurrentElectricityVal;
+	private JLabel lblRewardvalue;
+	private JLabel lblQValue;
+	private JLabel lblQvalue;
 	
 	
 	
@@ -177,26 +178,26 @@ public class Dashboard extends JFrame implements ActionListener {
 		gbl_userPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		userPanel.setLayout(gbl_userPanel);
 		
-//		JComboBox<String> UID = new JComboBox<>(UIDList);
-//		GridBagConstraints gbc_UID = new GridBagConstraints();
-//		gbc_UID.insets = new Insets(0, 0, 5, 5);
-//		gbc_UID.anchor = GridBagConstraints.NORTHWEST;
-//		gbc_UID.gridx = 1;
-//		gbc_UID.gridy = 1;
-//		userPanel.add(UID, gbc_UID);
-//		
-//		UID.addActionListener(new ActionListener() { 
-//        	@Override
-//            public void actionPerformed(ActionEvent e) { 
-//        		String s = (String) UID.getSelectedItem();//get the selected item
-//                for (int i = 0; i < users.length; i++) {
-//					if (users[i].getUID() == s) {
-//						activeUser = users[i];
-//						updateUserPane();
-//					}
-//				}
-//            } 
-//        });
+		JComboBox<String> UID = new JComboBox<>(UIDList);
+		GridBagConstraints gbc_UID = new GridBagConstraints();
+		gbc_UID.insets = new Insets(0, 0, 5, 5);
+		gbc_UID.anchor = GridBagConstraints.NORTHWEST;
+		gbc_UID.gridx = 1;
+		gbc_UID.gridy = 1;
+		userPanel.add(UID, gbc_UID);
+		
+		UID.addActionListener(new ActionListener() { 
+        	@Override
+            public void actionPerformed(ActionEvent e) { 
+        		String s = (String) UID.getSelectedItem();//get the selected item
+                for (int i = 0; i < users.length; i++) {
+					if (users[i].getUID() == s) {
+						activeUser = users[i];
+						updateUserPane();
+					}
+				}
+            } 
+        });
 		
 		userUID = new JLabel("User " + activeUser.getUID());
 		GridBagConstraints gbc_userUID = new GridBagConstraints();
@@ -279,7 +280,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		gbc_currentelectricityinfo.gridy = 12;
 		userPanel.add(currentelectricityinfo, gbc_currentelectricityinfo);
 		
-		gainedElectricityInfo = new JLabel(activeUser.gainedElectricity() + " kWh");
+		gainedElectricityInfo = new JLabel(activeUser.clinchedElectricity() + " kWh");
 		gainedElectricityInfo.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints gbc_gainedElectricityInfo = new GridBagConstraints();
 		gbc_gainedElectricityInfo.fill = GridBagConstraints.HORIZONTAL;
@@ -372,238 +373,128 @@ public class Dashboard extends JFrame implements ActionListener {
 		auctionHistory.setEditable(false);
 	}
 	public void agentPane(JPanel agentPanel) {
-		GridBagLayout gbl_agentPanel = new GridBagLayout();
-		gbl_agentPanel.rowHeights = new int[] {157, 42, 35, 33, 29, 30, 31, 31, 29, 32, 30, 30, 30, 30, 30, 30, 30, 0, 0};
-		gbl_agentPanel.columnWidths = new int[] {0, 71, 181, 104, 31, 0, 30, 100, 100, 150, 100};
-		gbl_agentPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		gbl_agentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		agentPanel.setLayout(gbl_agentPanel);
+		agentPanel.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(61dlu;default)"),
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(74dlu;default)"),
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(66dlu;default)"),
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(65dlu;default)"),
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(92dlu;default)"),},
+			new RowSpec[] {
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("max(23dlu;default)"),
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("max(15dlu;default)"),
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("max(17dlu;default)"),
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("max(17dlu;default)"),
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("max(17dlu;default)"),
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("max(18dlu;default)"),
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("max(17dlu;default)"),}));
 		
-		yesterdayLabel = new JLabel("Day " + t.getDay() + " Agent Results");
-		yesterdayLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_yesterdayLabel = new GridBagConstraints();
-		gbc_yesterdayLabel.gridwidth = 5;
-		gbc_yesterdayLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_yesterdayLabel.gridx = 2;
-		gbc_yesterdayLabel.gridy = 1;
-		agentPanel.add(yesterdayLabel, gbc_yesterdayLabel);
+		lblUserUid = new JLabel("User UID:");
+		agentPanel.add(lblUserUid, "2, 2, right, default");
 		
-		lblAgentUid = new JLabel("User UID:");
-		GridBagConstraints gbc_lblAgentUid = new GridBagConstraints();
-		gbc_lblAgentUid.anchor = GridBagConstraints.EAST;
-		gbc_lblAgentUid.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAgentUid.gridx = 2;
-		gbc_lblAgentUid.gridy = 2;
-		agentPanel.add(lblAgentUid, gbc_lblAgentUid);
+		lblUidval = new JLabel(agent.getUID());
+		agentPanel.add(lblUidval, "4, 2");
 		
-		lblAgentUIDVal = new JLabel(agent.getUID());
-		GridBagConstraints gbc_lblAgentUIDVal = new GridBagConstraints();
-		gbc_lblAgentUIDVal.anchor = GridBagConstraints.WEST;
-		gbc_lblAgentUIDVal.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAgentUIDVal.gridx = 3;
-		gbc_lblAgentUIDVal.gridy = 2;
-		agentPanel.add(lblAgentUIDVal, gbc_lblAgentUIDVal);
+		lblState = new JLabel("State");
+		agentPanel.add(lblState, "2, 6, 3, 1, center, default");
 		
-		userPrefTitleLabel = new JLabel("User Preferences");
-		GridBagConstraints gbc_userPrefTitleLabel = new GridBagConstraints();
-		gbc_userPrefTitleLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_userPrefTitleLabel.gridwidth = 2;
-		gbc_userPrefTitleLabel.gridx = 2;
-		gbc_userPrefTitleLabel.gridy = 3;
-		agentPanel.add(userPrefTitleLabel, gbc_userPrefTitleLabel);
+		lblAction = new JLabel("Action");
+		agentPanel.add(lblAction, "8, 6, 3, 1, center, default");
 		
-		lblAgentAction = new JLabel("Agent Action");
-		GridBagConstraints gbc_lblAgentAction = new GridBagConstraints();
-		gbc_lblAgentAction.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAgentAction.gridwidth = 2;
-		gbc_lblAgentAction.gridx = 6;
-		gbc_lblAgentAction.gridy = 3;
-		agentPanel.add(lblAgentAction, gbc_lblAgentAction);
+		lblNextstate = new JLabel("NextState");
+		agentPanel.add(lblNextstate, "14, 6, 3, 1, center, default");
 		
-		lblNeedsPref = new JLabel("Needs:");
-		lblNeedsPref.setHorizontalAlignment(SwingConstants.RIGHT);
-		GridBagConstraints gbc_lblNeedsPref = new GridBagConstraints();
-		gbc_lblNeedsPref.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblNeedsPref.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNeedsPref.gridx = 2;
-		gbc_lblNeedsPref.gridy = 4;
-		agentPanel.add(lblNeedsPref, gbc_lblNeedsPref);
+		lblDay = new JLabel("Day:");
+		agentPanel.add(lblDay, "2, 8, right, default");
 		
-		lblNeedsPrefVal = new JLabel(agent.getDailyNeeds() + " kWh");
-		GridBagConstraints gbc_lblNeedsPrefVal = new GridBagConstraints();
-		gbc_lblNeedsPrefVal.anchor = GridBagConstraints.WEST;
-		gbc_lblNeedsPrefVal.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNeedsPrefVal.gridx = 3;
-		gbc_lblNeedsPrefVal.gridy = 4;
-		agentPanel.add(lblNeedsPrefVal, gbc_lblNeedsPrefVal);
+		lblDayvalue = new JLabel(t.getDayName());
+		agentPanel.add(lblDayvalue, "4, 8");
 		
-		lblAgentBid = new JLabel("Predicted Needs:");
-		GridBagConstraints gbc_lblAgentBid = new GridBagConstraints();
-		gbc_lblAgentBid.anchor = GridBagConstraints.EAST;
-		gbc_lblAgentBid.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAgentBid.gridx = 6;
-		gbc_lblAgentBid.gridy = 4;
-		agentPanel.add(lblAgentBid, gbc_lblAgentBid);
+		lblAddedElectricity = new JLabel("Added Electricity:");
+		agentPanel.add(lblAddedElectricity, "8, 8, right, default");
 		
-		lblAgentBidValue = new JLabel(agent.getAction().getBidAmount() + " kWh");
-		GridBagConstraints gbc_lblAgentBidValue = new GridBagConstraints();
-		gbc_lblAgentBidValue.anchor = GridBagConstraints.WEST;
-		gbc_lblAgentBidValue.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAgentBidValue.gridx = 7;
-		gbc_lblAgentBidValue.gridy = 4;
-		agentPanel.add(lblAgentBidValue, gbc_lblAgentBidValue);
+		lblAddedelectricityvalue = new JLabel(agent.getAgent().getLastStateAction().getAction().getAddedAmountLevel()*agent.getCar().getBatteryCapacity() + "");
+		agentPanel.add(lblAddedelectricityvalue, "10, 8, left, default");
 		
-		lblBudgetPref = new JLabel("Budget:");
-		GridBagConstraints gbc_lblBudgetPref = new GridBagConstraints();
-		gbc_lblBudgetPref.anchor = GridBagConstraints.EAST;
-		gbc_lblBudgetPref.insets = new Insets(0, 0, 5, 5);
-		gbc_lblBudgetPref.gridx = 2;
-		gbc_lblBudgetPref.gridy = 5;
-		agentPanel.add(lblBudgetPref, gbc_lblBudgetPref);
+		lblDay_1 = new JLabel("Day:");
+		agentPanel.add(lblDay_1, "14, 8, right, default");
 		
-		lblBudgetPrefVal = new JLabel(agent.getBudget() + " p");
-		GridBagConstraints gbc_lblBudgetPrefVal = new GridBagConstraints();
-		gbc_lblBudgetPrefVal.anchor = GridBagConstraints.WEST;
-		gbc_lblBudgetPrefVal.insets = new Insets(0, 0, 5, 5);
-		gbc_lblBudgetPrefVal.gridx = 3;
-		gbc_lblBudgetPrefVal.gridy = 5;
-		agentPanel.add(lblBudgetPrefVal, gbc_lblBudgetPrefVal);
+		lblNextdayvalue = new JLabel(t.getNextDayName());
+		agentPanel.add(lblNextdayvalue, "16, 8");
 		
-		lblUnitBudget = new JLabel("Predicted Unit Budget:");
-		GridBagConstraints gbc_lblUnitBudget = new GridBagConstraints();
-		gbc_lblUnitBudget.anchor = GridBagConstraints.EAST;
-		gbc_lblUnitBudget.insets = new Insets(0, 0, 5, 5);
-		gbc_lblUnitBudget.gridx = 6;
-		gbc_lblUnitBudget.gridy = 5;
-		agentPanel.add(lblUnitBudget, gbc_lblUnitBudget);
+		lblWeather = new JLabel("Weather:");
+		agentPanel.add(lblWeather, "2, 10, right, default");
 		
-		lblAgentUnitBudget = new JLabel(agent.getAction().getBudget()/agent.getAction().getBidAmount() + " p");
-		GridBagConstraints gbc_lblAgentUnitBudget = new GridBagConstraints();
-		gbc_lblAgentUnitBudget.anchor = GridBagConstraints.WEST;
-		gbc_lblAgentUnitBudget.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAgentUnitBudget.gridx = 7;
-		gbc_lblAgentUnitBudget.gridy = 5;
-		agentPanel.add(lblAgentUnitBudget, gbc_lblAgentUnitBudget);
+		lblWeathervalue = new JLabel(t.getWeatherName());
+		agentPanel.add(lblWeathervalue, "4, 10");
 		
-		lblCurrentElectricityPref = new JLabel("Current Electricity:");
-		GridBagConstraints gbc_lblCurrentElectricityPref = new GridBagConstraints();
-		gbc_lblCurrentElectricityPref.anchor = GridBagConstraints.EAST;
-		gbc_lblCurrentElectricityPref.insets = new Insets(0, 0, 5, 5);
-		gbc_lblCurrentElectricityPref.gridx = 2;
-		gbc_lblCurrentElectricityPref.gridy = 6;
-		agentPanel.add(lblCurrentElectricityPref, gbc_lblCurrentElectricityPref);
+		lblBudgetLevel = new JLabel("Budget Level:");
+		agentPanel.add(lblBudgetLevel, "8, 10, right, default");
 		
-		lblCurrentElectricityVal = new JLabel(agent.getCurrentElectricity() + " kWh");
-		GridBagConstraints gbc_lblCurrentElectricityVal = new GridBagConstraints();
-		gbc_lblCurrentElectricityVal.anchor = GridBagConstraints.WEST;
-		gbc_lblCurrentElectricityVal.insets = new Insets(0, 0, 5, 5);
-		gbc_lblCurrentElectricityVal.gridx = 3;
-		gbc_lblCurrentElectricityVal.gridy = 6;
-		agentPanel.add(lblCurrentElectricityVal, gbc_lblCurrentElectricityVal);
+		lblBudgetlevelvalue = new JLabel("BudgetLevelValue");
+		agentPanel.add(lblBudgetlevelvalue, "10, 10");
 		
-		lblAgentSpending = new JLabel("Spending:");
-		GridBagConstraints gbc_lblAgentSpending = new GridBagConstraints();
-		gbc_lblAgentSpending.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAgentSpending.anchor = GridBagConstraints.EAST;
-		gbc_lblAgentSpending.gridx = 6;
-		gbc_lblAgentSpending.gridy = 6;
-		agentPanel.add(lblAgentSpending, gbc_lblAgentSpending);
+		lblElectricityLevel_1 = new JLabel(agent.getAgent().getLastStateAction().getAction().getBudget());
+		agentPanel.add(lblElectricityLevel_1, "14, 10, right, default");
 		
-		lblAgentSpendingVal = new JLabel(agent.getAction().getBudget() + " p");
-		GridBagConstraints gbc_lblAgentSpendingVal = new GridBagConstraints();
-		gbc_lblAgentSpendingVal.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAgentSpendingVal.anchor = GridBagConstraints.WEST;
-		gbc_lblAgentSpendingVal.gridx = 7;
-		gbc_lblAgentSpendingVal.gridy = 6;
-		agentPanel.add(lblAgentSpendingVal, gbc_lblAgentSpendingVal);
+		lblNextelectricitylevelvalue = new JLabel(agent.getAgent().getLastStateAction().getState().nextState(agent.getAgent().getLastStateAction().getAction(), agent).getElectricityLevel()*agent.getCar().getBatteryCapacity() + "");
+		agentPanel.add(lblNextelectricitylevelvalue, "16, 10");
+		
+		lblElectricityLevel = new JLabel("Electricity Level:");
+		agentPanel.add(lblElectricityLevel, "2, 12, right, default");
+		
+		lblElectricitylevelvalue = new JLabel(agent.getAgent().getLastStateAction().getState().getElectricityLevel() + "");
+		agentPanel.add(lblElectricitylevelvalue, "4, 12");
 		
 		lblRewardSignal = new JLabel("Reward Signal:");
-		GridBagConstraints gbc_lblRewardSignal = new GridBagConstraints();
-		gbc_lblRewardSignal.anchor = GridBagConstraints.EAST;
-		gbc_lblRewardSignal.insets = new Insets(0, 0, 5, 5);
-		gbc_lblRewardSignal.gridx = 2;
-		gbc_lblRewardSignal.gridy = 8;
-		agentPanel.add(lblRewardSignal, gbc_lblRewardSignal);
+		agentPanel.add(lblRewardSignal, "2, 18, right, default");
 		
-		lblRewardValue = new JLabel(agent.getReward() + "");
-		GridBagConstraints gbc_lblRewardValue = new GridBagConstraints();
-		gbc_lblRewardValue.anchor = GridBagConstraints.WEST;
-		gbc_lblRewardValue.insets = new Insets(0, 0, 5, 5);
-		gbc_lblRewardValue.gridx = 3;
-		gbc_lblRewardValue.gridy = 8;
-		agentPanel.add(lblRewardValue, gbc_lblRewardValue);
+		lblRewardvalue = new JLabel(Reward.RewardPatternA(agent) + "");
+		agentPanel.add(lblRewardvalue, "4, 18");
 		
-//		lblMaxQ = new JLabel("Max Q:");
-//		GridBagConstraints gbc_lblMaxQ = new GridBagConstraints();
-//		gbc_lblMaxQ.anchor = GridBagConstraints.EAST;
-//		gbc_lblMaxQ.insets = new Insets(0, 0, 5, 5);
-//		gbc_lblMaxQ.gridx = 0;
-//		gbc_lblMaxQ.gridy = 7;
-//		agentPanel.add(lblMaxQ, gbc_lblMaxQ);
-//		
-//		lblMaxQValue = new JLabel(agent.getMaxDailyValue() + "");
-//		GridBagConstraints gbc_lblMaxQValue = new GridBagConstraints();
-//		gbc_lblMaxQValue.anchor = GridBagConstraints.WEST;
-//		gbc_lblMaxQValue.insets = new Insets(0, 0, 5, 5);
-//		gbc_lblMaxQValue.gridx = 1;
-//		gbc_lblMaxQValue.gridy = 7;
-//		agentPanel.add(lblMaxQValue, gbc_lblMaxQValue);
+		lblQValue = new JLabel("Q Value:");
+		agentPanel.add(lblQValue, "2, 20, right, default");
 		
-		lblEvaluatedQ = new JLabel("Evaluated Q:");
-		GridBagConstraints gbc_lblEvaluatedq = new GridBagConstraints();
-		gbc_lblEvaluatedq.anchor = GridBagConstraints.EAST;
-		gbc_lblEvaluatedq.insets = new Insets(0, 0, 5, 5);
-		gbc_lblEvaluatedq.gridx = 2;
-		gbc_lblEvaluatedq.gridy = 9;
-		agentPanel.add(lblEvaluatedQ, gbc_lblEvaluatedq);
-		
-		lblEvaluatedQVal = new JLabel(agent.getAgent().findState(agent.getState(), agent.getAction()).getValue() + "");
-		GridBagConstraints gbc_lblEvaluatedQVal = new GridBagConstraints();
-		gbc_lblEvaluatedQVal.anchor = GridBagConstraints.WEST;
-		gbc_lblEvaluatedQVal.insets = new Insets(0, 0, 5, 5);
-		gbc_lblEvaluatedQVal.gridx = 3;
-		gbc_lblEvaluatedQVal.gridy = 9;
-		agentPanel.add(lblEvaluatedQVal, gbc_lblEvaluatedQVal);
-		
-		lblExploredStateactionPair = new JLabel("Explored State-Action Pair:");
-		GridBagConstraints gbc_lblExploredStateactionPair = new GridBagConstraints();
-		gbc_lblExploredStateactionPair.gridwidth = 2;
-		gbc_lblExploredStateactionPair.anchor = GridBagConstraints.EAST;
-		gbc_lblExploredStateactionPair.insets = new Insets(0, 0, 5, 5);
-		gbc_lblExploredStateactionPair.gridx = 2;
-		gbc_lblExploredStateactionPair.gridy = 10;
-		agentPanel.add(lblExploredStateactionPair, gbc_lblExploredStateactionPair);
-		
-		lblPair = new JLabel(agent.getAgent().getQSize() + "");
-		GridBagConstraints gbc_lblPair = new GridBagConstraints();
-		gbc_lblPair.anchor = GridBagConstraints.WEST;
-		gbc_lblPair.insets = new Insets(0, 0, 5, 5);
-		gbc_lblPair.gridx = 4;
-		gbc_lblPair.gridy = 10;
-		agentPanel.add(lblPair, gbc_lblPair);
+		lblQvalue = new JLabel(agent.getAgent().findSAPair(agent.getAgent().getLastStateAction().getState(), agent.getAgent().getLastStateAction().getAction()) + "");
+		agentPanel.add(lblQvalue, "4, 20");
 	}
 	public void updateUserPane() {
 		userUID.setText("User " + activeUser.getUID());
 		budgetInfo.setText(activeUser.getBudget() + " p");
 		needsInfo.setText(activeUser.getDailyNeeds() + " kWh");
 		currentelectricityinfo.setText(activeUser.getCurrentElectricity() + " kWh");
-		gainedElectricityInfo.setText(activeUser.gainedElectricity() + " kWh");
+		gainedElectricityInfo.setText(activeUser.clinchedElectricity() + " kWh");
 		expenseInfo.setText(activeUser.getExpenses() + " p");
+		
 		carTypeInfo.setText(activeUser.getCar().getCarName());
 		carConsumptionInfo.setText(activeUser.getCar().getConsumption() + " kWh/km");
 		carCapacityInfo.setText(activeUser.getCar().getBatteryCapacity() + " kWh");
 	}
 	public void updateAgentPane(double lastNeeds, double lastBudget, State lastState, Action lastAction, double lastSpending) {
-		yesterdayLabel .setText("Day " + (t.getDay()-1) + " Agent Results " + "(" + lastState.getDay() + ", " + lastState.getWeatherName() + ")");
-		lblNeedsPrefVal.setText(Snippet.round(lastNeeds) + " kWh");
-		lblCurrentElectricityVal.setText(lastState.getCurrentElectricity() + " kWh");
-		lblBudgetPrefVal.setText(lastBudget + " p");
-		lblAgentBidValue.setText(lastAction.getBidAmount() + " kWh");
-		lblAgentUnitBudget.setText(lastAction.getUnitBudget() + " p");
-		lblAgentSpendingVal.setText(lastSpending + " p");
-		lblRewardValue.setText(agent.getReward() + "");
-		lblEvaluatedQVal.setText((int) agent.getAgent().findState(lastState, lastAction).getValue() + "");
-		lblPair.setText(agent.getAgent().getQSize() + " Pair");
+
 	}
 	public void bottomPane(JPanel buttonPanel) {
 		String[] timeMenu = {"1 Day", "3 Days", "7 Days", "30 Days", "100 Days"};
@@ -642,30 +533,13 @@ public class Dashboard extends JFrame implements ActionListener {
 		btnAdvanceTime.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				double lastBudget;
-				double lastNeeds;
-				State lastState;
-				Action lastAction;
-				double lastSpending;
-				
 				for (int i = 0; i < timeJump; i++) {
-					Snippet.endOfDay(users);
-					
-					// agent state of the last day
-					lastNeeds = agent.getDailyNeeds();
-					lastBudget = agent.getBudget();
-					lastState = agent.getState();
-					lastAction = agent.getAction();
-					lastSpending  = agent.payout();
-//					System.out.println("Bid: " + lastAction.getBidAmount() + "\t Unit: " + lastAction.getUnitBudget() + "\t Total: " + lastAction.getBudget());
 					t.advanceTime();
 					Snippet.startOfDay(users, t);
 					a.runAuction(users, t, auctionResult, auctionHistory);
+					Snippet.endOfDay(users);
 					updateTopPane();
 					updateUserPane();
-					if (t.getDay() > 1) {
-						updateAgentPane(lastNeeds, lastBudget, lastState, lastAction, lastSpending);
-					}
 				}
 			}
 		});

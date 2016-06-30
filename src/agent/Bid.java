@@ -6,7 +6,6 @@ package agent;
 import marketFramework.Market;
 import marketFramework.Time;
 import userSimulation.User;
-import agent.learningAgent.ReinforcementLearning;
 import agent.learningAgent.Action;
 /**
  * @author pa1g15
@@ -26,7 +25,7 @@ public class Bid {
 		return amount;
 	}
 		
-	public void calculateBid(double currentBid, double lastBid, User user, ReinforcementLearning agent, Time t) {
+	public void calculateBid(double currentBid, double lastBid, User user, Time t) {
 		switch (user.getStrategy()) {
 		case 1:
 			this.amount = randomBid(currentBid, user.getDailyNeeds() - user.getCurrentElectricity(), lastBid, user.getBudget());
@@ -41,11 +40,11 @@ public class Bid {
 			this.amount = AllOrNothingBid(currentBid, user.getDailyNeeds() - user.getCurrentElectricity(), user.getBudget());
 			break;
 		case 5:
-			this.amount = RLTRuthfulBid(currentBid, user);
+			this.amount = RLBid(currentBid, user);
 			break;
 		}
-		if (amount < user.gainedElectricity()) {
-			this.amount = user.gainedElectricity();
+		if (amount < user.clinchedElectricity()) {
+			this.amount = user.clinchedElectricity();
 		}
 	}
 	public static double randomBid(double currentBid, double dailyNeeds, double lastBid, double budget) {
@@ -98,18 +97,54 @@ public class Bid {
 		return bid;
 	}
 	
-	public static double RLTRuthfulBid(double currentBid, User user) {
+	public static double RLBid(double currentBid, User user) {
 //		strategy 5
+		Action a = user.getAgent().getLastStateAction().getAction();
 		double bid = 0;
+		double maxPrice = 0;
 		double deficit = 0;
-		Action a = user.getAction();
-		deficit = a.getBidAmount() - user.getCurrentElectricity();
-		if (deficit > 0) {
-			if (deficit < a.getBudget()/currentBid) {
-				bid = deficit;
-			} else {
-				bid = a.getBudget()/currentBid;
-			}
+		int aim = a.getAddedAmountLevel();
+		int budget = a.getBudgetLevel();
+		
+		switch (aim) {
+		case 1:
+			deficit = 0;
+			break;
+		case 2:
+			deficit = user.getCar().getBatteryCapacity()*0.25;
+			break;
+		case 3:
+			deficit = user.getCar().getBatteryCapacity()*0.5;
+			break;
+		case 4:
+			deficit = user.getCar().getBatteryCapacity()*0.75;
+			break;
+		case 5:
+			deficit = user.getCar().getBatteryCapacity();
+			break;
+		}
+		
+		switch (budget) {
+		case 1:
+			maxPrice = 10;
+			break;
+		case 2:
+			maxPrice = 15;
+			break;
+		case 3:
+			maxPrice = 20;
+			break;
+		case 4:
+			maxPrice = 25;
+			break;
+		}
+
+		if (deficit + user.getCurrentElectricity() > user.getCar().getBatteryCapacity()) {
+			deficit = user.getCar().getBatteryCapacity() - user.getCurrentElectricity();
+		}
+		
+		if (currentBid <= maxPrice) {
+			bid = deficit;
 		}
 		return bid;
 	}

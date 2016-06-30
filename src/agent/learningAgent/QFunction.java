@@ -14,12 +14,18 @@ public class QFunction {
 	 */
 	private State state;
 	private Action action;
-	private double value;
+	private double reward;
 	
 	public QFunction(State state, Action action) {
 		this.state = state;
 		this.action = action;
-		this.value = 0;
+		this.reward = 0;
+	}
+	
+	public QFunction(State state, Action action, double reward) {
+		this.state = state;
+		this.action = action;
+		this.reward = reward;
 	}
 	
 	public State getState() {
@@ -30,11 +36,11 @@ public class QFunction {
 		return action;
 	}
 	
-	public double getValue() {
-		return value;
+	public double getReward() {
+		return reward;
 	}
 
-	public void setValue(double value) {
-		this.value = value;
+	public void setReward(double reward) {
+		this.reward = reward;
 	}
 }

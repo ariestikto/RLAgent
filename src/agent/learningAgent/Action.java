@@ -12,38 +12,51 @@ public class Action {
 	/**
 	 * 
 	 */
-	private double bidAmount;
-	private double budget;
+	private int addedAmountLevel; // (1: 0, 2: 0.25, 3: 0.5, 4: 0.75, 5: 1)
+	private int budgetLevel; // (1: low, 2: medium, 3: high, 4: very high)
 	
 	public Action() {
-		this.bidAmount = 0;
-		this.budget = 0;
+		this.addedAmountLevel = 0;
+		this.budgetLevel = 0;
 	}
 
-	public double getBidAmount() {
-		return bidAmount;
-	}
-
-	public void setBidAmount(double bidAmount) {
-		this.bidAmount = bidAmount;
-	}
-
-	public double getBudget() {
-		return budget;
-	}
-
-	public void setBudget(double budget) {
-		this.budget = Math.round(budget);
+	public void setAction(int addedAmountLevel, int budgetLevel) {
+		this.addedAmountLevel = addedAmountLevel;
+		this.budgetLevel = budgetLevel;
 	}
 	
-	public int getUnitBudget() {
-		if (bidAmount == 0) {
-			return 0;
-		} else {
-			return (int) (budget/bidAmount);
+	public int getAddedAmountLevel() {
+		return addedAmountLevel;
+	}
+
+	public int getBudgetLevel() {
+		return budgetLevel;
+	}
+	
+	public String getBudget() {
+		String level = "";
+		switch (budgetLevel) {
+		case 1:
+			level = "Low (5-10 p/kWh)";
+			break;
+		case 2:
+			level = "Medium (10-15 p/kWh)";
+			break;
+		case 3:
+			level = "High (15-20 p/kWh)";
+			break;
+		case 4:
+			level = "Very High (20-25 p/kWh)";
+			break;
+		default:
+			break;
 		}
+		return level;
+	}
+	public boolean isEmpty() {
+		return ((addedAmountLevel == 0) && (budgetLevel == 0));
 	}
 	public boolean isEqual(Action a) {
-		return ((bidAmount == a.getBidAmount()) && (budget == a.getBudget()));
+		return ((addedAmountLevel == a.getAddedAmountLevel()) && (budgetLevel == a.getBudgetLevel()));
 	}
 }

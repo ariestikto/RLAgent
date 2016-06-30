@@ -11,7 +11,7 @@ import java.util.Collections;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
 
-import agent.learningAgent.TaskValue;
+import agent.learningAgent.Task;
 
 import java.util.ArrayList;
 /**
@@ -19,7 +19,7 @@ import java.util.ArrayList;
  *
  */
 public class UserModel {
-	public static void EVUserA(Time time, User user, ElectricityBundle preferences, List<TaskValue> taskList) {
+	public static void EVUserA(Time time, User user, ElectricityBundle preferences, List<Task> taskList) {
 		double dayNeeds = 0; //km
 		double dayBudget = 0; //p/km
 		String task;
@@ -112,49 +112,49 @@ public class UserModel {
 					if (task == "work") {
 						dayNeeds += taskWork;
 						dayBudget += normalBudget*taskWork;
-						taskList.add(new TaskValue(workValue, taskWork));
+						taskList.add(new Task(workValue, taskWork));
 					} else if (task == "hospital") {
 						dayNeeds += taskHospital;
 						dayBudget += highBudget*taskHospital;
-						taskList.add(new TaskValue(hospitalValue, taskHospital));
+						taskList.add(new Task(hospitalValue, taskHospital));
 					} else if (task == "shopping") {
 						dayNeeds += taskShopping;
 						dayBudget += normalBudget*taskShopping;
-						taskList.add(new TaskValue(shoppingValue, taskShopping));
+						taskList.add(new Task(shoppingValue, taskShopping));
 					} else if (task == "hangout") {
 						dayNeeds += taskHangout;
 						dayBudget += lowBudget*taskHangout;
-						taskList.add(new TaskValue(hangoutValue, taskHangout));
+						taskList.add(new Task(hangoutValue, taskHangout));
 					} else if (task == "trip") {
 						dayNeeds += taskTrip;
 						dayBudget += lowBudget*taskTrip;
-						taskList.add(new TaskValue(tripValue, taskTrip));
+						taskList.add(new Task(tripValue, taskTrip));
 					}
 					break;
 				case 2: //rainy
 					if (task == "work") {
 						dayNeeds += taskWork*1.2;
 						dayBudget += normalBudget*taskWork*1.2;
-						taskList.add(new TaskValue(workValue, taskWork*1.2));
+						taskList.add(new Task(workValue, taskWork*1.2));
 					} else if (task == "hospital") {
 						dayNeeds += taskHospital*1.2;
 						dayBudget += highBudget*taskHospital*1.2;
-						taskList.add(new TaskValue(hospitalValue, taskHospital*1.2));
+						taskList.add(new Task(hospitalValue, taskHospital*1.2));
 					} else if (task == "shopping") {
 						dayNeeds += taskShopping*1.2;
 						dayBudget += normalBudget*taskShopping*1.2;
-						taskList.add(new TaskValue(shoppingValue, taskShopping*1.2));
+						taskList.add(new Task(shoppingValue, taskShopping*1.2));
 					} else if (task == "hangout") {
 						if (randomWeather1 > 200) {
 							dayNeeds += taskHangout*1.2;
 							dayBudget += lowBudget*taskHangout*1.2;
-							taskList.add(new TaskValue(hangoutValue, taskHangout*1.2));
+							taskList.add(new Task(hangoutValue, taskHangout*1.2));
 						}
 					} else if (task == "trip") {
 						if (randomWeather1 > 200) {
 							dayNeeds += taskTrip*1.2;
 							dayBudget += lowBudget*taskTrip*1.2;
-							taskList.add(new TaskValue(tripValue, taskTrip*1.2));
+							taskList.add(new Task(tripValue, taskTrip*1.2));
 						}
 					}
 					break;
@@ -162,26 +162,26 @@ public class UserModel {
 					if (task == "work") {
 						dayNeeds += taskWork;
 						dayBudget += normalBudget*taskWork;
-						taskList.add(new TaskValue(workValue, taskWork));
+						taskList.add(new Task(workValue, taskWork));
 					} else if (task == "hospital") {
 						dayNeeds += taskHospital;
 						dayBudget += highBudget*taskHospital;
-						taskList.add(new TaskValue(hospitalValue, taskHospital));
+						taskList.add(new Task(hospitalValue, taskHospital));
 					} else if (task == "shopping") {
 						dayNeeds += taskShopping;
 						dayBudget += normalBudget*taskShopping;
-						taskList.add(new TaskValue(shoppingValue, taskShopping));
+						taskList.add(new Task(shoppingValue, taskShopping));
 					} else if (task == "hangout") {
 						if (randomWeather1 > 700) {
 							dayNeeds += taskHangout;
 							dayBudget += lowBudget*taskHangout;
-							taskList.add(new TaskValue(hangoutValue, taskHangout));
+							taskList.add(new Task(hangoutValue, taskHangout));
 						}
 					} else if (task == "trip") {
 						if (randomWeather1 > 700) {
 							dayNeeds += taskTrip;
 							dayBudget += lowBudget*taskTrip;
-							taskList.add(new TaskValue(tripValue, taskTrip));
+							taskList.add(new Task(tripValue, taskTrip));
 						}
 					}
 					break;
@@ -190,29 +190,29 @@ public class UserModel {
 						if (randomWeather2 > 100) {
 							dayNeeds += taskWork*1.5;
 							dayBudget += normalBudget*taskWork*1.5;
-							taskList.add(new TaskValue(workValue, taskWork*1.5));
+							taskList.add(new Task(workValue, taskWork*1.5));
 						}
 					} else if (task == "hospital") {
 						dayNeeds += taskHospital*1.5;
 						dayBudget += highBudget*taskHospital*1.5;
-						taskList.add(new TaskValue(hospitalValue, taskHospital*1.5));
+						taskList.add(new Task(hospitalValue, taskHospital*1.5));
 					} else if (task == "shopping") {
 						if (randomWeather2 > 100) {
 							dayNeeds += taskShopping*1.5;
 							dayBudget += normalBudget*taskShopping*1.5;
-							taskList.add(new TaskValue(shoppingValue, taskShopping*1.5));
+							taskList.add(new Task(shoppingValue, taskShopping*1.5));
 						}
 					} else if (task == "hangout") {
 						if (randomWeather1 > 800) {
 							dayNeeds += taskHangout*1.5;
 							dayBudget += lowBudget*taskHangout*1.5;
-							taskList.add(new TaskValue(hangoutValue, taskHangout*1.5));
+							taskList.add(new Task(hangoutValue, taskHangout*1.5));
 						}
 					} else if (task == "trip") {
 						if (randomWeather1 > 800) {
 							dayNeeds += taskTrip*1.5;
 							dayBudget += lowBudget*taskTrip*1.5;
-							taskList.add(new TaskValue(tripValue, taskTrip*1.5));
+							taskList.add(new Task(tripValue, taskTrip*1.5));
 						}
 					}
 					break;
@@ -227,7 +227,7 @@ public class UserModel {
 		}
 		Collections.sort(taskList);
 	}
-	public static void EVUserB(Time time, User user, ElectricityBundle preferences, List<TaskValue> taskList) {
+	public static void EVUserB(Time time, User user, ElectricityBundle preferences, List<Task> taskList) {
 		double dayNeeds = 0; //km
 		double dayBudget = 0; //p/km
 		String task;
@@ -323,49 +323,49 @@ public class UserModel {
 					if (task == "work") {
 						dayNeeds += taskWork;
 						dayBudget += normalBudget*taskWork;
-						taskList.add(new TaskValue(workValue, taskWork));
+						taskList.add(new Task(workValue, taskWork));
 					} else if (task == "hospital") {
 						dayNeeds += taskHospital;
 						dayBudget += highBudget*taskHospital;
-						taskList.add(new TaskValue(hospitalValue, taskHospital));
+						taskList.add(new Task(hospitalValue, taskHospital));
 					} else if (task == "shopping") {
 						dayNeeds += taskShopping;
 						dayBudget += normalBudget*taskShopping;
-						taskList.add(new TaskValue(shoppingValue, taskShopping));
+						taskList.add(new Task(shoppingValue, taskShopping));
 					} else if (task == "hangout") {
 						dayNeeds += taskHangout;
 						dayBudget += lowBudget*taskHangout;
-						taskList.add(new TaskValue(hangoutValue, taskHangout));
+						taskList.add(new Task(hangoutValue, taskHangout));
 					} else if (task == "trip") {
 						dayNeeds += taskTrip;
 						dayBudget += lowBudget*taskTrip;
-						taskList.add(new TaskValue(tripValue, taskTrip));
+						taskList.add(new Task(tripValue, taskTrip));
 					}
 					break;
 				case 2: //rainy
 					if (task == "work") {
 						dayNeeds += taskWork*1.1;
 						dayBudget += normalBudget*taskWork*1.1;
-						taskList.add(new TaskValue(workValue, taskWork*1.1));
+						taskList.add(new Task(workValue, taskWork*1.1));
 					} else if (task == "hospital") {
 						dayNeeds += taskHospital*1.1;
 						dayBudget += highBudget*taskHospital*1.1;
-						taskList.add(new TaskValue(hospitalValue, taskHospital*1.1));
+						taskList.add(new Task(hospitalValue, taskHospital*1.1));
 					} else if (task == "shopping") {
 						dayNeeds += taskShopping*1.1;
 						dayBudget += normalBudget*taskShopping*1.1;
-						taskList.add(new TaskValue(shoppingValue, taskShopping*1.1));
+						taskList.add(new Task(shoppingValue, taskShopping*1.1));
 					} else if (task == "hangout") {
 						if (randomWeather1 > 50) {
 							dayNeeds += taskHangout*1.1;
 							dayBudget += lowBudget*taskHangout*1.1;
-							taskList.add(new TaskValue(hangoutValue, taskHangout*1.1));
+							taskList.add(new Task(hangoutValue, taskHangout*1.1));
 						}
 					} else if (task == "trip") {
 						if (randomWeather1 > 50) {
 							dayNeeds += taskTrip*1.1;
 							dayBudget += lowBudget*taskTrip*1.1;
-							taskList.add(new TaskValue(tripValue, taskTrip*1.1));
+							taskList.add(new Task(tripValue, taskTrip*1.1));
 						}
 					}
 					break;
@@ -373,26 +373,26 @@ public class UserModel {
 					if (task == "work") {
 						dayNeeds += taskWork;
 						dayBudget += normalBudget*taskWork;
-						taskList.add(new TaskValue(workValue, taskWork));
+						taskList.add(new Task(workValue, taskWork));
 					} else if (task == "hospital") {
 						dayNeeds += taskHospital;
 						dayBudget += highBudget*taskHospital;
-						taskList.add(new TaskValue(hospitalValue, taskHospital));
+						taskList.add(new Task(hospitalValue, taskHospital));
 					} else if (task == "shopping") {
 						dayNeeds += taskShopping;
 						dayBudget += normalBudget*taskShopping;
-						taskList.add(new TaskValue(shoppingValue, taskShopping));
+						taskList.add(new Task(shoppingValue, taskShopping));
 					} else if (task == "hangout") {
 						if (randomWeather1 > 50) {
 							dayNeeds += taskHangout;
 							dayBudget += lowBudget*taskHangout;
-							taskList.add(new TaskValue(hangoutValue, taskHangout));
+							taskList.add(new Task(hangoutValue, taskHangout));
 						}
 					} else if (task == "trip") {
 						if (randomWeather1 > 50) {
 							dayNeeds += taskTrip;
 							dayBudget += lowBudget*taskTrip;
-							taskList.add(new TaskValue(tripValue, taskTrip));
+							taskList.add(new Task(tripValue, taskTrip));
 						}
 					}
 					break;
@@ -401,29 +401,29 @@ public class UserModel {
 						if (randomWeather2 > 100) {
 							dayNeeds += taskWork*1.3;
 							dayBudget += normalBudget*taskWork*1.3;
-							taskList.add(new TaskValue(workValue, taskWork*1.3));
+							taskList.add(new Task(workValue, taskWork*1.3));
 						}
 					} else if (task == "hospital") {
 						dayNeeds += taskHospital*1.3;
 						dayBudget += highBudget*taskHospital*1.3;
-						taskList.add(new TaskValue(hospitalValue, taskHospital*1.3));
+						taskList.add(new Task(hospitalValue, taskHospital*1.3));
 					} else if (task == "shopping") {
 						if (randomWeather2 > 100) {
 							dayNeeds += taskShopping*1.3;
 							dayBudget += normalBudget*taskShopping*1.3;
-							taskList.add(new TaskValue(shoppingValue, taskShopping*1.3));
+							taskList.add(new Task(shoppingValue, taskShopping*1.3));
 						}
 					} else if (task == "hangout") {
 						if (randomWeather1 > 300) {
 							dayNeeds += taskHangout*1.3;
 							dayBudget += lowBudget*taskHangout*1.3;
-							taskList.add(new TaskValue(hangoutValue, taskHangout*1.3));
+							taskList.add(new Task(hangoutValue, taskHangout*1.3));
 						}
 					} else if (task == "trip") {
 						if (randomWeather1 > 300) {
 							dayNeeds += taskTrip*1.3;
 							dayBudget += lowBudget*taskTrip*1.3;
-							taskList.add(new TaskValue(tripValue, taskTrip*1.3));
+							taskList.add(new Task(tripValue, taskTrip*1.3));
 						}
 					}
 					break;

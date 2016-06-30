@@ -7,15 +7,16 @@ package agent.learningAgent;
  * @author pa1g15
  *
  */
-public class TaskValue implements Comparable<TaskValue> {
+public class Task implements Comparable<Task> {
 	
 	/**
 	 * 
 	 */
 	private int value;
 	private double needs;
+	private boolean completed = false; 
 	
-	public TaskValue(int value, double needs) {
+	public Task(int value, double needs) {
 		this.value = value;
 		this.needs = needs;
 	}
@@ -28,9 +29,17 @@ public class TaskValue implements Comparable<TaskValue> {
 		return needs;
 	}
 	
+	public void finishTask() {
+		this.completed = true;
+	}
+	
+	public boolean isFinished() {
+		return completed;
+	}
+	
 	@Override
-    public int compareTo(TaskValue task) {
-        int compareValue = ((TaskValue) task).getValue();
+    public int compareTo(Task task) {
+        int compareValue = ((Task) task).getValue();
         /* For Ascending order*/
         return this.value - compareValue;
 

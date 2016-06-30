@@ -4,7 +4,7 @@
 package userSimulation;
 
 /**
- * @author ariestikto
+ * @author pa1g15
  *
  */
 public class ElectricityBundle {

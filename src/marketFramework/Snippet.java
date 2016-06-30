@@ -50,14 +50,20 @@ public class Snippet {
 	}
 	public static void startOfDay(User[] users, Time t) {
 		for (int i = 0; i < users.length; i++) {
+			users[i].resetExpense();
 			users[i].resetAuction();
 			users[i].generatePreferences(t);
+			if (users[i].getStrategy() == 5) {
+				users[i].getAgent().takeAction(users[i], t);
+			}
 		}
 	}
 	public static void endOfDay (User[] users) {
 		for (int i = 0; i < users.length; i++) {
 			users[i].useElectricity();
-			users[i].resetExpense();
+			if (users[i].getStrategy() == 5) {
+				users[i].getAgent().evaluateAction(users[i]);
+			}
 		}
 	}
 }
