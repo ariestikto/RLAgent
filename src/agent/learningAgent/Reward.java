@@ -42,7 +42,7 @@ public class Reward {
 				}
 			} else {
 				if (randomElectricityFeedback > 700) {
-					reward += 10;
+					reward += 15;
 				}
 			}
 		}
@@ -63,15 +63,15 @@ public class Reward {
 					reward += -1;
 				}
 			} else if (expensesRate < 1.1) {
-				reward += 0;
+				reward += 2;
 			} else {
 				if (randomBudgetFeedback > 700) {
-					reward += 1;
+					reward += 5;
 				}
 			}
 		} else if (reward > 0) {
 			if (randomBudgetFeedback > 700) {
-				reward += 1;
+				reward += 10;
 			}
 		}
 		return reward;

@@ -119,20 +119,7 @@ public class State {
 		}
 		
 		//next weather 
-		int random = 1 + (int)(Math.random() * ((1000 - 1) + 1));
-		if (random < 810) {
-			// 1 = sunny weather
-			nextState.setWeather(1);
-		} else if (random < 960) {
-			// 2 = rainy weather
-			nextState.setWeather(2);
-		} else if (random < 980) {
-			// 3 = foggy weather
-			nextState.setWeather(3);
-		} else {
-			// 4 = snow weather
-			nextState.setWeather(4);
-		}
+		nextState.setWeather(0);
 		
 		//next electricity level
 		double currentLevel = user.getCurrentElectricity()/user.getCar().getBatteryCapacity();
@@ -152,7 +139,11 @@ public class State {
 	}
 
 	public boolean isEqual(State s) {
-		return ((day == s.getDay()) && (weather == s.getWeather()) && (electricityLevel == s.getElectricityLevel()));
+		if (weather == 0) {
+			return ((day == s.getDay()) && (electricityLevel == s.getElectricityLevel()));
+		} else {
+			return ((day == s.getDay()) && (weather == s.getWeather()) && (electricityLevel == s.getElectricityLevel()));
+		}
 	}
 	
 	public boolean isEmpty() {

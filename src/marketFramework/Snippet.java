@@ -58,11 +58,11 @@ public class Snippet {
 			}
 		}
 	}
-	public static void endOfDay (User[] users) {
+	public static void endOfDay (User[] users, double reward) {
 		for (int i = 0; i < users.length; i++) {
 			users[i].useElectricity();
 			if (users[i].getStrategy() == 5) {
-				users[i].getAgent().evaluateAction(users[i]);
+				users[i].getAgent().evaluateAction(users[i]);;
 			}
 		}
 	}
