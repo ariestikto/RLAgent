@@ -60,6 +60,25 @@ public class State {
 		return electricityLevel;
 	}
 
+	public String getElectricityPercentage() {
+		String percentage = "Empty";
+		switch (electricityLevel) {
+		case 2:
+			percentage = "1/4";
+			break;
+		case 3:
+			percentage = "1/2";
+			break;
+		case 4:
+			percentage = "3/4";
+			break;
+		case 5:
+			percentage = "Full";
+			break;
+		}
+		return percentage;
+	}
+	
 	private void setDay(String day) {
 		this.day = day;
 	}

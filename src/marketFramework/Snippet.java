@@ -27,7 +27,7 @@ public class Snippet {
 	public static User[] createUsers() {
 		User[] users = new User[Market.AUCTION_PARTICIPANT];
 		
-		users[0] = new User(1, 5, new Car(4));
+		users[0] = new User(1, 5, new Car(3));
 		users[1] = new User(2, 2, new Car(1));
 		users[2] = new User(3, 3);
 		users[3] = new User(4, 1);

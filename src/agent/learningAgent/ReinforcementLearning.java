@@ -103,6 +103,9 @@ public class ReinforcementLearning {
 		Action a = new Action();
 		int amountLevel = 1 + (int)(Math.random() * (((6 - s.getElectricityLevel()) - 1) + 1));
 		int budgetLevel = 1 + (int)(Math.random() * ((4 - 1) + 1));
+		if (amountLevel == 1) {
+			budgetLevel = 1;
+		}
 		a.setAction(amountLevel, budgetLevel);
 		return a;
 	}

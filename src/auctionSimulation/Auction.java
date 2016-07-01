@@ -18,8 +18,6 @@ import marketFramework.Time;
 public class Auction {
 	private double dailySupply;
 	private double currentBid;
-	private String lastAuction;
-	private String currentAuction;
 	
 	public Auction() {
 		restartAuction();

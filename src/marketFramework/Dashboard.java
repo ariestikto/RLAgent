@@ -24,9 +24,14 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
-import agent.learningAgent.Action;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
 import agent.learningAgent.Reward;
-import agent.learningAgent.State;
 import auctionSimulation.Auction;
 import userSimulation.User;
 
@@ -89,7 +94,9 @@ public class Dashboard extends JFrame implements ActionListener {
 	private JLabel lblQValue;
 	private JLabel lblQvalue;
 	
-	
+	// graph pane
+	XYSeriesCollection performanceDataset;
+	XYSeries performanceData;
 	
 	/**
 	 * Launch the application.
@@ -142,6 +149,10 @@ public class Dashboard extends JFrame implements ActionListener {
 		JPanel agentPanel = new JPanel();
 		tabbedPane.addTab("Agent", null, agentPanel, null);
 		agentPane(agentPanel);
+		
+		JPanel graphPanel = new JPanel();
+		tabbedPane.addTab("Performance", null, graphPanel, null);
+		graphPane(graphPanel);
 		
 		JPanel buttonPanel = new JPanel();
 		contentPane.add(buttonPanel, BorderLayout.SOUTH);
@@ -436,7 +447,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		lblAddedElectricity = new JLabel("Added Electricity:");
 		agentPanel.add(lblAddedElectricity, "8, 8, right, default");
 		
-		lblAddedelectricityvalue = new JLabel(agent.getAgent().getLastStateAction().getAction().getAddedAmountLevel()*agent.getCar().getBatteryCapacity() + "");
+		lblAddedelectricityvalue = new JLabel("0");
 		agentPanel.add(lblAddedelectricityvalue, "10, 8, left, default");
 		
 		lblDay_1 = new JLabel("Day:");
@@ -454,32 +465,55 @@ public class Dashboard extends JFrame implements ActionListener {
 		lblBudgetLevel = new JLabel("Budget Level:");
 		agentPanel.add(lblBudgetLevel, "8, 10, right, default");
 		
-		lblBudgetlevelvalue = new JLabel("BudgetLevelValue");
+		lblBudgetlevelvalue = new JLabel("0");
 		agentPanel.add(lblBudgetlevelvalue, "10, 10");
 		
-		lblElectricityLevel_1 = new JLabel(agent.getAgent().getLastStateAction().getAction().getBudget());
+		lblElectricityLevel_1 = new JLabel("Electricity Level:");
 		agentPanel.add(lblElectricityLevel_1, "14, 10, right, default");
 		
-		lblNextelectricitylevelvalue = new JLabel(agent.getAgent().getLastStateAction().getState().nextState(agent.getAgent().getLastStateAction().getAction(), agent).getElectricityLevel()*agent.getCar().getBatteryCapacity() + "");
+		lblNextelectricitylevelvalue = new JLabel("0");
 		agentPanel.add(lblNextelectricitylevelvalue, "16, 10");
 		
 		lblElectricityLevel = new JLabel("Electricity Level:");
 		agentPanel.add(lblElectricityLevel, "2, 12, right, default");
 		
-		lblElectricitylevelvalue = new JLabel(agent.getAgent().getLastStateAction().getState().getElectricityLevel() + "");
+		lblElectricitylevelvalue = new JLabel("0");
 		agentPanel.add(lblElectricitylevelvalue, "4, 12");
 		
 		lblRewardSignal = new JLabel("Reward Signal:");
 		agentPanel.add(lblRewardSignal, "2, 18, right, default");
 		
-		lblRewardvalue = new JLabel(Reward.RewardPatternA(agent) + "");
+		lblRewardvalue = new JLabel("0");
 		agentPanel.add(lblRewardvalue, "4, 18");
 		
 		lblQValue = new JLabel("Q Value:");
 		agentPanel.add(lblQValue, "2, 20, right, default");
 		
-		lblQvalue = new JLabel(agent.getAgent().findSAPair(agent.getAgent().getLastStateAction().getState(), agent.getAgent().getLastStateAction().getAction()) + "");
+		lblQvalue = new JLabel("0");
 		agentPanel.add(lblQvalue, "4, 20");
+	}
+	
+	public void graphPane(JPanel graphPanel) {
+		graphPanel.setLayout(new java.awt.BorderLayout());
+		performanceData = new XYSeries("XYGraph");
+		performanceData.add(0, 0);
+		
+		// Add the series to your data set
+		performanceDataset = new XYSeriesCollection();
+		performanceDataset.addSeries(performanceData);
+		JFreeChart chart = ChartFactory.createXYLineChart(
+			"Agent Reward Over Time", // Title
+			"Time", // x-axis Label
+			"Reward", // y-axis Label
+			performanceDataset, // Dataset
+			PlotOrientation.VERTICAL, // Plot Orientation
+			false, // Show Legend
+			true, // Use tooltips
+			false // Configure chart to generate URLs?
+		);
+		ChartPanel CP = new ChartPanel(chart);
+		graphPanel.add(CP,BorderLayout.CENTER);
+		graphPanel.validate();
 	}
 	public void updateUserPane() {
 		userUID.setText("User " + activeUser.getUID());
@@ -493,8 +527,19 @@ public class Dashboard extends JFrame implements ActionListener {
 		carConsumptionInfo.setText(activeUser.getCar().getConsumption() + " kWh/km");
 		carCapacityInfo.setText(activeUser.getCar().getBatteryCapacity() + " kWh");
 	}
-	public void updateAgentPane(double lastNeeds, double lastBudget, State lastState, Action lastAction, double lastSpending) {
-
+	public void updateAgentPane() {
+		lblDayvalue = new JLabel(t.getDayName());
+		lblAddedelectricityvalue.setText(agent.getAgent().getLastStateAction().getAction().getAmountPercentage());
+		lblNextdayvalue.setText(t.getNextDayName());
+		lblWeathervalue.setText(t.getWeatherName());
+		lblBudgetlevelvalue.setText(agent.getAgent().getLastStateAction().getAction().getBudget());
+		lblNextelectricitylevelvalue.setText(agent.getAgent().getLastStateAction().getState().nextState(agent.getAgent().getLastStateAction().getAction(), agent).getElectricityPercentage());
+		lblElectricitylevelvalue.setText(agent.getAgent().getLastStateAction().getState().getElectricityPercentage());
+		lblRewardvalue.setText(Reward.RewardPatternA(agent) + "");
+		lblQvalue.setText(agent.getAgent().findSAPair(agent.getAgent().getLastStateAction().getState(), agent.getAgent().getLastStateAction().getAction()).getReward() + "");
+	}
+	public void updateGraphPane() {
+		performanceData.add(t.getDay(), Reward.RewardPatternA(agent));
 	}
 	public void bottomPane(JPanel buttonPanel) {
 		String[] timeMenu = {"1 Day", "3 Days", "7 Days", "30 Days", "100 Days"};
@@ -540,6 +585,8 @@ public class Dashboard extends JFrame implements ActionListener {
 					Snippet.endOfDay(users);
 					updateTopPane();
 					updateUserPane();
+					updateAgentPane();
+					updateGraphPane();
 				}
 			}
 		});

@@ -103,6 +103,7 @@ public class Bid {
 		double bid = 0;
 		double maxPrice = 0;
 		double deficit = 0;
+		double totalBudget = 0;
 		int aim = a.getAddedAmountLevel();
 		int budget = a.getBudgetLevel();
 		
@@ -138,13 +139,17 @@ public class Bid {
 			maxPrice = 25;
 			break;
 		}
-
+		
 		if (deficit + user.getCurrentElectricity() > user.getCar().getBatteryCapacity()) {
 			deficit = user.getCar().getBatteryCapacity() - user.getCurrentElectricity();
 		}
-		
-		if (currentBid <= maxPrice) {
-			bid = deficit;
+		totalBudget = deficit*maxPrice;
+		if (deficit > 0) {
+			if (deficit < totalBudget/currentBid) {
+				bid = deficit;
+			} else {
+				bid = totalBudget/currentBid;
+			}
 		}
 		return bid;
 	}
