@@ -15,6 +15,7 @@ import marketFramework.Time;
 public class ReinforcementLearning {
 
 	private List<QFunction> Q;
+	private double reward = 0;
 	private double learningRate;
 	private double discountFactor;
 	private double epsilon;
@@ -26,6 +27,10 @@ public class ReinforcementLearning {
 		this.discountFactor = discountFactor;
 		this.epsilon = epsilon;
 		this.Q = new ArrayList<QFunction>();
+	}
+	
+	public double getReward() {
+		return reward;
 	}
 	
 	public double getLearningRate() {
@@ -139,10 +144,11 @@ public class ReinforcementLearning {
 	}
 	
 	public void evaluateAction(User user) {
+		this.reward = Reward.RewardPatternA(user);
 		double QReward = 0;
 		QFunction lastQ = findSAPair(lastStateAction.getState(), lastStateAction.getAction());
 		QFunction bestNextQ = findSAPair(lastStateAction.getState().nextState(lastStateAction.getAction(), user), bestAction(lastStateAction.getState().nextState(lastStateAction.getAction(), user), user));
-		QReward = lastQ.getReward() + learningRate*(Reward.RewardPatternA(user) + discountFactor*bestNextQ.getReward() - lastQ.getReward());
+		QReward = lastQ.getReward() + learningRate*(reward + discountFactor*bestNextQ.getReward() - lastQ.getReward());
 		updateQ(lastStateAction.getState(), lastStateAction.getAction(), QReward);
 	}
 }

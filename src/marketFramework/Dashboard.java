@@ -10,6 +10,12 @@ import java.awt.Insets;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,11 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -31,7 +32,11 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import agent.learningAgent.Reward;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+
 import auctionSimulation.Auction;
 import userSimulation.User;
 
@@ -43,6 +48,8 @@ public class Dashboard extends JFrame implements ActionListener {
 	private User agent = users[0];
 	private Auction a = new Auction();
 	private Time t = new Time();
+	private double reward = 0;
+	private List<Double> rewards = new ArrayList<Double>();
 	
 	private JPanel contentPane;
 	private JPanel timePanel;
@@ -97,6 +104,9 @@ public class Dashboard extends JFrame implements ActionListener {
 	// graph pane
 	XYSeriesCollection performanceDataset;
 	XYSeries performanceData;
+	String fileName = "reward.xls";
+	String line = null;
+	PrintWriter output;
 	
 	/**
 	 * Launch the application.
@@ -119,6 +129,12 @@ public class Dashboard extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public Dashboard() {
+		try {
+			output = new PrintWriter(new FileWriter(fileName, true), true);
+			output.close();
+		} catch (IOException ie) {
+            ie.printStackTrace();
+        }   
 		setTitle("Market Dashboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
@@ -528,21 +544,23 @@ public class Dashboard extends JFrame implements ActionListener {
 		carCapacityInfo.setText(activeUser.getCar().getBatteryCapacity() + " kWh");
 	}
 	public void updateAgentPane() {
-		lblDayvalue = new JLabel(t.getDayName());
+		reward = agent.getAgent().getReward();
+		rewards.add(reward);
+		lblDayvalue.setText(t.getDayName());
 		lblAddedelectricityvalue.setText(agent.getAgent().getLastStateAction().getAction().getAmountPercentage());
 		lblNextdayvalue.setText(t.getNextDayName());
 		lblWeathervalue.setText(t.getWeatherName());
 		lblBudgetlevelvalue.setText(agent.getAgent().getLastStateAction().getAction().getBudget());
 		lblNextelectricitylevelvalue.setText(agent.getAgent().getLastStateAction().getState().nextState(agent.getAgent().getLastStateAction().getAction(), agent).getElectricityPercentage());
 		lblElectricitylevelvalue.setText(agent.getAgent().getLastStateAction().getState().getElectricityPercentage());
-		lblRewardvalue.setText(Reward.RewardPatternA(agent) + "");
+		lblRewardvalue.setText(reward + "");
 		lblQvalue.setText(agent.getAgent().findSAPair(agent.getAgent().getLastStateAction().getState(), agent.getAgent().getLastStateAction().getAction()).getReward() + "");
 	}
 	public void updateGraphPane() {
-		performanceData.add(t.getDay(), Reward.RewardPatternA(agent));
+		performanceData.add(t.getDay(), reward);
 	}
 	public void bottomPane(JPanel buttonPanel) {
-		String[] timeMenu = {"1 Day", "3 Days", "7 Days", "30 Days", "100 Days"};
+		String[] timeMenu = {"1 Day", "3 Days", "7 Days", "30 Days", "100 Days", "1000 Days"};
 		
 		JComboBox<String> timeChoice = new JComboBox<>(timeMenu);
 		buttonPanel.add(timeChoice);
@@ -567,6 +585,9 @@ public class Dashboard extends JFrame implements ActionListener {
 					case "100 Days":
 						timeJump = 100;
 						break;
+					case "1000 Days":
+						timeJump = 1000;
+						break;
 
 				}
             } 
@@ -582,12 +603,39 @@ public class Dashboard extends JFrame implements ActionListener {
 					t.advanceTime();
 					Snippet.startOfDay(users, t);
 					a.runAuction(users, t, auctionResult, auctionHistory);
-					Snippet.endOfDay(users);
+					Snippet.endOfDay(users, reward);
 					updateTopPane();
 					updateUserPane();
 					updateAgentPane();
 					updateGraphPane();
 				}
+			}
+		});
+		
+		JButton btnWriteReward = new JButton("Export to XLS");
+		buttonPanel.add(btnWriteReward);
+		
+		btnWriteReward.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+		            // Assume default encoding.
+		            FileWriter fileWriter =
+		                new FileWriter(fileName);
+
+		            // Always wrap FileWriter in BufferedWriter.
+		            BufferedWriter bufferedWriter =
+		                new BufferedWriter(fileWriter);
+
+		            // Note that write() does not automatically
+		            // append a newline character.
+		            for (Double temp : rewards) {
+		            	bufferedWriter.write(temp + "\t");
+					}
+
+		            // Always close files.
+		            bufferedWriter.close();
+		        } catch(IOException ex) {}
 			}
 		});
 	}
