@@ -112,16 +112,16 @@ public class Bid {
 			deficit = 0;
 			break;
 		case 2:
-			deficit = user.getCar().getBatteryCapacity()*0.25;
+			deficit = user.getCar().getBatteryCapacity()*0.25 - user.getCurrentElectricity();
 			break;
 		case 3:
-			deficit = user.getCar().getBatteryCapacity()*0.5;
+			deficit = user.getCar().getBatteryCapacity()*0.5 - user.getCurrentElectricity();
 			break;
 		case 4:
-			deficit = user.getCar().getBatteryCapacity()*0.75;
+			deficit = user.getCar().getBatteryCapacity()*0.75 - user.getCurrentElectricity();
 			break;
 		case 5:
-			deficit = user.getCar().getBatteryCapacity();
+			deficit = user.getCar().getBatteryCapacity() - user.getCurrentElectricity();
 			break;
 		}
 		
@@ -139,10 +139,7 @@ public class Bid {
 			maxPrice = 25;
 			break;
 		}
-		
-		if (deficit + user.getCurrentElectricity() > user.getCar().getBatteryCapacity()) {
-			deficit = user.getCar().getBatteryCapacity() - user.getCurrentElectricity();
-		}
+
 		totalBudget = deficit*maxPrice;
 		if (deficit > 0) {
 			if (deficit < totalBudget/currentBid) {

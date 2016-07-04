@@ -59,11 +59,14 @@ public class ReinforcementLearning {
 	
 	public Action bestAction(State s, User user) {
 		Action a = randomAction(s, user);
+		int random = 1 + (int)(Math.random() * ((1000 - 1) + 1));
 		int reward = -999;
 		if (Q.size() > 0) {
 			for (QFunction temp : Q) {
 				if (s.isEqual(temp.getState())) {
 					if (temp.getReward() > reward) {
+						a = temp.getAction();
+					} else if ((temp.getReward() == reward) && (random > 500)) {
 						a = temp.getAction();
 					}
 				}
@@ -106,7 +109,7 @@ public class ReinforcementLearning {
 	
 	public Action randomAction(State s, User user) {
 		Action a = new Action();
-		int amountLevel = 1 + (int)(Math.random() * (((6 - s.getElectricityLevel()) - 1) + 1));
+		int amountLevel = s.getElectricityLevel() + (int)(Math.random() * ((5 - s.getElectricityLevel()) + 1));
 		int budgetLevel = 1 + (int)(Math.random() * ((4 - 1) + 1));
 		if (amountLevel == 1) {
 			budgetLevel = 1;
@@ -139,7 +142,7 @@ public class ReinforcementLearning {
 			} else {
 				a = randomAction(s, user);
 			}
-			
+			// ===============================
 			this.lastStateAction = findSAPair(s, a);
 	}
 	
@@ -149,6 +152,7 @@ public class ReinforcementLearning {
 		QFunction lastQ = findSAPair(lastStateAction.getState(), lastStateAction.getAction());
 		QFunction bestNextQ = findSAPair(lastStateAction.getState().nextState(lastStateAction.getAction(), user), bestAction(lastStateAction.getState().nextState(lastStateAction.getAction(), user), user));
 		QReward = lastQ.getReward() + learningRate*(reward + discountFactor*bestNextQ.getReward() - lastQ.getReward());
+//		System.out.println(QReward + " = " + lastQ.getReward() + " + " + learningRate + "(" + reward + " + " + discountFactor + "x" + bestNextQ.getReward() + " - " + lastQ.getReward() + ")");
 		updateQ(lastStateAction.getState(), lastStateAction.getAction(), QReward);
 	}
 }

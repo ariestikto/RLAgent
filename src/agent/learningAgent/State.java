@@ -56,7 +56,7 @@ public class State {
 		return weatherName;
 	}
 
-	public double getElectricityLevel() {
+	public int getElectricityLevel() {
 		return electricityLevel;
 	}
 

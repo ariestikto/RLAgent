@@ -439,7 +439,7 @@ public class Dashboard extends JFrame implements ActionListener {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("max(17dlu;default)"),}));
 		
-		lblUserUid = new JLabel("User UID:");
+		lblUserUid = new JLabel("User");
 		agentPanel.add(lblUserUid, "2, 2, right, default");
 		
 		lblUidval = new JLabel(agent.getUID());
@@ -518,7 +518,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		performanceDataset = new XYSeriesCollection();
 		performanceDataset.addSeries(performanceData);
 		JFreeChart chart = ChartFactory.createXYLineChart(
-			"Agent Reward Over Time", // Title
+			"Reward Over Time", // Title
 			"Time", // x-axis Label
 			"Reward", // y-axis Label
 			performanceDataset, // Dataset
