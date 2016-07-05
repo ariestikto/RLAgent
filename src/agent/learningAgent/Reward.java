@@ -34,7 +34,7 @@ public class Reward {
 			completedTaskProportion = finishedTask/allTask;
 			if (completedTaskProportion < 0.5) {
 				if (randomElectricityFeedback > 100) {
-					reward += -2;
+					reward += -1;
 				}
 			} else if (completedTaskProportion < 0.95) {
 				if (randomElectricityFeedback > 300) {
@@ -42,7 +42,7 @@ public class Reward {
 				}
 			} else {
 				if (randomElectricityFeedback > 700) {
-					reward += 5;
+					reward += 1;
 				}
 			}
 		}
@@ -52,21 +52,21 @@ public class Reward {
 			expensesRate = user.getBudget()/user.payout();
 			if (expensesRate < 0.7) {
 				if (randomBudgetFeedback > 100) {
-					reward += -2;
+					reward += -1;
 				}
 			} else if (expensesRate < 0.3) {
 				if (randomBudgetFeedback > 300) {
-					reward += -1.5;
+					reward += -1;
 				}
 			} else if (expensesRate < 0.95) {
 				if (randomBudgetFeedback > 500) {
 					reward += -1;
 				}
 			} else if ((expensesRate < 1.1) && (reward > 0)) {
-				reward += 1;
+				reward += 0;
 			} else {
 				if ((randomBudgetFeedback > 700) && (reward > 0)) {
-					reward += 2;
+					reward += 1;
 				}
 			}
 		} else if (reward > 0) {
