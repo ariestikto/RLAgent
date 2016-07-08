@@ -535,7 +535,7 @@ public class UserModel {
 		Collections.sort(taskList);
 	}
 	public static void CompanyBuyer(ElectricityBundle preferences) {
-		NormalDistribution needs = new NormalDistribution(35, 8);
+		NormalDistribution needs = new NormalDistribution(30, 3);
 		NormalDistribution unitBudget = new NormalDistribution(25, 3);
 		preferences.setAmount(needs.sample());
 		preferences.setUnitPrice(unitBudget.sample());

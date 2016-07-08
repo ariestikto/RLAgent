@@ -49,7 +49,9 @@ public class Dashboard extends JFrame implements ActionListener {
 	private Auction a = new Auction();
 	private Time t = new Time();
 	private double reward = 0;
+	private double lastTenReward = 0;
 	private List<Double> rewards = new ArrayList<Double>();
+	private List<Double> trends = new ArrayList<Double>();
 	
 	private JPanel contentPane;
 	private JPanel timePanel;
@@ -100,14 +102,22 @@ public class Dashboard extends JFrame implements ActionListener {
 	private JLabel lblRewardvalue;
 	private JLabel lblQValue;
 	private JLabel lblQvalue;
+	private JLabel lblnextWeather;
+	private JLabel lblNextweather;
 	
 	// graph pane
 	XYSeriesCollection performanceDataset;
 	XYSeries performanceData;
-	String fileName = "reward.xls";
+	
+	// trends pane
+	XYSeriesCollection trendsDataset;
+	XYSeries trendsData;
+	String fileName = "avgreward.xls";
 	String line = null;
 	PrintWriter output;
 	
+	
+	// trends pane
 	/**
 	 * Launch the application.
 	 */
@@ -169,6 +179,10 @@ public class Dashboard extends JFrame implements ActionListener {
 		JPanel graphPanel = new JPanel();
 		tabbedPane.addTab("Performance", null, graphPanel, null);
 		graphPane(graphPanel);
+		
+		JPanel trendsPanel = new JPanel();
+		tabbedPane.addTab("Trends", null, trendsPanel, null);
+		trendsPane(trendsPanel);
 		
 		JPanel buttonPanel = new JPanel();
 		contentPane.add(buttonPanel, BorderLayout.SOUTH);
@@ -253,7 +267,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		gbc_lblNeeds.gridy = 8;
 		userPanel.add(lblNeeds, gbc_lblNeeds);
 		
-		JLabel lblCurrentElectricity = new JLabel("Current Electricity: ");
+		JLabel lblCurrentElectricity = new JLabel("Remaining Electricity: ");
 		lblCurrentElectricity.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		GridBagConstraints gbc_lblCurrentElectricity = new GridBagConstraints();
 		gbc_lblCurrentElectricity.fill = GridBagConstraints.HORIZONTAL;
@@ -460,7 +474,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		lblDayvalue = new JLabel(t.getDayName());
 		agentPanel.add(lblDayvalue, "4, 8");
 		
-		lblAddedElectricity = new JLabel("Added Electricity:");
+		lblAddedElectricity = new JLabel("Target Electricity:");
 		agentPanel.add(lblAddedElectricity, "8, 8, right, default");
 		
 		lblAddedelectricityvalue = new JLabel("0");
@@ -484,17 +498,23 @@ public class Dashboard extends JFrame implements ActionListener {
 		lblBudgetlevelvalue = new JLabel("0");
 		agentPanel.add(lblBudgetlevelvalue, "10, 10");
 		
-		lblElectricityLevel_1 = new JLabel("Electricity Level:");
-		agentPanel.add(lblElectricityLevel_1, "14, 10, right, default");
+		lblnextWeather = new JLabel("Weather:");
+		agentPanel.add(lblnextWeather, "14, 10, right, default");
 		
-		lblNextelectricitylevelvalue = new JLabel("0");
-		agentPanel.add(lblNextelectricitylevelvalue, "16, 10");
+		lblNextweather = new JLabel(t.getNextWeatherName());
+		agentPanel.add(lblNextweather, "16, 10, left, default");
 		
 		lblElectricityLevel = new JLabel("Electricity Level:");
 		agentPanel.add(lblElectricityLevel, "2, 12, right, default");
 		
 		lblElectricitylevelvalue = new JLabel("0");
 		agentPanel.add(lblElectricitylevelvalue, "4, 12");
+		
+		lblElectricityLevel_1 = new JLabel("Electricity Level:");
+		agentPanel.add(lblElectricityLevel_1, "14, 12, right, default");
+		
+		lblNextelectricitylevelvalue = new JLabel("0");
+		agentPanel.add(lblNextelectricitylevelvalue, "16, 12");
 		
 		lblRewardSignal = new JLabel("Reward Signal:");
 		agentPanel.add(lblRewardSignal, "2, 18, right, default");
@@ -531,6 +551,29 @@ public class Dashboard extends JFrame implements ActionListener {
 		graphPanel.add(CP,BorderLayout.CENTER);
 		graphPanel.validate();
 	}
+	
+	public void trendsPane(JPanel trendsPanel) {
+		trendsPanel.setLayout(new java.awt.BorderLayout());
+		trendsData = new XYSeries("XYGraph");
+		trendsData.add(0, 0);
+		
+		// Add the series to your data set
+		trendsDataset = new XYSeriesCollection();
+		trendsDataset.addSeries(trendsData);
+		JFreeChart chart = ChartFactory.createXYLineChart(
+			"Average Reward Over Time", // Title
+			"Time", // x-axis Label
+			"Average Reward", // y-axis Label
+			trendsDataset, // Dataset
+			PlotOrientation.VERTICAL, // Plot Orientation
+			false, // Show Legend
+			true, // Use tooltips
+			false // Configure chart to generate URLs?
+		);
+		ChartPanel CP2 = new ChartPanel(chart);
+		trendsPanel.add(CP2,BorderLayout.CENTER);
+		trendsPanel.validate();
+	}
 	public void updateUserPane() {
 		userUID.setText("User " + activeUser.getUID());
 		budgetInfo.setText(activeUser.getBudget() + " p");
@@ -551,7 +594,8 @@ public class Dashboard extends JFrame implements ActionListener {
 		lblNextdayvalue.setText(t.getNextDayName());
 		lblWeathervalue.setText(t.getWeatherName());
 		lblBudgetlevelvalue.setText(agent.getAgent().getLastStateAction().getAction().getBudget());
-		lblNextelectricitylevelvalue.setText(agent.getAgent().getLastStateAction().getState().nextState(agent.getAgent().getLastStateAction().getAction(), agent).getElectricityPercentage());
+		lblNextweather.setText(t.getNextWeatherName());
+		lblNextelectricitylevelvalue.setText(agent.getAgent().getLastStateAction().getState().nextState(agent.getAgent().getLastStateAction().getAction(), agent, t.getNextWeather()).getElectricityPercentage());
 		lblElectricitylevelvalue.setText(agent.getAgent().getLastStateAction().getState().getElectricityPercentage());
 		lblRewardvalue.setText(reward + "");
 		lblQvalue.setText(agent.getAgent().findSAPair(agent.getAgent().getLastStateAction().getState(), agent.getAgent().getLastStateAction().getAction()).getReward() + "");
@@ -559,8 +603,19 @@ public class Dashboard extends JFrame implements ActionListener {
 	public void updateGraphPane() {
 		performanceData.add(t.getDay(), reward);
 	}
+	public void updateTrendsPane() {
+		lastTenReward = 0;
+		if (t.getDay() > 9) {
+			for (int i = 1; i < 10; i++) {
+				lastTenReward += rewards.get(rewards.size() - i);
+			}
+			rewards.remove(0);
+		}
+		trendsData.add(t.getDay(), lastTenReward/10);
+		trends.add(lastTenReward/10);
+	}
 	public void bottomPane(JPanel buttonPanel) {
-		String[] timeMenu = {"1 Day", "3 Days", "7 Days", "30 Days", "100 Days", "1000 Days"};
+		String[] timeMenu = {"1 Day", "3 Days", "7 Days", "30 Days", "100 Days", "500 Days", "1000 Days"};
 		
 		JComboBox<String> timeChoice = new JComboBox<>(timeMenu);
 		buttonPanel.add(timeChoice);
@@ -585,6 +640,9 @@ public class Dashboard extends JFrame implements ActionListener {
 					case "100 Days":
 						timeJump = 100;
 						break;
+					case "500 Days":
+						timeJump = 500;
+						break;
 					case "1000 Days":
 						timeJump = 1000;
 						break;
@@ -599,16 +657,23 @@ public class Dashboard extends JFrame implements ActionListener {
 		btnAdvanceTime.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < timeJump; i++) {
-					t.advanceTime();
-					Snippet.startOfDay(users, t);
-					a.runAuction(users, t, auctionResult, auctionHistory);
-					Snippet.endOfDay(users, reward);
-					updateTopPane();
-					updateUserPane();
-					updateAgentPane();
-					updateGraphPane();
-				}
+				Thread thread = new Thread() {
+					@Override
+					public void run() {
+						for (int i = 0; i < timeJump; i++) {
+							t.advanceTime();
+							Snippet.startOfDay(users, t);
+							a.runAuction(users, t, auctionResult, auctionHistory);
+							Snippet.endOfDay(users, reward, t);
+							updateTopPane();
+							updateUserPane();
+							updateAgentPane();
+							updateGraphPane();
+							updateTrendsPane();
+						}
+					}
+				};
+				thread.start();
 			}
 		});
 		
@@ -629,7 +694,7 @@ public class Dashboard extends JFrame implements ActionListener {
 
 		            // Note that write() does not automatically
 		            // append a newline character.
-		            for (Double temp : rewards) {
+		            for (Double temp : trends) {
 		            	bufferedWriter.write(temp + "\t");
 					}
 

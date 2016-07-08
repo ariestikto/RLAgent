@@ -127,16 +127,16 @@ public class Bid {
 		
 		switch (budget) {
 		case 1:
-			maxPrice = 10;
-			break;
-		case 2:
 			maxPrice = 15;
 			break;
-		case 3:
+		case 2:
 			maxPrice = 20;
 			break;
-		case 4:
+		case 3:
 			maxPrice = 25;
+			break;
+		case 4:
+			maxPrice = 30;
 			break;
 		}
 

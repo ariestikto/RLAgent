@@ -4,6 +4,7 @@
 package agent.learningAgent;
 
 import userSimulation.User;
+import userSimulation.UserSatisfaction;
 /**
  * @author pa1g15
  *
@@ -14,66 +15,34 @@ public class Reward {
 	 * 
 	 */
 	public static double RewardPatternA(User user) {
-		int allTask = 0;
-		int finishedTask = 0;
-		int reward  = 0;
-		double completedTaskProportion = 0;
-		double expensesRate = 0;
-		int randomElectricityFeedback = 1 + (int)(Math.random() * ((1000 - 1) + 1));
-		int randomBudgetFeedback = 1 + (int)(Math.random() * ((1000 - 1) + 1));
+		double reward  = 0;
+		double addedReward = 0;
+		int satisfactoryLevel = 0;
+//		int randomElectricityFeedback = 1 + (int)(Math.random() * ((1000 - 1) + 1));
 		
-		for (Task temp : user.getTask()) {
-			allTask += temp.getValue();
-			if (temp.isFinished()) {
-				finishedTask += temp.getValue();
-			}
-	    }
-		
-		//	electricity reward signal
-		if (allTask > 0) {
-			completedTaskProportion = finishedTask/allTask;
-			if (completedTaskProportion < 0.5) {
-				if (randomElectricityFeedback > 100) {
-					reward += -1;
-				}
-			} else if (completedTaskProportion < 0.95) {
-				if (randomElectricityFeedback > 300) {
-					reward += -1;
-				}
-			} else {
-				if (randomElectricityFeedback > 700) {
-					reward += 1;
-				}
-			}
+		// electricity
+		satisfactoryLevel = UserSatisfaction.userSatisfactory(user);
+		switch (satisfactoryLevel) {
+		case 1: // very low
+//			randomElectricityFeedback *= 1.5;
+			addedReward = -2;
+			break;
+		case 2: // low
+//			randomElectricityFeedback *= 1.5;
+			addedReward = -1;
+			break;
+		case 3: // normal
+			addedReward = 0;
+			break;
+		case 4: // high
+			addedReward = 10;
+			break;
 		}
 		
-		// budget reward signal
-		if (user.payout() > 0) {
-			expensesRate = user.getBudget()/user.payout();
-			if (expensesRate < 0.7) {
-				if (randomBudgetFeedback > 100) {
-					reward += -1;
-				}
-			} else if (expensesRate < 0.3) {
-				if (randomBudgetFeedback > 300) {
-					reward += -1;
-				}
-			} else if (expensesRate < 0.95) {
-				if (randomBudgetFeedback > 500) {
-					reward += -1;
-				}
-			} else if ((expensesRate < 1.1) && (reward > 0)) {
-				reward += 0;
-			} else {
-				if ((randomBudgetFeedback > 700) && (reward > 0)) {
-					reward += 1;
-				}
-			}
-		} else if (reward > 0) {
-			if (randomBudgetFeedback > 700) {
-				reward += 1;
-			}
-		}
+//		if (randomElectricityFeedback > 300) {
+			reward += addedReward;
+			reward -= user.payout()/100;
+//		}
 		return reward;
 	}
 }

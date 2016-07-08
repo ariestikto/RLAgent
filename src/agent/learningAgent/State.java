@@ -91,7 +91,7 @@ public class State {
 		this.electricityLevel = electricityLevel;
 	}
 
-	public State nextState(Action action, User user) {
+	public State nextState(Action action, User user, int nextWeather) {
 		State nextState = new State();
 		// next day
 		switch (day) {
@@ -119,7 +119,7 @@ public class State {
 		}
 		
 		//next weather 
-		nextState.setWeather(0);
+		nextState.setWeather(nextWeather);
 		
 		//next electricity level
 		double currentLevel = user.getCurrentElectricity()/user.getCar().getBatteryCapacity();
@@ -139,11 +139,7 @@ public class State {
 	}
 
 	public boolean isEqual(State s) {
-		if (weather == 0) {
-			return ((day == s.getDay()) && (electricityLevel == s.getElectricityLevel()));
-		} else {
-			return ((day == s.getDay()) && (weather == s.getWeather()) && (electricityLevel == s.getElectricityLevel()));
-		}
+		return ((day == s.getDay()) && (weather == s.getWeather()) && (electricityLevel == s.getElectricityLevel()));
 	}
 	
 	public boolean isEmpty() {

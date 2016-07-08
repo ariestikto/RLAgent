@@ -60,7 +60,7 @@ public class ReinforcementLearning {
 	public Action bestAction(State s, User user) {
 		Action a = randomAction(s, user);
 		int random = 1 + (int)(Math.random() * ((1000 - 1) + 1));
-		int reward = -999;
+		int reward = 0;
 		if (Q.size() > 0) {
 			for (QFunction temp : Q) {
 				if (s.isEqual(temp.getState())) {
@@ -146,11 +146,11 @@ public class ReinforcementLearning {
 			this.lastStateAction = findSAPair(s, a);
 	}
 	
-	public void evaluateAction(User user) {
+	public void evaluateAction(User user, int nextWeather) {
 		this.reward = Reward.RewardPatternA(user);
 		double QReward = 0;
 		QFunction lastQ = findSAPair(lastStateAction.getState(), lastStateAction.getAction());
-		QFunction bestNextQ = findSAPair(lastStateAction.getState().nextState(lastStateAction.getAction(), user), bestAction(lastStateAction.getState().nextState(lastStateAction.getAction(), user), user));
+		QFunction bestNextQ = findSAPair(lastStateAction.getState().nextState(lastStateAction.getAction(), user, nextWeather), bestAction(lastStateAction.getState().nextState(lastStateAction.getAction(), user, nextWeather), user));
 		QReward = lastQ.getReward() + learningRate*(reward + discountFactor*bestNextQ.getReward() - lastQ.getReward());
 //		System.out.println(QReward + " = " + lastQ.getReward() + " + " + learningRate + "(" + reward + " + " + discountFactor + "x" + bestNextQ.getReward() + " - " + lastQ.getReward() + ")");
 		updateQ(lastStateAction.getState(), lastStateAction.getAction(), QReward);

@@ -10,12 +10,13 @@ public class Time {
 	private int day;
 	private String dayName;
 	private int weather;
+	private int nextWeather;
 	
 	public Time() {
 		this.day = 0;
 		this.dayName = "Sunday";
+		randomizeNextWeather();
 		this.weather = 1;
-		randomizeWeather();
 	}	
 	public int getDay() {
 		return day;
@@ -54,20 +55,23 @@ public class Time {
 	public int getWeather() {
 		return weather;
 	}
-	public void randomizeWeather() {
+	public int getNextWeather() {
+		return nextWeather;
+	}
+	public void randomizeNextWeather() {
 		int random = 1 + (int)(Math.random() * ((1000 - 1) + 1));
 		if (random < 810) {
 			// 1 = sunny weather
-			this.weather = 1;
+			this.nextWeather = 1;
 		} else if (random < 960) {
 			// 2 = rainy weather
-			this.weather = 2;
+			this.nextWeather = 2;
 		} else if (random < 980) {
 			// 3 = foggy weather
-			this.weather = 3;
+			this.nextWeather = 3;
 		} else {
 			// 4 = snow weather
-			this.weather = 4;
+			this.nextWeather = 4;
 		}
 	}
 	public String getWeatherName() {
@@ -88,9 +92,28 @@ public class Time {
 		}
 		return weatherName;
 	}
+	public String getNextWeatherName() {
+		String weatherName = "";
+		switch (nextWeather) {
+		case 1:
+			weatherName =  "Sunny";
+			break;
+		case 2:
+			weatherName =  "Rainy";
+			break;
+		case 3:
+			weatherName =  "Fog";
+			break;
+		case 4:
+			weatherName =  "Snow";
+			break;
+		}
+		return weatherName;
+	}
 	public void advanceTime() {
 		this.day += 1;
-		randomizeWeather();
+		this.weather = nextWeather;
+		randomizeNextWeather();
 		switch (day%7) {
 		case 0:
 			this.dayName = "Sunday";
