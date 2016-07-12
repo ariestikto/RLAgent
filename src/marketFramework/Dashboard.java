@@ -146,7 +146,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		} catch (IOException ie) {
             ie.printStackTrace();
         }   
-		setTitle("Market Dashboard");
+		setTitle("Market Dashboard (Q Learning)");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
@@ -178,7 +178,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		agentPane(agentPanel);
 		
 		JPanel graphPanel = new JPanel();
-		tabbedPane.addTab("Performance", null, graphPanel, null);
+		tabbedPane.addTab("Reward", null, graphPanel, null);
 		graphPane(graphPanel);
 		
 		JPanel trendsPanel = new JPanel();
