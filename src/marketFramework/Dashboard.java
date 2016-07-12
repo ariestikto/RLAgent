@@ -113,7 +113,7 @@ public class Dashboard extends JFrame implements ActionListener {
 	// trends pane
 	XYSeriesCollection trendsDataset;
 	XYSeries trendsData;
-	String fileName = "avgreward.xls";
+	String fileName = "Avg_Reward_QLearning.xls";
 	String line = null;
 	PrintWriter output;
 	
