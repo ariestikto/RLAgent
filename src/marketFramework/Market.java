@@ -13,7 +13,7 @@ public class Market {
 	public static final int AUCTION_PARTICIPANT = 10;
 	public static final int TOTAL_CAR_TYPE = 7;
 	public static final double MAXIMUM_BID = 30; // p/kWh
-	public static final double AGENT_LEARNING_RATE = 0.2;
-	public static final double AGENT_DISCOUNT_FACTOR = 0.9;
-	public static final double EPSILON_PARAMETER = 0.2;
+	public static final double AGENT_LEARNING_RATE = 0.2; // 0.1
+	public static final double AGENT_DISCOUNT_FACTOR = 0.9; // 0.95
+	public static final double EPSILON_PARAMETER = 0.05; // 0.05
 }

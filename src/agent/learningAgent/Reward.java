@@ -32,7 +32,7 @@ public class Reward {
 			addedReward = -1;
 			break;
 		case 3: // normal
-			addedReward = 0;
+			addedReward = 3;
 			break;
 		case 4: // high
 			addedReward = 10;
@@ -41,7 +41,7 @@ public class Reward {
 		
 //		if (randomElectricityFeedback > 300) {
 			reward += addedReward;
-			reward -= user.payout()/100;
+			reward += (user.getBudget() - user.payout())/50;
 //		}
 		return reward;
 	}

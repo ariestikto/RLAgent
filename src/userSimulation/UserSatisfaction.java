@@ -33,7 +33,7 @@ public class UserSatisfaction {
 		}
 		if (completedTaskProportion < 0.5) {
 			satisfactoryLevel = 1; // very low
-		} else if (completedTaskProportion < 0.8) {
+		} else if (completedTaskProportion < 0.7) {
 			satisfactoryLevel = 2; //low
 		} else if (completedTaskProportion < 0.95) {
 			satisfactoryLevel = 3; // normal

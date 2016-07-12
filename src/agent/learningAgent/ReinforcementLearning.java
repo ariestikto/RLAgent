@@ -60,14 +60,16 @@ public class ReinforcementLearning {
 	public Action bestAction(State s, User user) {
 		Action a = randomAction(s, user);
 		int random = 1 + (int)(Math.random() * ((1000 - 1) + 1));
-		int reward = 0;
+		double reward = 0;
 		if (Q.size() > 0) {
 			for (QFunction temp : Q) {
 				if (s.isEqual(temp.getState())) {
 					if (temp.getReward() > reward) {
 						a = temp.getAction();
+						reward = temp.getReward();
 					} else if ((temp.getReward() == reward) && (random > 500)) {
 						a = temp.getAction();
+						reward = temp.getReward();
 					}
 				}
 		    }
@@ -138,8 +140,10 @@ public class ReinforcementLearning {
 			// epsilon greedy algorithm
 			// =========================
 			if (Math.random() > getEpsilon()) {
+//				System.out.println("Best");
 				a = bestAction(s, user);
 			} else {
+//				System.out.println("Random");
 				a = randomAction(s, user);
 			}
 			// ===============================

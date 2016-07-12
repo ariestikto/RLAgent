@@ -62,8 +62,28 @@ public class Snippet {
 		for (int i = 0; i < users.length; i++) {
 			users[i].useElectricity();
 			if (users[i].getStrategy() == 5) {
-				users[i].getAgent().evaluateAction(users[i], t.getNextWeather());;
+				users[i].getAgent().evaluateAction(users[i], t.getNextWeather());
+				System.out.println("SA Pair: " + users[i].getAgent().getQSize());
 			}
 		}
+	}
+	public static double agentPerformance (User agent) {
+		double electricityAccuracy = 0;
+		double spendingAccuracy = 0;
+		double performance = 0;
+		
+		if (agent.getDailyNeeds() < agent.getCurrentElectricity()) {
+			electricityAccuracy = 1;
+		} else {
+			electricityAccuracy = agent.getCurrentElectricity()/agent.getDailyNeeds();
+		}
+		if (agent.getBudget() > agent.payout()) {
+			spendingAccuracy = 1;
+		} else {
+			spendingAccuracy = agent.getBudget()/agent.payout();
+		}
+		
+		performance = electricityAccuracy*spendingAccuracy;
+		return performance;
 	}
 }

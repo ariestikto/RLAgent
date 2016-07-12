@@ -50,6 +50,7 @@ public class Dashboard extends JFrame implements ActionListener {
 	private Time t = new Time();
 	private double reward = 0;
 	private double lastTenReward = 0;
+	private double performance = 0;
 	private List<Double> rewards = new ArrayList<Double>();
 	private List<Double> trends = new ArrayList<Double>();
 	
@@ -538,9 +539,9 @@ public class Dashboard extends JFrame implements ActionListener {
 		performanceDataset = new XYSeriesCollection();
 		performanceDataset.addSeries(performanceData);
 		JFreeChart chart = ChartFactory.createXYLineChart(
-			"Reward Over Time", // Title
+			"Performance Over Time", // Title
 			"Time", // x-axis Label
-			"Reward", // y-axis Label
+			"Performance", // y-axis Label
 			performanceDataset, // Dataset
 			PlotOrientation.VERTICAL, // Plot Orientation
 			false, // Show Legend
@@ -601,7 +602,8 @@ public class Dashboard extends JFrame implements ActionListener {
 		lblQvalue.setText(agent.getAgent().findSAPair(agent.getAgent().getLastStateAction().getState(), agent.getAgent().getLastStateAction().getAction()).getReward() + "");
 	}
 	public void updateGraphPane() {
-		performanceData.add(t.getDay(), reward);
+//		performanceData.add(t.getDay(), reward);
+		performanceData.add(t.getDay(), performance);
 	}
 	public void updateTrendsPane() {
 		lastTenReward = 0;
@@ -664,6 +666,7 @@ public class Dashboard extends JFrame implements ActionListener {
 							t.advanceTime();
 							Snippet.startOfDay(users, t);
 							a.runAuction(users, t, auctionResult, auctionHistory);
+							performance = Snippet.agentPerformance(agent);
 							Snippet.endOfDay(users, reward, t);
 							updateTopPane();
 							updateUserPane();
