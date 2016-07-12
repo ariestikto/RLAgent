@@ -63,7 +63,7 @@ public class Snippet {
 			users[i].useElectricity();
 			if (users[i].getStrategy() == 5) {
 				users[i].getAgent().evaluateAction(users[i], t.getNextWeather());
-				System.out.println("SA Pair: " + users[i].getAgent().getQSize());
+//				System.out.println("SA Pair: " + users[i].getAgent().getQSize());
 			}
 		}
 	}
