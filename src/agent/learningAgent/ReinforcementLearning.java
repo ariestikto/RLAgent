@@ -140,10 +140,10 @@ public class ReinforcementLearning {
 			// epsilon greedy algorithm
 			// =========================
 			if (Math.random() > getEpsilon()) {
-//				System.out.println("Best");
+			//	System.out.println("Best");
 				a = bestAction(s, user);
 			} else {
-//				System.out.println("Random");
+			//	System.out.println("Random");
 				a = randomAction(s, user);
 			}
 			// ===============================
