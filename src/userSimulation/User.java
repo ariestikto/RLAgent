@@ -187,6 +187,12 @@ public class User {
 		case 4:
 			UserModel.OtherUser(t, preferences);
 			break;
+		case 5:
+			UserModel.TestCaseEVUser(t, this, preferences, task);
+			break;
+		case 6:
+			UserModel.CompanyBuyerB(preferences);
+			break;
 		}
 		
 		this.taskList = task;

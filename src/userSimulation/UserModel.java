@@ -534,11 +534,47 @@ public class UserModel {
 		}
 		Collections.sort(taskList);
 	}
+	public static void TestCaseEVUser(Time time, User user, ElectricityBundle preferences, List<Task> taskList) {
+		double dayNeeds = 0; //km
+		double dayBudget = 0; //p/km
+		String day;
+		double taskAll = 16;
+		double taskDaily = 1.4;
+		int allValue = 60;
+		int dailyValue = 25;
+		
+		day = time.getDayName();
+		// set task for the day
+		switch (day) {
+		case "Monday":
+		case "Tuesday":
+		case "Wednesday":
+		case "Thursday":
+		case "Friday":
+		case "Saturday":
+			dayBudget += 20;
+			dayNeeds += taskDaily;
+			taskList.add(new Task(dailyValue, taskDaily/user.getCar().getConsumption()));
+			break;
+		case "Sunday":
+			dayBudget += 5;
+			dayNeeds += taskAll;
+			taskList.add(new Task(allValue, taskAll/user.getCar().getConsumption()));
+			break;
+		}
+		preferences.setAmount(dayNeeds);
+		preferences.setUnitPrice(dayBudget);
+		Collections.sort(taskList);
+	}
 	public static void CompanyBuyer(ElectricityBundle preferences) {
 		NormalDistribution needs = new NormalDistribution(30, 3);
 		NormalDistribution unitBudget = new NormalDistribution(25, 3);
 		preferences.setAmount(needs.sample());
 		preferences.setUnitPrice(unitBudget.sample());
+	}
+	public static void CompanyBuyerB(ElectricityBundle preferences) {
+		preferences.setAmount(10);
+		preferences.setUnitPrice(10);
 	}
 	public static void OtherUser(Time time, ElectricityBundle preferences) {
 		double randomNeeds = 0.2 + (Math.random() * ((5 - 0.2) + 1));

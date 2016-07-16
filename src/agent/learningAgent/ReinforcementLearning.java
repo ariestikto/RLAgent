@@ -15,7 +15,7 @@ import marketFramework.Time;
 public class ReinforcementLearning {
 
 	private List<QFunction> Q;
-	private double reward = 0;
+	private double rewardSignal = 0;
 	private double learningRate;
 	private double discountFactor;
 	private double epsilon;
@@ -29,8 +29,8 @@ public class ReinforcementLearning {
 		this.Q = new ArrayList<QFunction>();
 	}
 	
-	public double getReward() {
-		return reward;
+	public double getRewardSignal() {
+		return rewardSignal;
 	}
 	
 	public double getLearningRate() {
@@ -63,6 +63,7 @@ public class ReinforcementLearning {
 		if (Q.size() > 0) {
 			for (QFunction temp : Q) {
 				if (s.isEqual(temp.getState())) {
+					System.out.println(temp.getReward());
 					if (temp.getReward() > reward) {
 						a = temp.getAction();
 						reward = temp.getReward();
@@ -107,7 +108,7 @@ public class ReinforcementLearning {
 	
 	public Action randomAction(State s, User user) {
 		Action a = new Action();
-		int amountLevel = s.getElectricityLevel() + (int)(Math.random() * ((5 - s.getElectricityLevel()) + 1));
+		int amountLevel = 1 + (int)(Math.random() * (((6-s.getElectricityLevel()) - 1) + 1));
 		int budgetLevel = 1 + (int)(Math.random() * ((4 - 1) + 1));
 		if (amountLevel == 1) {
 			budgetLevel = 1;
@@ -136,10 +137,8 @@ public class ReinforcementLearning {
 			// epsilon greedy algorithm
 			// =========================
 			if (Math.random() > getEpsilon()) {
-			//	System.out.println("Best");
 				a = bestAction(s, user);
 			} else {
-			//	System.out.println("Random");
 				a = randomAction(s, user);
 			}
 			// ===============================
@@ -147,12 +146,12 @@ public class ReinforcementLearning {
 	}
 	
 	public void evaluateAction(User user, int nextWeather) {
-		this.reward = Reward.RewardPatternA(user);
+		this.rewardSignal = Feedback.FeedbackPatternA(user);
 		double QReward = 0;
 		QFunction lastQ = findSAPair(lastStateAction.getState(), lastStateAction.getAction());
 		QFunction bestNextQ = findSAPair(lastStateAction.getState().nextState(lastStateAction.getAction(), user, nextWeather), bestAction(lastStateAction.getState().nextState(lastStateAction.getAction(), user, nextWeather), user));
-		QReward = lastQ.getReward() + learningRate*(reward + discountFactor*bestNextQ.getReward() - lastQ.getReward());
-//		System.out.println(QReward + " = " + lastQ.getReward() + " + " + learningRate + "(" + reward + " + " + discountFactor + "x" + bestNextQ.getReward() + " - " + lastQ.getReward() + ")");
+		QReward = lastQ.getReward() + learningRate*(rewardSignal + discountFactor*bestNextQ.getReward() - lastQ.getReward());
+//		System.out.println(QReward + " = " + lastQ.getReward() + " + " + learningRate + "(" + rewardSignal + " + " + discountFactor + "x" + bestNextQ.getReward() + " - " + lastQ.getReward() + ")");
 		updateQ(lastStateAction.getState(), lastStateAction.getAction(), QReward);
 	}
 }

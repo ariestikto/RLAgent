@@ -47,9 +47,6 @@ public class State {
 			weatherName =  "Rainy";
 			break;
 		case 3:
-			weatherName =  "Fog";
-			break;
-		case 4:
 			weatherName =  "Snow";
 			break;
 		}

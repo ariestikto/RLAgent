@@ -23,9 +23,9 @@ public class Auction {
 		restartAuction();
 	}
 	public void restartAuction() {
-		NormalDistribution supplyDist = new NormalDistribution(Market.ELECTRICITY_SUPPLY, 1);
+//		NormalDistribution supplyDist = new NormalDistribution(Market.ELECTRICITY_SUPPLY, 1);
 		
-		this.dailySupply = Snippet.round(supplyDist.sample());;
+		this.dailySupply = Market.ELECTRICITY_SUPPLY;
 		this.currentBid = Market.START_PRICE;
 	}
 	public double getDailySupply() {

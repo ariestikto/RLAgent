@@ -106,40 +106,40 @@ public class Bid {
 		double totalBudget = 0;
 		int aim = a.getAddedAmountLevel();
 		int budget = a.getBudgetLevel();
-		
 		switch (aim) {
 		case 1:
 			deficit = 0;
 			break;
 		case 2:
-			deficit = user.getCar().getBatteryCapacity()*0.25 - user.getCurrentElectricity();
+			deficit = user.getCar().getBatteryCapacity()*0.25;
 			break;
 		case 3:
-			deficit = user.getCar().getBatteryCapacity()*0.5 - user.getCurrentElectricity();
+			deficit = user.getCar().getBatteryCapacity()*0.5;
 			break;
 		case 4:
-			deficit = user.getCar().getBatteryCapacity()*0.75 - user.getCurrentElectricity();
+			deficit = user.getCar().getBatteryCapacity()*0.75;
 			break;
 		case 5:
-			deficit = user.getCar().getBatteryCapacity() - user.getCurrentElectricity();
+			deficit = user.getCar().getBatteryCapacity();
 			break;
 		}
-		
+		if (user.getCar().getBatteryCapacity() < (deficit + user.getCurrentElectricity())) {
+			deficit = user.getCar().getBatteryCapacity() - user.getCurrentElectricity();
+		}
 		switch (budget) {
 		case 1:
-			maxPrice = 15;
+			maxPrice = 7;
 			break;
 		case 2:
-			maxPrice = 20;
+			maxPrice = 13;
 			break;
 		case 3:
-			maxPrice = 25;
+			maxPrice = 18;
 			break;
 		case 4:
-			maxPrice = 30;
+			maxPrice = 23;
 			break;
 		}
-
 		totalBudget = deficit*maxPrice;
 		if (deficit > 0) {
 			if (deficit < totalBudget/currentBid) {

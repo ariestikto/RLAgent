@@ -37,6 +37,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
+import agent.learningAgent.Feedback;
+import agent.learningAgent.Reward;
 import auctionSimulation.Auction;
 import userSimulation.User;
 
@@ -475,7 +477,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		lblDayvalue = new JLabel(t.getDayName());
 		agentPanel.add(lblDayvalue, "4, 8");
 		
-		lblAddedElectricity = new JLabel("Target Electricity:");
+		lblAddedElectricity = new JLabel("Added Electricity:");
 		agentPanel.add(lblAddedElectricity, "8, 8, right, default");
 		
 		lblAddedelectricityvalue = new JLabel("0");
@@ -517,7 +519,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		lblNextelectricitylevelvalue = new JLabel("0");
 		agentPanel.add(lblNextelectricitylevelvalue, "16, 12");
 		
-		lblRewardSignal = new JLabel("Reward Signal:");
+		lblRewardSignal = new JLabel("Feedback Signal:");
 		agentPanel.add(lblRewardSignal, "2, 18, right, default");
 		
 		lblRewardvalue = new JLabel("0");
@@ -588,7 +590,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		carCapacityInfo.setText(activeUser.getCar().getBatteryCapacity() + " kWh");
 	}
 	public void updateAgentPane() {
-		reward = agent.getAgent().getReward();
+		reward = Feedback.FeedbackPatternA(agent);
 		rewards.add(reward);
 		lblDayvalue.setText(t.getDayName());
 		lblAddedelectricityvalue.setText(agent.getAgent().getLastStateAction().getAction().getAmountPercentage());
@@ -598,7 +600,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		lblNextweather.setText(t.getNextWeatherName());
 		lblNextelectricitylevelvalue.setText(agent.getAgent().getLastStateAction().getState().nextState(agent.getAgent().getLastStateAction().getAction(), agent, t.getNextWeather()).getElectricityPercentage());
 		lblElectricitylevelvalue.setText(agent.getAgent().getLastStateAction().getState().getElectricityPercentage());
-		lblRewardvalue.setText(reward + "");
+		lblRewardvalue.setText(agent.getAgent().getRewardSignal() + "");
 		lblQvalue.setText(agent.getAgent().findSAPair(agent.getAgent().getLastStateAction().getState(), agent.getAgent().getLastStateAction().getAction()).getReward() + "");
 	}
 	public void updateGraphPane() {

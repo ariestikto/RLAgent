@@ -59,19 +59,16 @@ public class Time {
 		return nextWeather;
 	}
 	public void randomizeNextWeather() {
-		int random = 1 + (int)(Math.random() * ((1000 - 1) + 1));
-		if (random < 810) {
+		double random = Math.random();
+		if (random > 0.25) {
 			// 1 = sunny weather
 			this.nextWeather = 1;
-		} else if (random < 960) {
+		} else if (random > 0.05) {
 			// 2 = rainy weather
 			this.nextWeather = 2;
-		} else if (random < 980) {
-			// 3 = foggy weather
-			this.nextWeather = 3;
 		} else {
-			// 4 = snow weather
-			this.nextWeather = 4;
+			// 3 = snow weather
+			this.nextWeather = 3;
 		}
 	}
 	public String getWeatherName() {
@@ -84,9 +81,6 @@ public class Time {
 			weatherName =  "Rainy";
 			break;
 		case 3:
-			weatherName =  "Fog";
-			break;
-		case 4:
 			weatherName =  "Snow";
 			break;
 		}
@@ -102,9 +96,6 @@ public class Time {
 			weatherName =  "Rainy";
 			break;
 		case 3:
-			weatherName =  "Fog";
-			break;
-		case 4:
 			weatherName =  "Snow";
 			break;
 		}
