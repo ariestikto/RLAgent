@@ -32,7 +32,6 @@ public class User {
 //	EV user only
 	private Car car = new Car(0);
 	private boolean isEVUser = false;
-	private boolean isShop = false;
 	private List<Task> taskList = new ArrayList<Task>();
 	private ReinforcementLearning agent = new ReinforcementLearning(Market.AGENT_LEARNING_RATE, Market.AGENT_DISCOUNT_FACTOR, Market.EPSILON_PARAMETER);
 	
@@ -77,18 +76,6 @@ public class User {
 	
 	public Car getCar() {
 		return car;
-	}
-	
-	public void setShop(int isShop) {
-		if (isShop == 1) {
-			this.isShop = true;
-		} else {
-			this.isShop = false;
-		}
-	}
-	
-	public boolean getShop() {
-		return isShop;
 	}
 	
 	public List<Task> getTask() {

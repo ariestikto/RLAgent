@@ -41,7 +41,7 @@ public class UserModel {
 		double highBudget = Snippet.normDist(18.6);
 		double normalBudget = Snippet.normDist(13.9);
 		double lowBudget = Snippet.normDist(7.1);
-		int workValue = 50;
+		int workValue = 45;
 		int lunchValue = 5;
 		int dinnerValue = 10;
 		int hospitalValue = 100;
@@ -53,7 +53,6 @@ public class UserModel {
 		// set task for the day
 		switch (day) {
 		case "Monday":
-			user.setShop(0);
 		case "Tuesday":
 		case "Wednesday":
 		case "Thursday":
@@ -84,17 +83,9 @@ public class UserModel {
 				}
 			} else if (random1 < 981) {
 				if (random2 < 501) {
-					if (user.getShop()) {
-						consumption.add("0");
-						if (random3 < 301) {
-							consumption.add("lunch");
-						}
-					} else {
-						consumption.add("shopping"); //heavy_shopping
-						user.setShop(1);
-						if (random3 < 801) {
-							consumption.add("lunch");
-						}
+					consumption.add("shopping"); //heavy_shopping
+					if (random3 < 801) {
+						consumption.add("lunch");
 					}
 				} else if (random2 < 801) {
 					consumption.add("hangout");
@@ -123,17 +114,9 @@ public class UserModel {
 		case "Saturday":
 		case "Sunday":
 			if (random1 < 501) {
-				if (user.getShop()) {
-					consumption.add("0");
-					if (random3 < 301) {
-						consumption.add("lunch");
-					}
-				} else {
-					consumption.add("shopping"); //heavy_shopping
-					if (random3 < 801) {
-						consumption.add("lunch");
-					}
-					user.setShop(1);
+				consumption.add("shopping"); //heavy_shopping
+				if (random3 < 801) {
+					consumption.add("lunch");
 				}
 			} else if (random1 < 801) {
 				consumption.add("hangout");
@@ -232,44 +215,7 @@ public class UserModel {
 						}
 					}
 					break;
-				case 3: //foggy
-					if (task == "work") {
-						dayNeeds += taskWork;
-						dayBudget += normalBudget*taskWork;
-						taskList.add(new Task(workValue, taskWork));
-					} else if (task == "hospital") {
-						dayNeeds += taskHospital;
-						dayBudget += highBudget*taskHospital;
-						taskList.add(new Task(hospitalValue, taskHospital));
-					} else if (task == "shopping") {
-						dayNeeds += taskShopping;
-						dayBudget += normalBudget*taskShopping;
-						taskList.add(new Task(shoppingValue, taskShopping));
-					} else if (task == "hangout") {
-						if (randomWeather1 > 700) {
-							dayNeeds += taskHangout;
-							dayBudget += lowBudget*taskHangout;
-							taskList.add(new Task(hangoutValue, taskHangout));
-						}
-					} else if (task == "trip") {
-						if (randomWeather1 > 700) {
-							dayNeeds += taskTrip;
-							dayBudget += lowBudget*taskTrip;
-							taskList.add(new Task(tripValue, taskTrip));
-						}
-					} else if (task == "dinner") {
-						dayNeeds += taskDinner;
-						dayBudget += normalBudget*taskDinner;
-						taskList.add(new Task(dinnerValue, taskDinner));
-					} else if (task == "lunch") {
-						if (randomWeather1 > 700) {
-							dayNeeds += taskLunch;
-							dayBudget += lowBudget*taskLunch;
-							taskList.add(new Task(lunchValue, taskLunch));
-						}
-					}
-					break;
-				case 4: //snow
+				case 3: //snow
 					if (task == "work") {
 						if (randomWeather2 > 100) {
 							dayNeeds += taskWork*1.5;
@@ -329,201 +275,84 @@ public class UserModel {
 		String task;
 		String day;
 		List<String> consumption = new ArrayList<String>();
-		int random1 = 1 + (int)(Math.random() * ((1000 - 1) + 1));
-		int random2 = 1 + (int)(Math.random() * ((1000 - 1) + 1));
-		int randomWeather1 = 1 + (int)(Math.random() * ((1000 - 1) + 1));
-		int randomWeather2 = 1 + (int)(Math.random() * ((1000 - 1) + 1));
 		double taskWork = Snippet.normDist(50);
-		double taskHospital = Snippet.normDist(5);
-		double taskShopping = Snippet.normDist(7);
-		double taskHangout = Snippet.normDist(20 + (Math.random() * ((40 - 20) + 1)));
-		double taskTrip = Snippet.normDist(50 + (Math.random() * ((200 - 50) + 1)));
-		double highBudget = Snippet.normDist(24.5);
-		double normalBudget = Snippet.normDist(18.6);
-		double lowBudget = Snippet.normDist(13.9);
-		int workValue = 70;
-		int hospitalValue = 80;
-		int shoppingValue = 50;
-		int hangoutValue = 20;
-		int tripValue = 30;
-		
+		double taskDinner = Snippet.normDist(30);
+		double taskTrip = Snippet.normDist(120);
+		double highBudget = 18.6;
+		double normalBudget = 13.9;
+		double lowBudget = 7.1;
+		int workValue = 40;
+		int dinnerValue = 30;
+		int tripValue = 60;
 		
 		day = time.getDayName();
 		// set task for the day
 		switch (day) {
 		case "Monday":
-			user.setShop(0);
 		case "Tuesday":
 		case "Wednesday":
 		case "Thursday":
 		case "Friday":
-			if (random1 < 501) {
+			if (Math.random() < 0.95) {
 				consumption.add("work");
-			} else if (random1 < 503) {
-				consumption.add("hospital");
-			} else if (random1 < 533) {
-				if (random2 < 501) {
-					if (user.getShop()) {
-						consumption.add("0");
-					} else {
-						consumption.add("shopping"); //heavy_shopping
-						user.setShop(1);
-					}
-				} else {
-					consumption.add("0");
-				}
-			} else {
-				if (random2 < 201) {
-					if (user.getShop()) {
-						consumption.add("0");
-					} else {
-						consumption.add("shopping"); //heavy_shopping
-						user.setShop(1);
-					}
-				} else if (random2 < 801) {
-					consumption.add("hangout");
-				} else if (random2 < 901) {
-					consumption.add("trip");
-				} else {
-					consumption.add("0");
-				}
+				dayNeeds += taskWork;
+				dayBudget += normalBudget*taskWork;
+			}
+			if (Math.random() < 0.8) {
+				consumption.add("dinner");
+				dayNeeds += taskDinner;
+				dayBudget += lowBudget*taskDinner;
 			}
 			break;
 		case "Saturday":
-		case "Sunday":
-			if (random1 < 201) {
-				if (user.getShop()) {
-					consumption.add("0");
-				} else {
-					consumption.add("shopping"); //heavy_shopping
-					user.setShop(1);
-				}
-			} else if (random1 < 801) {
-				consumption.add("hangout");
-			} else if (random1 < 901) {
+			if (Math.random() < 0.5) {
 				consumption.add("trip");
-			} else if (random1 < 921){
-				consumption.add("hospital");
-			} else {
-				consumption.add("0");
+				dayNeeds += taskTrip;
+				dayBudget += highBudget*taskTrip;
+			}
+			break;
+		case "Sunday":
+			if (Math.random() < 0.2) {
+				consumption.add("trip");
+				dayNeeds += taskTrip;
+				dayBudget += highBudget*taskTrip;
 			}
 			break;
 		}
-		
-		// allocate needs and budget for the day
 		for (int i = 0; i < consumption.size(); i++) {
 			task = consumption.get(i);
-			if (task != "0") {
-				switch (time.getWeather()) {
-				case 1: //sunny
-					if (task == "work") {
-						dayNeeds += taskWork;
-						dayBudget += normalBudget*taskWork;
-						taskList.add(new Task(workValue, taskWork));
-					} else if (task == "hospital") {
-						dayNeeds += taskHospital;
-						dayBudget += highBudget*taskHospital;
-						taskList.add(new Task(hospitalValue, taskHospital));
-					} else if (task == "shopping") {
-						dayNeeds += taskShopping;
-						dayBudget += normalBudget*taskShopping;
-						taskList.add(new Task(shoppingValue, taskShopping));
-					} else if (task == "hangout") {
-						dayNeeds += taskHangout;
-						dayBudget += lowBudget*taskHangout;
-						taskList.add(new Task(hangoutValue, taskHangout));
-					} else if (task == "trip") {
-						dayNeeds += taskTrip;
-						dayBudget += lowBudget*taskTrip;
-						taskList.add(new Task(tripValue, taskTrip));
-					}
-					break;
-				case 2: //rainy
-					if (task == "work") {
-						dayNeeds += taskWork*1.1;
-						dayBudget += normalBudget*taskWork*1.1;
-						taskList.add(new Task(workValue, taskWork*1.1));
-					} else if (task == "hospital") {
-						dayNeeds += taskHospital*1.1;
-						dayBudget += highBudget*taskHospital*1.1;
-						taskList.add(new Task(hospitalValue, taskHospital*1.1));
-					} else if (task == "shopping") {
-						dayNeeds += taskShopping*1.1;
-						dayBudget += normalBudget*taskShopping*1.1;
-						taskList.add(new Task(shoppingValue, taskShopping*1.1));
-					} else if (task == "hangout") {
-						if (randomWeather1 > 50) {
-							dayNeeds += taskHangout*1.1;
-							dayBudget += lowBudget*taskHangout*1.1;
-							taskList.add(new Task(hangoutValue, taskHangout*1.1));
-						}
-					} else if (task == "trip") {
-						if (randomWeather1 > 50) {
-							dayNeeds += taskTrip*1.1;
-							dayBudget += lowBudget*taskTrip*1.1;
-							taskList.add(new Task(tripValue, taskTrip*1.1));
-						}
-					}
-					break;
-				case 3: //foggy
-					if (task == "work") {
-						dayNeeds += taskWork;
-						dayBudget += normalBudget*taskWork;
-						taskList.add(new Task(workValue, taskWork));
-					} else if (task == "hospital") {
-						dayNeeds += taskHospital;
-						dayBudget += highBudget*taskHospital;
-						taskList.add(new Task(hospitalValue, taskHospital));
-					} else if (task == "shopping") {
-						dayNeeds += taskShopping;
-						dayBudget += normalBudget*taskShopping;
-						taskList.add(new Task(shoppingValue, taskShopping));
-					} else if (task == "hangout") {
-						if (randomWeather1 > 50) {
-							dayNeeds += taskHangout;
-							dayBudget += lowBudget*taskHangout;
-							taskList.add(new Task(hangoutValue, taskHangout));
-						}
-					} else if (task == "trip") {
-						if (randomWeather1 > 50) {
-							dayNeeds += taskTrip;
-							dayBudget += lowBudget*taskTrip;
-							taskList.add(new Task(tripValue, taskTrip));
-						}
-					}
-					break;
-				case 4: //snow
-					if (task == "work") {
-						if (randomWeather2 > 100) {
-							dayNeeds += taskWork*1.3;
-							dayBudget += normalBudget*taskWork*1.3;
-							taskList.add(new Task(workValue, taskWork*1.3));
-						}
-					} else if (task == "hospital") {
-						dayNeeds += taskHospital*1.3;
-						dayBudget += highBudget*taskHospital*1.3;
-						taskList.add(new Task(hospitalValue, taskHospital*1.3));
-					} else if (task == "shopping") {
-						if (randomWeather2 > 100) {
-							dayNeeds += taskShopping*1.3;
-							dayBudget += normalBudget*taskShopping*1.3;
-							taskList.add(new Task(shoppingValue, taskShopping*1.3));
-						}
-					} else if (task == "hangout") {
-						if (randomWeather1 > 300) {
-							dayNeeds += taskHangout*1.3;
-							dayBudget += lowBudget*taskHangout*1.3;
-							taskList.add(new Task(hangoutValue, taskHangout*1.3));
-						}
-					} else if (task == "trip") {
-						if (randomWeather1 > 300) {
-							dayNeeds += taskTrip*1.3;
-							dayBudget += lowBudget*taskTrip*1.3;
-							taskList.add(new Task(tripValue, taskTrip*1.3));
-						}
-					}
-					break;
+			switch (time.getWeather()) {
+			case 1: //sunny
+				if (task == "work") {
+					taskList.add(new Task(workValue, taskWork));
+				} else if (task == "dinner") {
+					taskList.add(new Task(dinnerValue, taskDinner));
+				} else if (task == "trip") {
+					taskList.add(new Task(tripValue, taskTrip));
 				}
+				break;
+			case 2: //rainy
+				dayNeeds *= 1.2;
+				dayBudget *= 1.2;
+				if (task == "work") {
+					taskList.add(new Task(workValue, taskWork*1.2));
+				} else if (task == "dinner") {
+					taskList.add(new Task(dinnerValue, taskDinner*1.2));
+				} else if (task == "trip") {
+					taskList.add(new Task(tripValue, taskTrip*1.2));
+				}
+				break;
+			case 3: //snow
+				dayNeeds *= 1.5;
+				dayBudget *= 1.5;
+				if (task == "work") {
+					taskList.add(new Task(workValue, taskWork*1.5));
+				} else if (task == "dinner") {
+					taskList.add(new Task(dinnerValue, taskDinner*1.5));
+				} else if (task == "trip") {
+					taskList.add(new Task(tripValue, taskTrip*1.5));
+				}
+				break;
 			}
 		}
 		preferences.setAmount(dayNeeds*user.getCar().getConsumption());
@@ -562,8 +391,8 @@ public class UserModel {
 		Collections.sort(taskList);
 	}
 	public static void CompanyBuyer(ElectricityBundle preferences) {
-		NormalDistribution needs = new NormalDistribution(30, 3);
-		NormalDistribution unitBudget = new NormalDistribution(25, 3);
+		NormalDistribution needs = new NormalDistribution(30, 2);
+		NormalDistribution unitBudget = new NormalDistribution(25, 2);
 		preferences.setAmount(needs.sample());
 		preferences.setUnitPrice(unitBudget.sample());
 	}
