@@ -7,6 +7,7 @@ import java.util.List;
 
 import java.util.ArrayList;
 import userSimulation.User;
+import marketFramework.Market;
 import marketFramework.Time;
 /**
  * @author pa1g15
@@ -146,7 +147,11 @@ public class ReinforcementLearning {
 	}
 	
 	public void evaluateAction(User user, int nextWeather) {
-		this.rewardSignal = Feedback.FeedbackPatternA(user);
+		if (Math.random() < Market.FEEDBACK_FREQUENCY) {
+			this.rewardSignal = Feedback.FeedbackPatternA(user);
+		} else {
+			this.rewardSignal = 0;
+		}
 		double QReward = 0;
 		QFunction lastQ = findSAPair(lastStateAction.getState(), lastStateAction.getAction());
 		QFunction bestNextQ = findSAPair(lastStateAction.getState().nextState(lastStateAction.getAction(), user, nextWeather), bestAction(lastStateAction.getState().nextState(lastStateAction.getAction(), user, nextWeather), user));

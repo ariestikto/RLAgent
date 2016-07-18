@@ -539,9 +539,7 @@ public class UserModel {
 		double dayBudget = 0; //p/km
 		String day;
 		double taskAll = 16;
-		double taskDaily = 1.4;
 		int allValue = 60;
-		int dailyValue = 25;
 		
 		day = time.getDayName();
 		// set task for the day
@@ -553,8 +551,6 @@ public class UserModel {
 		case "Friday":
 		case "Saturday":
 			dayBudget += 20;
-//			dayNeeds += taskDaily;
-//			taskList.add(new Task(dailyValue, taskDaily/user.getCar().getConsumption()));
 			break;
 		case "Sunday":
 			dayNeeds += taskAll;
