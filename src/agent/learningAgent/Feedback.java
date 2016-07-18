@@ -3,7 +3,6 @@
  */
 package agent.learningAgent;
 
-import marketFramework.Market;
 import userSimulation.User;
 import userSimulation.UserSatisfaction;
 
@@ -18,34 +17,33 @@ public class Feedback {
 	 */
 	public static int FeedbackPatternA(User user) {
 		int score  = 0;
-		int addedScore = 0;
 		int satisfactoryLevel = 0;
+		double excessBudget = user.payout() - user.getBudget();
 		
 		// electricity
 		satisfactoryLevel = UserSatisfaction.userSatisfactory(user);
 		switch (satisfactoryLevel) {
 		case 5: // very satisfied
-			addedScore = 5;
+			score = 5;
 			break;
 		case 4: // satisfied
-			addedScore = 3;
+			score = 3;
 			break;
 		case 3: // neutral
-			addedScore = 0;
+			score = 0;
 			break;
 		case 2: // dissatisfied
-			addedScore = -3;
+			score = -3;
 			break;
 		case 1: // very dissatisfied
-			addedScore = -5;
+			score = -5;
 			break;
 		}
-		if (user.getBudget() < user.payout()) {
-			addedScore += -1;
+		if (excessBudget > 100) {
+			score += -2;
+		} else if (excessBudget > 50) {
+			score += -1;
 		}
-//		if (Math.random() < Market.FEEDBACK_FREQUENCY) {
-			score = addedScore;
-//		}
 		return score;
 	}
 }

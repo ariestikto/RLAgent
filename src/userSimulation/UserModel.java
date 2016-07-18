@@ -553,11 +553,10 @@ public class UserModel {
 		case "Friday":
 		case "Saturday":
 			dayBudget += 20;
-			dayNeeds += taskDaily;
-			taskList.add(new Task(dailyValue, taskDaily/user.getCar().getConsumption()));
+//			dayNeeds += taskDaily;
+//			taskList.add(new Task(dailyValue, taskDaily/user.getCar().getConsumption()));
 			break;
 		case "Sunday":
-			dayBudget += 5;
 			dayNeeds += taskAll;
 			taskList.add(new Task(allValue, taskAll/user.getCar().getConsumption()));
 			break;

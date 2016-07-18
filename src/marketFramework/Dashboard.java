@@ -590,7 +590,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		carCapacityInfo.setText(activeUser.getCar().getBatteryCapacity() + " kWh");
 	}
 	public void updateAgentPane() {
-		reward = Feedback.FeedbackPatternA(agent);
+		reward = Reward.RewardPatternA(agent);
 		rewards.add(reward);
 		lblDayvalue.setText(t.getDayName());
 		lblAddedelectricityvalue.setText(agent.getAgent().getLastStateAction().getAction().getAmountPercentage());
@@ -609,14 +609,14 @@ public class Dashboard extends JFrame implements ActionListener {
 	}
 	public void updateTrendsPane() {
 		lastTenReward = 0;
-		if (t.getDay() > 9) {
-			for (int i = 1; i < 10; i++) {
+		if (t.getDay() > 6) {
+			for (int i = 1; i < 8; i++) {
 				lastTenReward += rewards.get(rewards.size() - i);
 			}
 			rewards.remove(0);
 		}
-		trendsData.add(t.getDay(), lastTenReward/10);
-		trends.add(lastTenReward/10);
+		trendsData.add(t.getDay(), lastTenReward/7);
+		trends.add(lastTenReward/7);
 	}
 	public void bottomPane(JPanel buttonPanel) {
 		String[] timeMenu = {"1 Day", "3 Days", "7 Days", "30 Days", "100 Days", "500 Days", "1000 Days"};
@@ -691,7 +691,7 @@ public class Dashboard extends JFrame implements ActionListener {
 				try {
 		            // Assume default encoding.
 		            FileWriter fileWriter =
-		                new FileWriter(fileName);
+		                new FileWriter(fileName, true);
 
 		            // Always wrap FileWriter in BufferedWriter.
 		            BufferedWriter bufferedWriter =
@@ -699,10 +699,11 @@ public class Dashboard extends JFrame implements ActionListener {
 
 		            // Note that write() does not automatically
 		            // append a newline character.
+		            
 		            for (Double temp : trends) {
 		            	bufferedWriter.write(temp + "\t");
 					}
-
+		            bufferedWriter.write("\n");
 		            // Always close files.
 		            bufferedWriter.close();
 		        } catch(IOException ex) {}

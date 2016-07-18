@@ -63,7 +63,7 @@ public class ReinforcementLearning {
 		if (Q.size() > 0) {
 			for (QFunction temp : Q) {
 				if (s.isEqual(temp.getState())) {
-					System.out.println(temp.getReward());
+//					System.out.println(temp.getReward());
 					if (temp.getReward() > reward) {
 						a = temp.getAction();
 						reward = temp.getReward();
