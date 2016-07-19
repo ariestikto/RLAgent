@@ -5,8 +5,6 @@ package auctionSimulation;
 
 import java.awt.TextArea;
 
-import org.apache.commons.math3.distribution.NormalDistribution;
-
 import marketFramework.Market;
 import marketFramework.Snippet;
 import userSimulation.User;

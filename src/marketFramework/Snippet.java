@@ -27,7 +27,7 @@ public class Snippet {
 	public static User[] createUsers() {
 		User[] users = new User[Market.AUCTION_PARTICIPANT];
 		
-		users[0] = new User(2, 5, new Car(3));
+		users[0] = new User(1, 5, new Car(3));
 		users[1] = new User(6, 2);
 		users[2] = new User(3, 3);
 		users[3] = new User(4, 1);
@@ -37,6 +37,7 @@ public class Snippet {
 		users[7] = new User(4, 4);
 		users[8] = new User(4, 2);
 		users[9] = new User(2, 2, new Car(3));
+		users[10] = new User(1, 2, new Car(1));
 		return users;
 	}
 	public static double normDist(double mean) {
