@@ -29,17 +29,18 @@ public class UserSatisfaction {
 	}
 	
 	public void generateFeedbackPatternA(User user) {
+		//	fair feedback
 		Performance p = user.getPerformance();
 		double FEEDBACK_FREQUENCY = 0.7;
 		double surplus = p.getActualSpending() - user.getBudget(); 
 		if (p.lostValue() > 0) {
-			if (p.lostValue() > 50) {
+			if (p.lostValue() > 500) {
 				this.electricityFeedback = 1;
 			} else {
 				this.electricityFeedback = 2;
 			}
 		} else {
-			if (p.getGainedValue() > 80) {
+			if (p.getGainedValue() > 1000) {
 				this.electricityFeedback = 5;
 			} else {
 				this.electricityFeedback = 4;
@@ -63,5 +64,78 @@ public class UserSatisfaction {
 			this.electricityFeedback = 3;
 		}
 	}
-
+	
+	public void generateFeedbackPatternB(User user) {
+		// punish trip failure
+		Performance p = user.getPerformance();
+		double FEEDBACK_FREQUENCY = 0.7;
+		double surplus = p.getActualSpending() - user.getBudget(); 
+		if (p.lostValue() > 0) {
+			if (p.lostValue() > 100) {
+				this.electricityFeedback = 1;
+			} else {
+				this.electricityFeedback = 2;
+			}
+		} else {
+			if (p.getGainedValue() > 1500) {
+				this.electricityFeedback = 5;
+			} else {
+				this.electricityFeedback = 4;
+			}
+		}
+		
+		if (surplus > 20) {
+			this.payoutFeedback = 5;
+		} else if (surplus > -10) {
+			this.payoutFeedback = 4;
+		} else if (surplus > -50) {
+			this.payoutFeedback = 3;
+		} else if (surplus > -100) {
+			this.payoutFeedback = 2;
+		} else {
+			this.payoutFeedback = 1;
+		}
+		
+		if (Math.random() > FEEDBACK_FREQUENCY) {
+			this.payoutFeedback = 3;
+			this.electricityFeedback = 3;
+		}
+	}
+	
+	public void generateFeedbackPatternC(User user) {
+		// cheapskate
+		Performance p = user.getPerformance();
+		double FEEDBACK_FREQUENCY = 0.7;
+		double surplus = p.getActualSpending() - user.getBudget(); 
+		if (p.lostValue() > 0) {
+			if (p.lostValue() > 500) {
+				this.electricityFeedback = 1;
+			} else {
+				this.electricityFeedback = 2;
+			}
+		} else {
+			if (p.getGainedValue() > 1000) {
+				this.electricityFeedback = 5;
+			} else {
+				this.electricityFeedback = 4;
+			}
+		}
+		
+		if (surplus > 100) {
+			this.payoutFeedback = 5;
+		} else if (surplus > 20) {
+			this.payoutFeedback = 4;
+		} else if (surplus > 0) {
+			this.payoutFeedback = 3;
+		} else if (surplus > -10) {
+			this.payoutFeedback = 2;
+		} else {
+			this.payoutFeedback = 1;
+		}
+		
+		if (Math.random() > FEEDBACK_FREQUENCY) {
+			this.payoutFeedback = 3;
+			this.electricityFeedback = 3;
+		}
+	}
 }

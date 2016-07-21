@@ -38,6 +38,8 @@ public class Snippet {
 		users[8] = new User(4, 2);
 		users[9] = new User(2, 2, new Car(3));
 		users[10] = new User(1, 2, new Car(1));
+//		users[0] = new User(5, 5, new Car(3));
+//		users[1] = new User(6, 2);
 		return users;
 	}
 	public static double normDist(double mean) {

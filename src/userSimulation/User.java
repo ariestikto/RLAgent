@@ -140,18 +140,17 @@ public class User {
 						gainedValue += temp.getValue();
 					}
 			    }
-				this.performance.setMaxValue(totalValue);
-				this.performance.setGainedValue(gainedValue);
 			}
+			this.performance.setMaxValue(totalValue);
+			this.performance.setGainedValue(gainedValue);
 		} else {
 			this.currentElectricity = 0;
 		}
 		this.currentElectricity = Snippet.round(currentElectricity);
 		this.performance.setActualSpending(payout());
 		if (userStrategy == 5) {
-			System.out.println(totalNeeds);
+//			System.out.println(totalNeeds);
 		}
-		System.out.println(totalNeeds);
 	}
 	
 	public void addExpenses(double expense) {
@@ -196,6 +195,7 @@ public class User {
 			break;
 		case 5:
 			UserModel.TestCaseEVUser(t, this, preferences, task);
+			this.performance.setMaxSpending(23*(car.getBatteryCapacity()-currentElectricity));
 			break;
 		case 6:
 			UserModel.CompanyBuyerB(preferences);

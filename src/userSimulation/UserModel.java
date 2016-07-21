@@ -36,13 +36,13 @@ public class UserModel {
 		double highBudget = 18.6;
 		double normalBudget = 13.9;
 		double lowBudget = 7.1;
-		double workValue = taskWork*normalBudget*consumption;
-		double lunchValue = taskLunch*normalBudget*consumption;
-		double dinnerValue = taskDinner*normalBudget*consumption;
-		double hospitalValue = taskHospital*highBudget*consumption;
-		double shoppingValue = taskShopping*normalBudget*consumption;
-		double hangoutValue = taskHangout*lowBudget*consumption;
-		double tripValue = taskTrip*lowBudget*consumption;
+		double workValue = taskWork*normalBudget*consumption*10;
+		double lunchValue = taskLunch*normalBudget*consumption*10;
+		double dinnerValue = taskDinner*normalBudget*consumption*10;
+		double hospitalValue = taskHospital*highBudget*consumption*10;
+		double shoppingValue = taskShopping*normalBudget*consumption*10;
+		double hangoutValue = taskHangout*lowBudget*consumption*10;
+		double tripValue = taskTrip*lowBudget*consumption*10;
 		
 		day = time.getDayName();
 		// set task for the day
@@ -354,8 +354,10 @@ public class UserModel {
 		double dayNeeds = 0; //km
 		double dayBudget = 0; //p/km
 		String day;
-		double taskAll = 16;
-		int allValue = 60;
+		double taskAll = 12;
+		double taskDaily = 6;
+		int allValue = 50000;
+		int dailyValue = 50000;
 		
 		day = time.getDayName();
 		// set task for the day
@@ -366,7 +368,9 @@ public class UserModel {
 		case "Thursday":
 		case "Friday":
 		case "Saturday":
-			dayBudget += 20;
+			dailyValue += taskDaily;
+			dayBudget += 30;
+			taskList.add(new Task(dailyValue, taskDaily/user.getCar().getConsumption()));
 			break;
 		case "Sunday":
 			dayNeeds += taskAll;
@@ -375,7 +379,6 @@ public class UserModel {
 		}
 		preferences.setAmount(dayNeeds);
 		preferences.setUnitPrice(dayBudget);
-		Collections.sort(taskList);
 	}
 	public static void CompanyBuyer(ElectricityBundle preferences) {
 		NormalDistribution needs = new NormalDistribution(30, 2);
@@ -385,7 +388,7 @@ public class UserModel {
 	}
 	public static void CompanyBuyerB(ElectricityBundle preferences) {
 		preferences.setAmount(10);
-		preferences.setUnitPrice(10);
+		preferences.setUnitPrice(15);
 	}
 	public static void OtherUser(Time time, ElectricityBundle preferences) {
 		double randomNeeds = 0.2 + (Math.random() * ((5 - 0.2) + 1));

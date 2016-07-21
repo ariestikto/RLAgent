@@ -70,6 +70,8 @@ public class Performance {
 		if (maxScore > 0) {
 			normalizedScore = (score + maxSpending)/maxScore;
 		}
+//		System.out.println(-maxSpending + " < " + (score + maxSpending) + " < " + maxScore);
+//		System.out.println(maxScore);
 		return normalizedScore;
 	}
 	
