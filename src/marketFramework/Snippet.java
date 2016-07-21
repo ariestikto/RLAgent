@@ -67,23 +67,4 @@ public class Snippet {
 			}
 		}
 	}
-	public static double agentPerformance (User agent) {
-		double electricityAccuracy = 0;
-		double spendingAccuracy = 0;
-		double performance = 0;
-		
-		if (agent.getDailyNeeds() < agent.getCurrentElectricity()) {
-			electricityAccuracy = 1;
-		} else {
-			electricityAccuracy = agent.getCurrentElectricity()/agent.getDailyNeeds();
-		}
-		if (agent.getBudget() > agent.payout()) {
-			spendingAccuracy = 1;
-		} else {
-			spendingAccuracy = agent.getBudget()/agent.payout();
-		}
-		
-		performance = electricityAccuracy*spendingAccuracy;
-		return performance;
-	}
 }

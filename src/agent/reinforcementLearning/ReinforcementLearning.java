@@ -1,9 +1,13 @@
 /**
  * 
  */
-package agent.learningAgent;
+package agent.reinforcementLearning;
 
 import java.util.List;
+
+import agent.Action;
+import agent.Feedback;
+import agent.State;
 
 import java.util.ArrayList;
 import userSimulation.User;
@@ -147,11 +151,7 @@ public class ReinforcementLearning {
 	}
 	
 	public void evaluateAction(User user, int nextWeather) {
-		if (Math.random() < Market.FEEDBACK_FREQUENCY) {
-			this.rewardSignal = Feedback.FeedbackPatternA(user);
-		} else {
-			this.rewardSignal = 0;
-		}
+		this.rewardSignal = Feedback.FeedbackPatternA(user);
 		double QReward = 0;
 		QFunction lastQ = findSAPair(lastStateAction.getState(), lastStateAction.getAction());
 		QFunction bestNextQ = findSAPair(lastStateAction.getState().nextState(lastStateAction.getAction(), user, nextWeather), bestAction(lastStateAction.getState().nextState(lastStateAction.getAction(), user, nextWeather), user));

@@ -1,7 +1,10 @@
 /**
  * 
  */
-package agent.learningAgent;
+package agent.reinforcementLearning;
+
+import agent.Action;
+import agent.State;
 
 /**
  * @author pa1g15

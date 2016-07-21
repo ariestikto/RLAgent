@@ -1,7 +1,7 @@
 /**
  * 
  */
-package agent.learningAgent;
+package agent;
 
 import userSimulation.User;
 /**

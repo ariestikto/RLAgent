@@ -1,47 +1,67 @@
-/**
- * 
- */
 package userSimulation;
 
-import agent.learningAgent.Task;
-
-/**
- * @author pa1g15
- *
- */
+import agent.Performance;
 public class UserSatisfaction {
 
-	/**
-	 * 
-	 */
-	public static int userSatisfactory(User user) {
-		int allTask = 0;
-		int finishedTask = 0;
-		int satisfactoryLevel = 3;
-		double lostValue = 0;
-		
-		for (Task temp : user.getTask()) {
-			allTask += temp.getValue();
-			if (temp.isFinished()) {
-				finishedTask += temp.getValue();
-			}
-	    }
-		if (allTask > 0) {
-			lostValue = allTask - finishedTask; 
-			if (lostValue == 0) {
-				if (finishedTask > 50) {
-					satisfactoryLevel = 5;
-				} else {
-					satisfactoryLevel = 4;
-				}
+	private int electricityFeedback;
+	private int payoutFeedback;
+	
+	public UserSatisfaction() {
+		// TODO Auto-generated constructor stub
+		this.electricityFeedback = 3;
+		this.payoutFeedback = 3;
+	}
+
+	public int getElectricityFeedback() {
+		return electricityFeedback;
+	}
+
+	public void setElectricityFeedback(int electricityFeedback) {
+		this.electricityFeedback = electricityFeedback;
+	}
+
+	public int getPayoutFeedback() {
+		return payoutFeedback;
+	}
+
+	public void setPayoutFeedback(int payoutFeedback) {
+		this.payoutFeedback = payoutFeedback;
+	}
+	
+	public void generateFeedbackPatternA(User user) {
+		Performance p = user.getPerformance();
+		double FEEDBACK_FREQUENCY = 0.7;
+		double surplus = p.getActualSpending() - user.getBudget(); 
+		if (p.lostValue() > 0) {
+			if (p.lostValue() > 50) {
+				this.electricityFeedback = 1;
 			} else {
-				if (lostValue > 50) {
-					satisfactoryLevel = 1;
-				} else {
-					satisfactoryLevel = 2;
-				}
+				this.electricityFeedback = 2;
+			}
+		} else {
+			if (p.getGainedValue() > 80) {
+				this.electricityFeedback = 5;
+			} else {
+				this.electricityFeedback = 4;
 			}
 		}
-		return satisfactoryLevel;
+		
+		if (surplus > 20) {
+			this.payoutFeedback = 5;
+		} else if (surplus > -10) {
+			this.payoutFeedback = 4;
+		} else if (surplus > -50) {
+			this.payoutFeedback = 3;
+		} else if (surplus > -100) {
+			this.payoutFeedback = 2;
+		} else {
+			this.payoutFeedback = 1;
+		}
+		
+		if (Math.random() > FEEDBACK_FREQUENCY) {
+			this.payoutFeedback = 3;
+			this.electricityFeedback = 3;
+		}
 	}
+
 }

@@ -37,8 +37,6 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
-import agent.learningAgent.Feedback;
-import agent.learningAgent.Reward;
 import auctionSimulation.Auction;
 import userSimulation.User;
 
@@ -590,7 +588,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		carCapacityInfo.setText(activeUser.getCar().getBatteryCapacity() + " kWh");
 	}
 	public void updateAgentPane() {
-		reward = Reward.RewardPatternA(agent);
+		reward = agent.getPerformance().normalizedScore();
 		rewards.add(reward);
 		lblDayvalue.setText(t.getDayName());
 		lblAddedelectricityvalue.setText(agent.getAgent().getLastStateAction().getAction().getAmountPercentage());

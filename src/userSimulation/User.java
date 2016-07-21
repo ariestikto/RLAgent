@@ -3,16 +3,17 @@
  */
 package userSimulation;
 
-import java.util.UUID;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
+import agent.Bid;
+import agent.Performance;
+import agent.Task;
+import agent.reinforcementLearning.ReinforcementLearning;
 import marketFramework.Market;
 import marketFramework.Snippet;
 import marketFramework.Time;
-import agent.Bid;
-import agent.learningAgent.Task;
-import agent.learningAgent.ReinforcementLearning;
 	
 /**
  * @author pa1g15
@@ -34,6 +35,7 @@ public class User {
 	private boolean isEVUser = false;
 	private List<Task> taskList = new ArrayList<Task>();
 	private ReinforcementLearning agent = new ReinforcementLearning(Market.AGENT_LEARNING_RATE, Market.AGENT_DISCOUNT_FACTOR, Market.EPSILON_PARAMETER);
+	private Performance performance = new Performance();
 	
 //	EV user constructor
 	public User(int userType, int userStrategy, Car car) {
@@ -86,6 +88,10 @@ public class User {
 		return agent;
 	}
 	
+	public Performance getPerformance() {
+		return performance;
+	}
+	
 	public double getBid(double currentBid, double lastBid, Time t) {
 		bid.calculateBid(currentBid, lastBid, this, t);
 		return Snippet.round(bid.getAmount());
@@ -119,20 +125,33 @@ public class User {
 	
 	public void useElectricity() {
 		double needs = 0;
+		double totalValue = 0;
+		double gainedValue = 0;
+		double totalNeeds = 0;
 		if (isEVUser) {
 			if (taskList.size() > 0) {
 				for (Task temp : taskList) {
+					totalNeeds += temp.getNeeds();
 					needs = Snippet.round(temp.getNeeds()*car.getConsumption());
+					totalValue += temp.getValue();
 					if (Snippet.round(currentElectricity) - needs >= 0) {
 						this.currentElectricity -= needs;
 						temp.finishTask();
+						gainedValue += temp.getValue();
 					}
 			    }
+				this.performance.setMaxValue(totalValue);
+				this.performance.setGainedValue(gainedValue);
 			}
 		} else {
 			this.currentElectricity = 0;
 		}
 		this.currentElectricity = Snippet.round(currentElectricity);
+		this.performance.setActualSpending(payout());
+		if (userStrategy == 5) {
+			System.out.println(totalNeeds);
+		}
+		System.out.println(totalNeeds);
 	}
 	
 	public void addExpenses(double expense) {
@@ -164,6 +183,7 @@ public class User {
 		switch (this.userType) {
 		case 1:
 			UserModel.EVUserA(t, this, preferences, task);
+			this.performance.setMaxSpending(23*(car.getBatteryCapacity()-currentElectricity));
 			break;
 		case 2:
 			UserModel.EVUserB(t, this, preferences, task);

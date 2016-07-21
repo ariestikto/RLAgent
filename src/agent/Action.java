@@ -1,7 +1,7 @@
 /**
  * 
  */
-package agent.learningAgent;
+package agent;
 
 /**
  * @author pa1g15
