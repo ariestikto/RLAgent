@@ -1,7 +1,7 @@
 /**
  * 
  */
-package agent.reinforcementLearning;
+package agent.qLearning;
 
 import agent.Action;
 import agent.State;

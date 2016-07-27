@@ -20,32 +20,42 @@ import java.util.ArrayList;
  */
 public class UserModel {
 	public static void EVUserA(Time time, User user, ElectricityBundle preferences, List<Task> taskList) {
+		// necessary variables
 		double dayNeeds = 0; //km
 		double dayBudget = 0; //p/km
 		String task;
 		String day;
 		List<String> plan = new ArrayList<String>();
 		double consumption = user.getCar().getConsumption();
-		double taskWork = Snippet.normDist(40);
-		double taskLunch = Snippet.normDist(5 + (Math.random() * ((10 - 5) + 1)));
-		double taskDinner = Snippet.normDist(7 + (Math.random() * ((18 - 7) + 1)));
-		double taskHospital = Snippet.normDist(15);
-		double taskShopping = Snippet.normDist(20);
-		double taskHangout = Snippet.normDist(20 + (Math.random() * ((25 - 20) + 1)));
-		double taskTrip = Snippet.normDist(70 + (Math.random() * ((200 - 70) + 1)));
+		
+		// user parameter
 		double highBudget = 18.6;
 		double normalBudget = 13.9;
 		double lowBudget = 7.1;
-		double workValue = taskWork*normalBudget*consumption*10;
-		double lunchValue = taskLunch*normalBudget*consumption*10;
-		double dinnerValue = taskDinner*normalBudget*consumption*10;
-		double hospitalValue = taskHospital*highBudget*consumption*10;
-		double shoppingValue = taskShopping*normalBudget*consumption*10;
-		double hangoutValue = taskHangout*lowBudget*consumption*10;
-		double tripValue = taskTrip*lowBudget*consumption*10;
+		double highMultiplier = 15;
+		double normalMultiplier = 13;
+		double lowMultiplier = 10;
+		
+		// available task list
+		double taskWork = Snippet.normDist(40);
+		double taskLunch = Snippet.normDist(10 + (Math.random() * ((15 - 10) + 1)));
+		double taskDinner = Snippet.normDist(17 + (Math.random() * ((20 - 17) + 1)));
+		double taskHospital = Snippet.normDist(20);
+		double taskShopping = Snippet.normDist(30);
+		double taskHangout = Snippet.normDist(20 + (Math.random() * ((25 - 20) + 1)));
+		double taskTrip = Snippet.normDist(150 + (Math.random() * ((200 - 150) + 1)));
+		
+		// task value function
+		double workValue = taskWork*normalBudget*consumption*normalMultiplier;
+		double lunchValue = taskLunch*normalBudget*consumption*normalMultiplier;
+		double dinnerValue = taskDinner*normalBudget*consumption*normalMultiplier;
+		double hospitalValue = taskHospital*highBudget*consumption*highMultiplier;
+		double shoppingValue = taskShopping*normalBudget*consumption*normalMultiplier;
+		double hangoutValue = taskHangout*lowBudget*consumption*lowMultiplier;
+		double tripValue = taskTrip*lowBudget*consumption*lowMultiplier;
 		
 		day = time.getDayName();
-		// set task for the day
+		// add task for the day
 		switch (day) {
 		case "Monday":
 		case "Tuesday":
@@ -55,7 +65,7 @@ public class UserModel {
 			if (Math.random() < 0.95) {
 				plan.add("work");
 				if (Math.random() < 0.65) {
-					plan.add("shopping"); //light_shopping
+					plan.add("shopping");
 					if (Math.random() < 0.8) {
 						plan.add("lunch");
 					}
@@ -76,7 +86,7 @@ public class UserModel {
 				}
 			} else if (Math.random() < 0.02) {
 				if (Math.random() < 0.5) {
-					plan.add("shopping"); //heavy_shopping
+					plan.add("shopping");
 					if (Math.random() < 0.8) {
 						plan.add("lunch");
 					}
@@ -104,7 +114,7 @@ public class UserModel {
 		case "Saturday":
 		case "Sunday":
 			if (Math.random() < 0.5) {
-				plan.add("shopping"); //heavy_shopping
+				plan.add("shopping");
 				if (Math.random() < 0.8) {
 					plan.add("lunch");
 				}
@@ -248,7 +258,7 @@ public class UserModel {
 				break;
 			}
 		}
-		preferences.setAmount(dayNeeds*user.getCar().getConsumption());
+		preferences.setAmount(dayNeeds*consumption);
 		if (dayNeeds > 0) {
 			preferences.setUnitPrice(dayBudget/dayNeeds);
 		} else {
@@ -257,20 +267,31 @@ public class UserModel {
 		Collections.sort(taskList);
 	}
 	public static void EVUserB(Time time, User user, ElectricityBundle preferences, List<Task> taskList) {
+		
+	}
+	public static void TestCase1EVUser(Time time, User user, ElectricityBundle preferences, List<Task> taskList) {
+		// necessary variables
 		double dayNeeds = 0; //km
 		double dayBudget = 0; //p/km
 		String task;
 		String day;
-		List<String> consumption = new ArrayList<String>();
-		double taskWork = Snippet.normDist(50);
-		double taskDinner = Snippet.normDist(30);
-		double taskTrip = Snippet.normDist(120);
-		double highBudget = 18.6;
-		double normalBudget = 13.9;
-		double lowBudget = 7.1;
-		int workValue = 40;
-		int dinnerValue = 30;
-		int tripValue = 60;
+		List<String> plan = new ArrayList<String>();
+		double consumption = user.getCar().getConsumption();
+		
+		// user parameter
+		double highBudget = 5;
+		double lowBudget = 0;
+		
+		double highMultiplier = 80;
+		double lowMultiplier = 40;
+		
+		// available task list
+		double taskWork = 6/consumption;
+		double taskTrip = 12/consumption;
+		
+		// task value function
+		double workValue = taskWork*highMultiplier;
+		double tripValue = taskTrip*lowMultiplier;
 		
 		day = time.getDayName();
 		// set task for the day
@@ -280,69 +301,28 @@ public class UserModel {
 		case "Wednesday":
 		case "Thursday":
 		case "Friday":
-			if (Math.random() < 0.95) {
-				consumption.add("work");
-				dayNeeds += taskWork;
-				dayBudget += normalBudget*taskWork;
-			}
-			if (Math.random() < 0.8) {
-				consumption.add("dinner");
-				dayNeeds += taskDinner;
-				dayBudget += lowBudget*taskDinner;
-			}
-			break;
 		case "Saturday":
-			if (Math.random() < 0.5) {
-				consumption.add("trip");
-				dayNeeds += taskTrip;
-				dayBudget += highBudget*taskTrip;
-			}
+			plan.add("work");
 			break;
 		case "Sunday":
-			if (Math.random() < 0.2) {
-				consumption.add("trip");
-				dayNeeds += taskTrip;
-				dayBudget += highBudget*taskTrip;
-			}
+			plan.add("trip");
 			break;
 		}
-		for (int i = 0; i < consumption.size(); i++) {
-			task = consumption.get(i);
-			switch (time.getWeather()) {
-			case 1: //sunny
-				if (task == "work") {
-					taskList.add(new Task(workValue, taskWork));
-				} else if (task == "dinner") {
-					taskList.add(new Task(dinnerValue, taskDinner));
-				} else if (task == "trip") {
-					taskList.add(new Task(tripValue, taskTrip));
-				}
-				break;
-			case 2: //rainy
-				dayNeeds *= 1.2;
-				dayBudget *= 1.2;
-				if (task == "work") {
-					taskList.add(new Task(workValue, taskWork*1.2));
-				} else if (task == "dinner") {
-					taskList.add(new Task(dinnerValue, taskDinner*1.2));
-				} else if (task == "trip") {
-					taskList.add(new Task(tripValue, taskTrip*1.2));
-				}
-				break;
-			case 3: //snow
-				dayNeeds *= 1.5;
-				dayBudget *= 1.5;
-				if (task == "work") {
-					taskList.add(new Task(workValue, taskWork*1.5));
-				} else if (task == "dinner") {
-					taskList.add(new Task(dinnerValue, taskDinner*1.5));
-				} else if (task == "trip") {
-					taskList.add(new Task(tripValue, taskTrip*1.5));
-				}
-				break;
+		
+		// allocate needs and budget for the day
+		for (int i = 0; i < plan.size(); i++) {
+			task = plan.get(i);
+			if (task == "work") {
+				dayNeeds += taskWork;
+				dayBudget += highBudget*taskWork;
+				taskList.add(new Task(workValue, taskWork));
+			} else if (task == "trip") {
+				dayNeeds += taskTrip;
+				dayBudget += lowBudget*taskTrip;
+				taskList.add(new Task(tripValue, taskTrip));
 			}
 		}
-		preferences.setAmount(dayNeeds*user.getCar().getConsumption());
+		preferences.setAmount(dayNeeds*consumption);
 		if (dayNeeds > 0) {
 			preferences.setUnitPrice(dayBudget/dayNeeds);
 		} else {
@@ -350,14 +330,25 @@ public class UserModel {
 		}
 		Collections.sort(taskList);
 	}
-	public static void TestCaseEVUser(Time time, User user, ElectricityBundle preferences, List<Task> taskList) {
+	public static void TestCase2EVUser(Time time, User user, ElectricityBundle preferences, List<Task> taskList) {
+		// necessary variables
 		double dayNeeds = 0; //km
 		double dayBudget = 0; //p/km
+		String task;
 		String day;
-		double taskAll = 12;
-		double taskDaily = 6;
-		int allValue = 50000;
-		int dailyValue = 50000;
+		List<String> plan = new ArrayList<String>();
+		double consumption = user.getCar().getConsumption();
+		
+		// user parameter
+		double highBudget = 23;
+		
+		double highMultiplier = 20;
+		
+		// available task list
+		double taskWork = 16.36/consumption;
+		
+		// task value function
+		double workValue = taskWork*highMultiplier;
 		
 		day = time.getDayName();
 		// set task for the day
@@ -368,17 +359,27 @@ public class UserModel {
 		case "Thursday":
 		case "Friday":
 		case "Saturday":
-			dailyValue += taskDaily;
-			dayBudget += 30;
-			taskList.add(new Task(dailyValue, taskDaily/user.getCar().getConsumption()));
-			break;
 		case "Sunday":
-			dayNeeds += taskAll;
-			taskList.add(new Task(allValue, taskAll/user.getCar().getConsumption()));
+			plan.add("work");
 			break;
 		}
-		preferences.setAmount(dayNeeds);
-		preferences.setUnitPrice(dayBudget);
+		
+		// allocate needs and budget for the day
+		for (int i = 0; i < plan.size(); i++) {
+			task = plan.get(i);
+			if (task == "work") {
+				dayNeeds += taskWork;
+				dayBudget += highBudget*taskWork;
+				taskList.add(new Task(workValue, taskWork));
+			}
+		}
+		preferences.setAmount(dayNeeds*consumption);
+		if (dayNeeds > 0) {
+			preferences.setUnitPrice(dayBudget/dayNeeds);
+		} else {
+			preferences.setUnitPrice(0);
+		}
+		Collections.sort(taskList);
 	}
 	public static void CompanyBuyer(ElectricityBundle preferences) {
 		NormalDistribution needs = new NormalDistribution(30, 2);
@@ -388,7 +389,7 @@ public class UserModel {
 	}
 	public static void CompanyBuyerB(ElectricityBundle preferences) {
 		preferences.setAmount(10);
-		preferences.setUnitPrice(15);
+		preferences.setUnitPrice(17);
 	}
 	public static void OtherUser(Time time, ElectricityBundle preferences) {
 		double randomNeeds = 0.2 + (Math.random() * ((5 - 0.2) + 1));

@@ -42,6 +42,10 @@ import userSimulation.User;
 
 public class Dashboard extends JFrame implements ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int timeJump = 1;
 	private User[] users = Snippet.createUsers();
 	private User activeUser = users[0];
@@ -113,7 +117,7 @@ public class Dashboard extends JFrame implements ActionListener {
 	// trends pane
 	XYSeriesCollection trendsDataset;
 	XYSeries trendsData;
-	String fileName = "Avg_Reward_QLearning.xls";
+	String fileName = "Avg_Performance.xls";
 	String line = null;
 	PrintWriter output;
 	
@@ -177,12 +181,12 @@ public class Dashboard extends JFrame implements ActionListener {
 		tabbedPane.addTab("Agent", null, agentPanel, null);
 		agentPane(agentPanel);
 		
-		JPanel graphPanel = new JPanel();
-		tabbedPane.addTab("Reward", null, graphPanel, null);
-		graphPane(graphPanel);
+//		JPanel graphPanel = new JPanel();
+//		tabbedPane.addTab("Reward", null, graphPanel, null);
+//		graphPane(graphPanel);
 		
 		JPanel trendsPanel = new JPanel();
-		tabbedPane.addTab("Trends", null, trendsPanel, null);
+		tabbedPane.addTab("Performance", null, trendsPanel, null);
 		trendsPane(trendsPanel);
 		
 		JPanel buttonPanel = new JPanel();
@@ -530,41 +534,40 @@ public class Dashboard extends JFrame implements ActionListener {
 		agentPanel.add(lblQvalue, "4, 20");
 	}
 	
-	public void graphPane(JPanel graphPanel) {
-		graphPanel.setLayout(new java.awt.BorderLayout());
-		performanceData = new XYSeries("XYGraph");
-		performanceData.add(0, 0);
-		
-		// Add the series to your data set
-		performanceDataset = new XYSeriesCollection();
-		performanceDataset.addSeries(performanceData);
-		JFreeChart chart = ChartFactory.createXYLineChart(
-			"Reward Over Time", // Title
-			"Time", // x-axis Label
-			"Reward", // y-axis Label
-			performanceDataset, // Dataset
-			PlotOrientation.VERTICAL, // Plot Orientation
-			false, // Show Legend
-			true, // Use tooltips
-			false // Configure chart to generate URLs?
-		);
-		ChartPanel CP = new ChartPanel(chart);
-		graphPanel.add(CP,BorderLayout.CENTER);
-		graphPanel.validate();
-	}
+//	public void graphPane(JPanel graphPanel) {
+//		graphPanel.setLayout(new java.awt.BorderLayout());
+//		performanceData = new XYSeries("XYGraph");
+//		performanceData.add(0, 0);
+//		
+//		// Add the series to your data set
+//		performanceDataset = new XYSeriesCollection();
+//		performanceDataset.addSeries(performanceData);
+//		JFreeChart chart = ChartFactory.createXYLineChart(
+//			"Reward Over Time", // Title
+//			"Time", // x-axis Label
+//			"Reward", // y-axis Label
+//			performanceDataset, // Dataset
+//			PlotOrientation.VERTICAL, // Plot Orientation
+//			false, // Show Legend
+//			true, // Use tooltips
+//			false // Configure chart to generate URLs?
+//		);
+//		ChartPanel CP = new ChartPanel(chart);
+//		graphPanel.add(CP,BorderLayout.CENTER);
+//		graphPanel.validate();
+//	}
 	
 	public void trendsPane(JPanel trendsPanel) {
 		trendsPanel.setLayout(new java.awt.BorderLayout());
 		trendsData = new XYSeries("XYGraph");
-		trendsData.add(0, 0);
 		
 		// Add the series to your data set
 		trendsDataset = new XYSeriesCollection();
 		trendsDataset.addSeries(trendsData);
 		JFreeChart chart = ChartFactory.createXYLineChart(
-			"Average Reward Over Time", // Title
+			"Average Performance of Last 7 Days", // Title
 			"Time", // x-axis Label
-			"Average Reward", // y-axis Label
+			"Average Performance", // y-axis Label
 			trendsDataset, // Dataset
 			PlotOrientation.VERTICAL, // Plot Orientation
 			false, // Show Legend
@@ -582,7 +585,6 @@ public class Dashboard extends JFrame implements ActionListener {
 		currentelectricityinfo.setText(activeUser.getCurrentElectricity() + " kWh");
 		gainedElectricityInfo.setText(activeUser.clinchedElectricity() + " kWh");
 		expenseInfo.setText(activeUser.getExpenses() + " p");
-		
 		carTypeInfo.setText(activeUser.getCar().getCarName());
 		carConsumptionInfo.setText(activeUser.getCar().getConsumption() + " kWh/km");
 		carCapacityInfo.setText(activeUser.getCar().getBatteryCapacity() + " kWh");
@@ -601,10 +603,9 @@ public class Dashboard extends JFrame implements ActionListener {
 		lblRewardvalue.setText(agent.getAgent().getRewardSignal() + "");
 		lblQvalue.setText(agent.getAgent().findSAPair(agent.getAgent().getLastStateAction().getState(), agent.getAgent().getLastStateAction().getAction()).getReward() + "");
 	}
-	public void updateGraphPane() {
-		performanceData.add(t.getDay(), reward);
-//		performanceData.add(t.getDay(), performance);
-	}
+//	public void updateGraphPane() {
+//		performanceData.add(t.getDay(), reward);
+//	}
 	public void updateTrendsPane() {
 		lastTenReward = 0;
 		if (t.getDay() > 6) {
@@ -612,9 +613,9 @@ public class Dashboard extends JFrame implements ActionListener {
 				lastTenReward += rewards.get(rewards.size() - i);
 			}
 			rewards.remove(0);
+			trendsData.add(t.getDay(), lastTenReward/7);
+			trends.add(lastTenReward/7);
 		}
-		trendsData.add(t.getDay(), lastTenReward/7);
-		trends.add(lastTenReward/7);
 	}
 	public void bottomPane(JPanel buttonPanel) {
 		String[] timeMenu = {"1 Day", "3 Days", "7 Days", "30 Days", "100 Days", "500 Days", "1000 Days"};
@@ -666,12 +667,11 @@ public class Dashboard extends JFrame implements ActionListener {
 							t.advanceTime();
 							Snippet.startOfDay(users, t);
 							a.runAuction(users, t, auctionResult, auctionHistory);
-//							performance = Snippet.agentPerformance(agent);
 							Snippet.endOfDay(users, reward, t);
 							updateTopPane();
 							updateUserPane();
 							updateAgentPane();
-							updateGraphPane();
+//							updateGraphPane();
 							updateTrendsPane();
 						}
 					}

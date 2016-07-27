@@ -44,9 +44,9 @@ public class Task implements Comparable<Task> {
 		if (this.value == compareValue) {
 			return 0;
 		}
-		return this.value < compareValue ? -1 : 1;
+		return this.value > compareValue ? -1 : 1;
 
         /* For Descending order do like this */
-        //  return compareValue - this.value;
+		// return this.value < compareValue ? -1 : 1;
     }
 }

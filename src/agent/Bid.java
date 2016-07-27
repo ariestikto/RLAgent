@@ -88,7 +88,7 @@ public class Bid {
 	public static double AllOrNothingBid(double currentBid, double dailyNeeds, double budget) {
 //		strategy 4
 		double bid = 0;
-		if (currentBid > budget) {
+		if (currentBid > budget/dailyNeeds) {
 			bid = 0;
 		} else {
 			bid = dailyNeeds;

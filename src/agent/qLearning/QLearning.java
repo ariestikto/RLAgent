@@ -1,12 +1,12 @@
 /**
  * 
  */
-package agent.reinforcementLearning;
+package agent.qLearning;
 
 import java.util.List;
 
 import agent.Action;
-import agent.Feedback;
+import agent.Reward;
 import agent.State;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import marketFramework.Time;
  * @author pa1g15
  *
  */
-public class ReinforcementLearning {
+public class QLearning {
 
 	private List<QFunction> Q;
 	private double rewardSignal = 0;
@@ -27,7 +27,7 @@ public class ReinforcementLearning {
 	private QFunction lastStateAction;
 	
 	//	RL agent with e-greedy policy
-	public ReinforcementLearning(double learningRate, double discountFactor, double epsilon) {
+	public QLearning(double learningRate, double discountFactor, double epsilon) {
 		this.learningRate = learningRate;
 		this.discountFactor = discountFactor;
 		this.epsilon = epsilon;
@@ -141,7 +141,7 @@ public class ReinforcementLearning {
 			
 			// epsilon greedy algorithm
 			// =========================
-			if (Math.random() > getEpsilon()) {
+			if (Math.random() > epsilon) {
 				a = bestAction(s, user);
 			} else {
 				a = randomAction(s, user);
@@ -152,8 +152,8 @@ public class ReinforcementLearning {
 	
 	public void evaluateAction(User user, int nextWeather) {
 		UserSatisfaction satisfactionLevel = new UserSatisfaction();
-		satisfactionLevel.generateFeedbackPatternC(user);
-		this.rewardSignal = Feedback.FeedbackPatternB(user, satisfactionLevel);
+		satisfactionLevel.generateFeedbackPattern_1(user);
+		this.rewardSignal = Reward.RewardPatternB(satisfactionLevel);
 		double QReward = 0;
 		QFunction lastQ = findSAPair(lastStateAction.getState(), lastStateAction.getAction());
 		QFunction bestNextQ = findSAPair(lastStateAction.getState().nextState(lastStateAction.getAction(), user, nextWeather), bestAction(lastStateAction.getState().nextState(lastStateAction.getAction(), user, nextWeather), user));
