@@ -32,18 +32,31 @@ public class UserModel {
 		double highBudget = 18.6;
 		double normalBudget = 13.9;
 		double lowBudget = 7.1;
-		double highMultiplier = 15;
-		double normalMultiplier = 13;
-		double lowMultiplier = 10;
+//		double highMultiplier = 15;
+//		double normalMultiplier = 13;
+//		double lowMultiplier = 10;
+//		
+//		// available task list
+//		double taskWork = Snippet.normDist(40);
+//		double taskLunch = Snippet.normDist(10 + (Math.random() * ((15 - 10) + 1)));
+//		double taskDinner = Snippet.normDist(17 + (Math.random() * ((20 - 17) + 1)));
+//		double taskHospital = Snippet.normDist(20);
+//		double taskShopping = Snippet.normDist(30);
+//		double taskHangout = Snippet.normDist(20 + (Math.random() * ((25 - 20) + 1)));
+//		double taskTrip = Snippet.normDist(150 + (Math.random() * ((200 - 150) + 1)));
+		
+		double highMultiplier = 12;
+		double normalMultiplier = 10;
+		double lowMultiplier = 8;
 		
 		// available task list
 		double taskWork = Snippet.normDist(40);
-		double taskLunch = Snippet.normDist(10 + (Math.random() * ((15 - 10) + 1)));
-		double taskDinner = Snippet.normDist(17 + (Math.random() * ((20 - 17) + 1)));
-		double taskHospital = Snippet.normDist(20);
-		double taskShopping = Snippet.normDist(30);
+		double taskLunch = Snippet.normDist(5 + (Math.random() * ((10 - 5) + 1)));
+		double taskDinner = Snippet.normDist(7 + (Math.random() * ((18 - 7) + 1)));
+		double taskHospital = Snippet.normDist(15);
+		double taskShopping = Snippet.normDist(20);
 		double taskHangout = Snippet.normDist(20 + (Math.random() * ((25 - 20) + 1)));
-		double taskTrip = Snippet.normDist(150 + (Math.random() * ((200 - 150) + 1)));
+		double taskTrip = Snippet.normDist(70 + (Math.random() * ((200 - 70) + 1)));
 		
 		// task value function
 		double workValue = taskWork*normalBudget*consumption*normalMultiplier;

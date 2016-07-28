@@ -18,6 +18,38 @@ public class Time {
 		randomizeNextWeather();
 		this.weather = 1;
 	}	
+	
+	public void resetTime(int dayNumber, int weather) {
+		String dayName = "";
+		switch ((dayNumber+1)%7) {
+		case 0:
+			dayName = "Sunday";
+			break;
+		case 1:
+			dayName = "Monday";
+			break;
+		case 2:
+			dayName = "Tuesday";
+			break;
+		case 3:
+			dayName = "Wednesday";
+			break;
+		case 4:
+			dayName = "Thursday";
+			break;
+		case 5:
+			dayName = "Friday";
+			break;
+		case 6:
+			dayName = "Saturday";
+			break;
+		}
+		this.day = 1;
+		this.dayName = dayName;
+		this.weather = weather;
+		randomizeNextWeather();
+	}
+
 	public int getDay() {
 		return day;
 	}

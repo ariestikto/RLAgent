@@ -54,7 +54,6 @@ public class Dashboard extends JFrame implements ActionListener {
 	private Time t = new Time();
 	private double reward = 0;
 	private double lastTenReward = 0;
-//	private double performance = 0;
 	private List<Double> rewards = new ArrayList<Double>();
 	private List<Double> trends = new ArrayList<Double>();
 	

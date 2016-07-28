@@ -15,5 +15,5 @@ public class Market {
 	public static final int TOTAL_CAR_TYPE = 7;
 	public static final double AGENT_LEARNING_RATE = 0.2; // 0.2
 	public static final double AGENT_DISCOUNT_FACTOR = 0.95; // 0.95
-	public static final double EPSILON_PARAMETER = 0.1; // 0.1
+	public static final double EPSILON_PARAMETER = 1; // 0.1
 }

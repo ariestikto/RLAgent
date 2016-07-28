@@ -127,13 +127,25 @@ public class QLearning {
 			State s = new State();
 			Action a = new Action();
 			
-			if (currentLevel > 0.875) {
+//			if (currentLevel > 0.875) {
+//				s.setState(t.getDayName(), t.getWeather(), 5);
+//			} else if (currentLevel > 0.625) {
+//				s.setState(t.getDayName(), t.getWeather(), 4);
+//			} else if (currentLevel > 0.375) {
+//				s.setState(t.getDayName(), t.getWeather(), 3);
+//			} else if (currentLevel > 0.125) {
+//				s.setState(t.getDayName(), t.getWeather(), 2);
+//			} else {
+//				s.setState(t.getDayName(), t.getWeather(), 1);
+//			}
+			
+			if (currentLevel > 0.99) {
 				s.setState(t.getDayName(), t.getWeather(), 5);
-			} else if (currentLevel > 0.625) {
+			} else if (currentLevel > 0.75) {
 				s.setState(t.getDayName(), t.getWeather(), 4);
-			} else if (currentLevel > 0.375) {
+			} else if (currentLevel > 0.5) {
 				s.setState(t.getDayName(), t.getWeather(), 3);
-			} else if (currentLevel > 0.125) {
+			} else if (currentLevel > 0.25) {
 				s.setState(t.getDayName(), t.getWeather(), 2);
 			} else {
 				s.setState(t.getDayName(), t.getWeather(), 1);
@@ -152,7 +164,7 @@ public class QLearning {
 	
 	public void evaluateAction(User user, int nextWeather) {
 		UserSatisfaction satisfactionLevel = new UserSatisfaction();
-		satisfactionLevel.generateFeedbackPattern_1(user);
+		satisfactionLevel.generateFeedbackPattern_6(user);
 		this.rewardSignal = Reward.RewardPatternB(satisfactionLevel);
 		double QReward = 0;
 		QFunction lastQ = findSAPair(lastStateAction.getState(), lastStateAction.getAction());

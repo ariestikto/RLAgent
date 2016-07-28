@@ -32,6 +32,7 @@ public class UserSatisfaction {
 		this.electricityFeedback = 0;
 		this.payoutFeedback = 0;
 	}
+	
 	public void generateFeedbackPattern_1(User user) {
 		//	fair feedback
 		Performance p = user.getPerformance();
@@ -216,6 +217,7 @@ public class UserSatisfaction {
 			}
 		}
 	}
+	
 	public void generateFeedbackPattern_test(User user) {
 		//	lazy user
 		Performance p = user.getPerformance();
@@ -239,6 +241,90 @@ public class UserSatisfaction {
 			this.payoutFeedback = 2;
 		} else {
 			this.payoutFeedback = 1;
+		}
+	}
+	
+	public void generateFeedbackPattern_5(User user) {
+		//	very lazy user
+		Performance p = user.getPerformance();
+		double FEEDBACK_FREQUENCY = 0.4;
+		double surplus = p.getActualSpending() - user.getBudget(); 
+		
+		noFeedback();
+		if (Math.random() <= FEEDBACK_FREQUENCY) {
+			// electricity feedback function
+			if (p.lostValue() == 0) {
+				if (p.getLeftoverElectricity() > 0.25*user.getCar().getBatteryCapacity()) {
+					this.electricityFeedback = 5;
+				} else if (p.getLeftoverElectricity() > 0.05*user.getCar().getBatteryCapacity()) {
+					this.electricityFeedback = 4;
+				} else {
+					this.electricityFeedback = 3;
+				}
+			} else {
+				if (p.getTotalTask() > 0) {
+					if ((double) p.getFinishedTask()/p.getTotalTask() > 0.7) {
+						this.electricityFeedback = 2;
+					} else {
+						this.electricityFeedback = 1;
+					}
+				}
+			}
+		
+			// expense reward function
+			if (surplus > 100) {
+				this.payoutFeedback = 5;
+			} else if (surplus > 20) {
+				this.payoutFeedback = 4;
+			} else if (surplus > -15) {
+				this.payoutFeedback = 3;
+			} else if (surplus > -50) {
+				this.payoutFeedback = 2;
+			} else {
+				this.payoutFeedback = 1;
+			}
+		}
+	}
+	
+	public void generateFeedbackPattern_6(User user) {
+		//	confused user
+		Performance p = user.getPerformance();
+		double FEEDBACK_FREQUENCY = 0.7;
+		double surplus = p.getActualSpending() - user.getBudget(); 
+		
+		noFeedback();
+		if (Math.random() <= FEEDBACK_FREQUENCY) {
+			// electricity feedback function
+			if (p.lostValue() == 0) {
+				if (p.getLeftoverElectricity() > 0.25*user.getCar().getBatteryCapacity()) {
+					this.electricityFeedback = 1;
+				} else if (p.getLeftoverElectricity() > 0.05*user.getCar().getBatteryCapacity()) {
+					this.electricityFeedback = 2;
+				} else {
+					this.electricityFeedback = 3;
+				}
+			} else {
+				if (p.getTotalTask() > 0) {
+					if ((double) p.getFinishedTask()/p.getTotalTask() > 0.7) {
+						this.electricityFeedback = 4;
+					} else {
+						this.electricityFeedback = 5;
+					}
+				}
+			}
+		
+			// expense reward function
+			if (surplus > 100) {
+				this.payoutFeedback = 1;
+			} else if (surplus > 20) {
+				this.payoutFeedback = 2;
+			} else if (surplus > -15) {
+				this.payoutFeedback = 3;
+			} else if (surplus > -50) {
+				this.payoutFeedback = 4;
+			} else {
+				this.payoutFeedback = 5;
+			}
 		}
 	}
 }
