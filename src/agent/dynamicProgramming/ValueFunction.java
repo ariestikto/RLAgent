@@ -15,13 +15,20 @@ public class ValueFunction {
 	public State getState() {
 		return state;
 	}
+	
 	public void setState(State state) {
 		this.state = state;
 	}
+	
 	public double getValue() {
 		return value;
 	}
+	
 	public void setValue(double value) {
 		this.value = value;
+	}
+	
+	public boolean isEqual(State s) {
+		return state.isEqual(s);
 	}
 }

@@ -597,7 +597,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		lblWeathervalue.setText(t.getWeatherName());
 		lblBudgetlevelvalue.setText(agent.getAgent().getLastStateAction().getAction().getBudget());
 		lblNextweather.setText(t.getNextWeatherName());
-		lblNextelectricitylevelvalue.setText(agent.getAgent().getLastStateAction().getState().nextState(agent.getAgent().getLastStateAction().getAction(), agent, t.getNextWeather()).getElectricityPercentage());
+		lblNextelectricitylevelvalue.setText(agent.getAgent().getLastStateAction().getState().nextState(agent, t.getNextWeather()).getElectricityPercentage());
 		lblElectricitylevelvalue.setText(agent.getAgent().getLastStateAction().getState().getElectricityPercentage());
 		lblRewardvalue.setText(agent.getAgent().getRewardSignal() + "");
 		lblQvalue.setText(agent.getAgent().findSAPair(agent.getAgent().getLastStateAction().getState(), agent.getAgent().getLastStateAction().getAction()).getReward() + "");
@@ -666,7 +666,7 @@ public class Dashboard extends JFrame implements ActionListener {
 							t.advanceTime();
 							Snippet.startOfDay(users, t);
 							a.runAuction(users, t, auctionResult, auctionHistory);
-							Snippet.endOfDay(users, reward, t);
+							Snippet.endOfDay(users, t);
 							updateTopPane();
 							updateUserPane();
 							updateAgentPane();

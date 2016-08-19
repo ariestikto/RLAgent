@@ -3,6 +3,8 @@
  */
 package agent;
 
+import marketFramework.Parameter;
+import userSimulation.User;
 import userSimulation.UserSatisfaction;
 
 /**
@@ -158,5 +160,64 @@ public class Reward {
 			break;
 		}
 		return score;
+	}
+	
+	public static double RewardPatternSlider(UserSatisfaction satisfactionLevel) {
+		double score = 0;
+		double scoreEL  = 0;
+		double scorePayout = 0;
+		int electricityFeedback = satisfactionLevel.getElectricityFeedback();
+		int payoutFeedback = satisfactionLevel.getPayoutFeedback();
+		
+		switch (electricityFeedback) {
+		case 5:
+			scoreEL = 1;
+			break;
+		case 4:
+			scoreEL = 0.5;
+			break;
+		case 3:
+			scoreEL = 0;
+			break;
+		case 2:
+			scoreEL = -1;
+			break;
+		case 1:
+			scoreEL = -1.5;
+			break;
+		default:
+			scoreEL += 0;
+			break;
+		}
+		
+		switch (payoutFeedback) {
+		case 5:
+			scorePayout = 1;
+			break;
+		case 4:
+			scorePayout = 0.5;
+			break;
+		case 3:
+			scorePayout = 0;
+			break;
+		case 2:
+			scorePayout = -1;
+			break;
+		case 1:
+			scorePayout = -1.5;
+			break;
+		default:
+			scorePayout = 0;
+			break;
+		}
+		
+		scoreEL *= Parameter.ELECTRICITIY_REWARD_MULTIPLIER;
+		scorePayout *= Parameter.PAYOUT_REWARD_MULTIPLIER;
+		score = scoreEL + scorePayout;
+		return score;
+	}
+	public static double RealRewardPattern(User user) {
+		return (user.getPerformance().normalizedScore()*1000)-750;
+		
 	}
 }

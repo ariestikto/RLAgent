@@ -7,11 +7,11 @@ public class ProbabilityTable {
 
 	private State state;
 	private Action action;
-	private int reward;
+	private double reward;
 	private State nextState;
 	private double probability;
 	
-	public ProbabilityTable(State state, Action action, int reward, State nextState) {
+	public ProbabilityTable(State state, Action action, double reward, State nextState) {
 		this.state = state;
 		this.action = action;
 		this.reward = reward;
@@ -27,7 +27,7 @@ public class ProbabilityTable {
 		return action;
 	}
 
-	public int getReward() {
+	public double getReward() {
 		return reward;
 	}
 
@@ -39,16 +39,12 @@ public class ProbabilityTable {
 		return probability;
 	}
 
-	public void addProbability() {
+	public void addProbability(int trial) {
 		this.probability += 1;
 	}
 	
 	public boolean isEqual(ProbabilityTable table) {
-		return (
-				state.isEqual(table.getState()) &&
-				action.isEqual(table.getAction()) &&
-				(reward == table.getReward()) &&
-				nextState.isEqual(table.getNextState())
-				);
+		boolean equal = (state.isEqual(table.getState())) && (action.isEqual(table.getAction())) && (reward == table.getReward()) && (nextState.isEqual(table.getNextState()));
+		return equal;
 	}
 }

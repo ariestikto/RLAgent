@@ -3,7 +3,9 @@
  */
 package agent;
 
-import marketFramework.Market;
+import agent.dynamicProgramming.ProbabilityDatabase;
+import agent.dynamicProgramming.ValueIteration;
+import marketFramework.Parameter;
 import marketFramework.Time;
 import userSimulation.User;
 /**
@@ -46,10 +48,41 @@ public class Bid {
 			this.amount = user.clinchedElectricity();
 		}
 	}
+	
+	public void simulationBid(double currentBid, User user, Action simulationAction) {
+		this.amount = DBBuildBid(currentBid, user, simulationAction);
+		
+		if (amount < user.clinchedElectricity()) {
+			this.amount = user.clinchedElectricity();
+		}
+	}
+	
+	public void searchDPBid(double currentBid, User user, ProbabilityDatabase DB, ValueIteration DPAgent, Time t) {
+		State state= new State();
+		double currentLevel = user.getCurrentElectricity()/user.getCar().getBatteryCapacity();
+		if (currentLevel > 0.99) {
+			state.setState(t.getDayName(), t.getWeather(), 5);
+		} else if (currentLevel > 0.75) {
+			state.setState(t.getDayName(), t.getWeather(), 4);
+		} else if (currentLevel > 0.5) {
+			state.setState(t.getDayName(), t.getWeather(), 3);
+		} else if (currentLevel > 0.25) {
+			state.setState(t.getDayName(), t.getWeather(), 2);
+		} else {
+			state.setState(t.getDayName(), t.getWeather(), 1);
+		}
+		
+		this.amount = DPBid(currentBid, user, DB, DPAgent, state);
+		
+		if (amount < user.clinchedElectricity()) {
+			this.amount = user.clinchedElectricity();
+		}
+	}
+	
 	public static double randomBid(double currentBid, double dailyNeeds, double lastBid, double budget) {
 //		strategy 1
 		double bid = 0;
-		if (currentBid == Market.START_PRICE) {
+		if (currentBid == Parameter.START_PRICE) {
 			bid = dailyNeeds;
 		} else {
 			do {
@@ -99,6 +132,9 @@ public class Bid {
 	public static double RLBid(double currentBid, User user) {
 //		strategy 5
 		Action a = user.getAgent().getLastStateAction().getAction();
+		if (user.isAlternate()) {
+			a = user.getAgent().getBestStateAction().getAction();
+		}
 		double bid = 0;
 		double maxPrice = 0;
 		double deficit = 0;
@@ -127,16 +163,125 @@ public class Bid {
 		}
 		switch (budget) {
 		case 1:
-			maxPrice = 7;
+			maxPrice = 8;
 			break;
 		case 2:
-			maxPrice = 13;
+			maxPrice = 15;
 			break;
 		case 3:
-			maxPrice = 18;
+			maxPrice = 23;
 			break;
 		case 4:
+			maxPrice = 30;
+			break;
+		}
+		totalBudget = deficit*maxPrice;
+		if (deficit > 0) {
+			if (deficit < totalBudget/currentBid) {
+				bid = deficit;
+			} else {
+				bid = totalBudget/currentBid;
+			}
+		}
+		return bid;
+		
+	}
+	
+	public static double DBBuildBid(double currentBid, User user, Action a) {
+//		strategy 6 in simulation
+		double bid = 0;
+		double maxPrice = 0;
+		double deficit = 0;
+		double totalBudget = 0;
+		int aim = a.getAddedAmountLevel();
+		int budget = a.getBudgetLevel();
+		switch (aim) {
+		case 1:
+			deficit = 0;
+			break;
+		case 2:
+			deficit = user.getCar().getBatteryCapacity()*0.25;
+			break;
+		case 3:
+			deficit = user.getCar().getBatteryCapacity()*0.5;
+			break;
+		case 4:
+			deficit = user.getCar().getBatteryCapacity()*0.75;
+			break;
+		case 5:
+			deficit = user.getCar().getBatteryCapacity();
+			break;
+		}
+		if (user.getCar().getBatteryCapacity() < (deficit + user.getCurrentElectricity())) {
+			deficit = user.getCar().getBatteryCapacity() - user.getCurrentElectricity();
+		}
+		switch (budget) {
+		case 1:
+			maxPrice = 8;
+			break;
+		case 2:
+			maxPrice = 15;
+			break;
+		case 3:
 			maxPrice = 23;
+			break;
+		case 4:
+			maxPrice = 30;
+			break;
+		}
+		totalBudget = deficit*maxPrice;
+		if (deficit > 0) {
+			if (deficit < totalBudget/currentBid) {
+				bid = deficit;
+			} else {
+				bid = totalBudget/currentBid;
+			}
+		}
+		return bid;
+	}
+	
+	public static double DPBid(double currentBid, User user, ProbabilityDatabase DB, ValueIteration DPAgent, State state) {
+//		strategy 6 real
+		double bid = 0;
+		double maxPrice = 0;
+		double deficit = 0;
+		double totalBudget = 0;
+		Action a = DPAgent.bestAction(state, DB);
+		int aim = a.getAddedAmountLevel();
+		int budget = a.getBudgetLevel();
+		
+		switch (aim) {
+		case 1:
+			deficit = 0;
+			break;
+		case 2:
+			deficit = user.getCar().getBatteryCapacity()*0.25;
+			break;
+		case 3:
+			deficit = user.getCar().getBatteryCapacity()*0.5;
+			break;
+		case 4:
+			deficit = user.getCar().getBatteryCapacity()*0.75;
+			break;
+		case 5:
+			deficit = user.getCar().getBatteryCapacity();
+			break;
+		}
+		if (user.getCar().getBatteryCapacity() < (deficit + user.getCurrentElectricity())) {
+			deficit = user.getCar().getBatteryCapacity() - user.getCurrentElectricity();
+		}
+		switch (budget) {
+		case 1:
+			maxPrice = 8;
+			break;
+		case 2:
+			maxPrice = 15;
+			break;
+		case 3:
+			maxPrice = 23;
+			break;
+		case 4:
+			maxPrice = 30;
 			break;
 		}
 		totalBudget = deficit*maxPrice;

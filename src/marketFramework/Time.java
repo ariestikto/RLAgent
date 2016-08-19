@@ -21,7 +21,7 @@ public class Time {
 	
 	public void resetTime(int dayNumber, int weather) {
 		String dayName = "";
-		switch ((dayNumber+1)%7) {
+		switch ((dayNumber)%7) {
 		case 0:
 			dayName = "Sunday";
 			break;

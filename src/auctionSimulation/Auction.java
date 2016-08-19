@@ -5,10 +5,13 @@ package auctionSimulation;
 
 import java.awt.TextArea;
 
-import marketFramework.Market;
+import agent.Action;
+import agent.dynamicProgramming.ProbabilityDatabase;
+import agent.dynamicProgramming.ValueIteration;
+import marketFramework.Parameter;
 import marketFramework.Snippet;
-import userSimulation.User;
 import marketFramework.Time;
+import userSimulation.User;
 /**
  * @author pa1g15
  *
@@ -21,8 +24,8 @@ public class Auction {
 		restartAuction();
 	}
 	public void restartAuction() {
-		this.dailySupply = Snippet.normDist(Market.ELECTRICITY_SUPPLY);
-		this.currentBid = Market.START_PRICE;
+		this.dailySupply = Snippet.normDist(Parameter.ELECTRICITY_SUPPLY);
+		this.currentBid = Parameter.START_PRICE;
 	}
 	public double getDailySupply() {
 		return dailySupply;
@@ -85,5 +88,180 @@ public class Auction {
 		
 		auctionResult.append("Demand: " + Snippet.round(finalDistribution) + "\t Supply: "  + dailySupply + "\n\n");
 		auctionHistory.append("Demand: " + Snippet.round(finalDistribution) + "\t Supply: "  + dailySupply + "\n\n");
+	}
+	
+	public void runFastAuction(User[] users, Time t){
+//		restartAuction();
+		this.currentBid = Parameter.START_PRICE;
+		
+		double demand;
+		double securedAmount = 0;
+		double[] bid = new double[users.length];
+		double payout = 0;
+		double distribution = 0;
+ 		
+		do {
+			demand  = 0;
+			for (int i = 0; i < users.length; i++) {
+				bid[i] = users[i].getBid(currentBid, bid[i], t);
+				demand += bid[i];
+			}
+			for (int i = 0; i < users.length; i++) {
+				payout = 0;
+				distribution = 0;
+				
+				if (bid[i] != 0) {
+					if (demand - bid[i] < dailySupply) {
+						securedAmount = dailySupply-(demand-bid[i])-users[i].clinchedElectricity();
+						if (securedAmount + users[i].clinchedElectricity() > bid[i]) {
+							securedAmount = bid[i] - users[i].clinchedElectricity();
+						}
+						distribution = securedAmount;
+						payout = currentBid;
+					}
+				} else {
+					users[i].resetAuction();
+				}
+				users[i].clinchElectricity(distribution, payout);
+			}
+			currentBid += 1;
+		} while (Snippet.round(demand) > Snippet.round(dailySupply));
+		for (int i = 0; i < users.length; i++) {
+			users[i].addExpenses(users[i].payout());
+			users[i].addElectricity(users[i].clinchedElectricity());
+		}
+	}
+	public void runBackgroundAuction(User[] users, Time t){
+		restartAuction();
+		
+		double demand;
+		double securedAmount = 0;
+		double[] bid = new double[users.length];
+		double payout = 0;
+		double distribution = 0;
+ 		
+		do {
+			demand  = 0;
+			for (int i = 0; i < users.length; i++) {
+				bid[i] = users[i].getBid(currentBid, bid[i], t);
+				demand += bid[i];
+			}
+			for (int i = 0; i < users.length; i++) {
+				payout = 0;
+				distribution = 0;
+				
+				if (bid[i] != 0) {
+					if (demand - bid[i] < dailySupply) {
+						securedAmount = dailySupply-(demand-bid[i])-users[i].clinchedElectricity();
+						if (securedAmount + users[i].clinchedElectricity() > bid[i]) {
+							securedAmount = bid[i] - users[i].clinchedElectricity();
+						}
+						distribution = securedAmount;
+						payout = currentBid;
+					}
+				} else {
+					users[i].resetAuction();
+				}
+				users[i].clinchElectricity(distribution, payout);
+			}
+			currentBid += 1;
+		} while (Snippet.round(demand) > Snippet.round(dailySupply));
+		for (int i = 0; i < users.length; i++) {
+			if (users[i].getStrategy() == 5) {
+				users[i].addExpenses(users[i].payout());
+				users[i].addElectricity(users[i].clinchedElectricity());
+//				users[i].useElectricity();
+			} else {
+				users[i].resetAuction();
+			}
+		}
+	}
+	public void runDPAuction(User[] users, Time t, ProbabilityDatabase DB, ValueIteration DPAgent){
+		restartAuction();
+		double demand;
+		double securedAmount = 0;
+		double[] bid = new double[users.length];
+		double payout = 0;
+		double distribution = 0;
+ 		
+		do {
+			demand  = 0;
+			for (int i = 0; i < users.length; i++) {
+				if (users[i].getStrategy() == 6) {
+					bid[i] = users[i].getDPBid(currentBid, DB, DPAgent, t);
+				} else {
+					bid[i] = users[i].getBid(currentBid, bid[i], t);
+				}
+				demand += bid[i];
+			}
+			for (int i = 0; i < users.length; i++) {
+				payout = 0;
+				distribution = 0;
+				
+				if (bid[i] != 0) {
+					if (demand - bid[i] < dailySupply) {
+						securedAmount = dailySupply-(demand-bid[i])-users[i].clinchedElectricity();
+						if (securedAmount + users[i].clinchedElectricity() > bid[i]) {
+							securedAmount = bid[i] - users[i].clinchedElectricity();
+						}
+						distribution = securedAmount;
+						payout = currentBid;
+					}
+				} else {
+					users[i].resetAuction();
+				}
+				users[i].clinchElectricity(distribution, payout);
+			}
+			currentBid += 1;
+		} while (Snippet.round(demand) > Snippet.round(dailySupply));
+		for (int i = 0; i < users.length; i++) {
+			users[i].addExpenses(users[i].payout());
+			users[i].addElectricity(users[i].clinchedElectricity());
+		}
+	}
+	
+	public void simulationAuction(User[] users, Time t, Action simulationAction){
+		restartAuction();
+		
+		double demand;
+		double securedAmount = 0;
+		double[] bid = new double[users.length];
+		double payout = 0;
+		double distribution = 0;
+ 		
+		do {
+			demand  = 0;
+			for (int i = 0; i < users.length; i++) {
+				if (users[i].getStrategy() == 6) {
+					bid[i] = users[i].getSimulationBid(currentBid, simulationAction);
+				} else {
+					bid[i] = users[i].getBid(currentBid, bid[i], t);
+				}
+				demand += bid[i];
+			}
+			for (int i = 0; i < users.length; i++) {
+				payout = 0;
+				distribution = 0;
+				
+				if (bid[i] != 0) {
+					if (demand - bid[i] < dailySupply) {
+						securedAmount = dailySupply-(demand-bid[i])-users[i].clinchedElectricity();
+						if (securedAmount + users[i].clinchedElectricity() > bid[i]) {
+							securedAmount = bid[i] - users[i].clinchedElectricity();
+						}
+						distribution = securedAmount;
+						payout = currentBid;
+					}
+				} else {
+					users[i].resetAuction();
+				}
+				users[i].clinchElectricity(distribution, payout);
+			}
+			currentBid += 1;
+		} while (Snippet.round(demand) > Snippet.round(dailySupply));
+		for (int i = 0; i < users.length; i++) {
+			users[i].addExpenses(users[i].payout());
+			users[i].addElectricity(users[i].clinchedElectricity());
+		}
 	}
 }

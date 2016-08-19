@@ -88,7 +88,7 @@ public class State {
 		this.electricityLevel = electricityLevel;
 	}
 
-	public State nextState(Action action, User user, int nextWeather) {
+	public State nextState(User user, int nextWeather) {
 		State nextState = new State();
 		// next day
 		switch (day) {
@@ -120,13 +120,24 @@ public class State {
 		
 		//next electricity level
 		double currentLevel = user.getCurrentElectricity()/user.getCar().getBatteryCapacity();
-		if (currentLevel > 0.875) {
+//		if (currentLevel > 0.875) {
+//			nextState.setElectricityLevel(5);
+//		} else if (currentLevel > 0.625) {
+//			nextState.setElectricityLevel(4);
+//		} else if (currentLevel > 0.375) {
+//			nextState.setElectricityLevel(3);
+//		} else if (currentLevel > 0.125) {
+//			nextState.setElectricityLevel(2);
+//		} else {
+//			nextState.setElectricityLevel(1);
+//		}
+		if (currentLevel > 0.99) {
 			nextState.setElectricityLevel(5);
-		} else if (currentLevel > 0.625) {
+		} else if (currentLevel > 0.75) {
 			nextState.setElectricityLevel(4);
-		} else if (currentLevel > 0.375) {
+		} else if (currentLevel > 0.5) {
 			nextState.setElectricityLevel(3);
-		} else if (currentLevel > 0.125) {
+		} else if (currentLevel > 0.25) {
 			nextState.setElectricityLevel(2);
 		} else {
 			nextState.setElectricityLevel(1);

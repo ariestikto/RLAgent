@@ -3,17 +3,15 @@
  */
 package userSimulation;
 
-import marketFramework.Snippet;
-import marketFramework.Time;
-
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
 
 import agent.Task;
-
-import java.util.ArrayList;
+import marketFramework.Snippet;
+import marketFramework.Time;
 /**
  * @author pa1g15
  *
@@ -29,9 +27,9 @@ public class UserModel {
 		double consumption = user.getCar().getConsumption();
 		
 		// user parameter
-		double highBudget = 18.6;
-		double normalBudget = 13.9;
-		double lowBudget = 7.1;
+		double highBudget = 25;
+		double normalBudget = 15;
+		double lowBudget = 8;
 //		double highMultiplier = 15;
 //		double normalMultiplier = 13;
 //		double lowMultiplier = 10;
@@ -45,9 +43,9 @@ public class UserModel {
 //		double taskHangout = Snippet.normDist(20 + (Math.random() * ((25 - 20) + 1)));
 //		double taskTrip = Snippet.normDist(150 + (Math.random() * ((200 - 150) + 1)));
 		
-		double highMultiplier = 12;
-		double normalMultiplier = 10;
-		double lowMultiplier = 8;
+		double highMultiplier = 20;
+		double normalMultiplier = 13;
+		double lowMultiplier = 10;
 		
 		// available task list
 		double taskWork = Snippet.normDist(40);
@@ -353,7 +351,7 @@ public class UserModel {
 		double consumption = user.getCar().getConsumption();
 		
 		// user parameter
-		double highBudget = 23;
+		double highBudget = 30;
 		
 		double highMultiplier = 20;
 		

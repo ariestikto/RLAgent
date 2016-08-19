@@ -86,7 +86,7 @@ public class Performance {
 		this.finishedTask = finishedTask;
 	}
 
-	private double score() {
+	public double score() {
 		double score = 0;
 		score = gainedValue - actualSpending;
 		return score;
@@ -96,11 +96,12 @@ public class Performance {
 		double normalizedScore = 1;
 		// min-max difference -> minSpending -- maxValue -> 0 -- maxValue + maxSpending
 		double maxScore = maxValue + maxSpending;
+//		System.out.println(maxSpending);
 		double score = score();
 		if (maxScore > 0) {
 			normalizedScore = (score + maxSpending)/maxScore;
 		}
-//		System.out.println(-maxSpending + " < " + (score + maxSpending) + " < " + maxScore);
+//		System.out.println(-maxSpending + " < " + (score + maxSpending) + " < " + maxScore + " Normalized: " + normalizedScore);
 //		System.out.println(maxScore);
 		return normalizedScore;
 	}

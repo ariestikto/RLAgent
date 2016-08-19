@@ -1,4 +1,4 @@
-/**
+ /**
  * 
  */
 package agent.qLearning;
@@ -12,6 +12,7 @@ import agent.State;
 import java.util.ArrayList;
 import userSimulation.User;
 import userSimulation.UserSatisfaction;
+import marketFramework.Parameter;
 import marketFramework.Time;
 /**
  * @author pa1g15
@@ -25,6 +26,8 @@ public class QLearning {
 	private double discountFactor;
 	private double epsilon;
 	private QFunction lastStateAction;
+	private QFunction bestStateAction;
+	private boolean best = false;
 	
 	//	RL agent with e-greedy policy
 	public QLearning(double learningRate, double discountFactor, double epsilon) {
@@ -54,14 +57,13 @@ public class QLearning {
 		return Q.size();
 	}
 	
-	public void setLastStateAction(QFunction Q) {
-		this.lastStateAction = Q;
-	}
-	
 	public QFunction getLastStateAction() {
 		return lastStateAction;
 	}
 	
+	public QFunction getBestStateAction() {
+		return bestStateAction;
+	}
 	public Action bestAction(State s, User user) {
 		Action a = randomAction(s, user);
 		double reward = 0;
@@ -69,7 +71,7 @@ public class QLearning {
 			for (QFunction temp : Q) {
 				if (s.isEqual(temp.getState())) {
 //					System.out.println(temp.getReward());
-					if (temp.getReward() > reward) {
+					if ((temp.getReward() > reward) || ((temp.getReward() == reward) && (Math.random() > 0.5))) {
 						a = temp.getAction();
 						reward = temp.getReward();
 					}
@@ -127,18 +129,6 @@ public class QLearning {
 			State s = new State();
 			Action a = new Action();
 			
-//			if (currentLevel > 0.875) {
-//				s.setState(t.getDayName(), t.getWeather(), 5);
-//			} else if (currentLevel > 0.625) {
-//				s.setState(t.getDayName(), t.getWeather(), 4);
-//			} else if (currentLevel > 0.375) {
-//				s.setState(t.getDayName(), t.getWeather(), 3);
-//			} else if (currentLevel > 0.125) {
-//				s.setState(t.getDayName(), t.getWeather(), 2);
-//			} else {
-//				s.setState(t.getDayName(), t.getWeather(), 1);
-//			}
-			
 			if (currentLevel > 0.99) {
 				s.setState(t.getDayName(), t.getWeather(), 5);
 			} else if (currentLevel > 0.75) {
@@ -155,20 +145,50 @@ public class QLearning {
 			// =========================
 			if (Math.random() > epsilon) {
 				a = bestAction(s, user);
+				best = true;
+//				System.out.println("BEST==============================");
 			} else {
 				a = randomAction(s, user);
+				best = false;
+//				System.out.println("RANDOM==============================");
 			}
 			// ===============================
 			this.lastStateAction = findSAPair(s, a);
+			this.bestStateAction = findSAPair(s, bestAction(s, user));
+			if (best) {
+				this.bestStateAction = lastStateAction;
+			}
+			
+			
+			
+			
 	}
-	
 	public void evaluateAction(User user, int nextWeather) {
+		double QReward = 0;
+		
 		UserSatisfaction satisfactionLevel = new UserSatisfaction();
 		satisfactionLevel.generateFeedbackPattern_6(user);
-		this.rewardSignal = Reward.RewardPatternB(satisfactionLevel);
-		double QReward = 0;
+//		switch (Parameter.PATTERN) {
+//		case 1:
+//			satisfactionLevel.generateFeedbackPattern_1(user);
+//			break;
+//		case 2:
+//			satisfactionLevel.generateFeedbackPattern_2(user);
+//			break;
+//		case 3:
+//			satisfactionLevel.generateFeedbackPattern_3(user);
+//			break;
+//		case 4:
+//			satisfactionLevel.generateFeedbackPattern_4(user);
+//			break;
+//		case 5:
+//			satisfactionLevel.generateFeedbackPattern_5(user);
+//			break;
+//		}
+		this.rewardSignal = Reward.RewardPatternSlider(satisfactionLevel);
+//		this.rewardSignal = Reward.RealRewardPattern(user);
 		QFunction lastQ = findSAPair(lastStateAction.getState(), lastStateAction.getAction());
-		QFunction bestNextQ = findSAPair(lastStateAction.getState().nextState(lastStateAction.getAction(), user, nextWeather), bestAction(lastStateAction.getState().nextState(lastStateAction.getAction(), user, nextWeather), user));
+		QFunction bestNextQ = findSAPair(lastStateAction.getState().nextState(user, nextWeather), bestAction(lastStateAction.getState().nextState(user, nextWeather), user));
 		QReward = lastQ.getReward() + learningRate*(rewardSignal + discountFactor*bestNextQ.getReward() - lastQ.getReward());
 //		System.out.println(QReward + " = " + lastQ.getReward() + " + " + learningRate + "(" + rewardSignal + " + " + discountFactor + "x" + bestNextQ.getReward() + " - " + lastQ.getReward() + ")");
 		updateQ(lastStateAction.getState(), lastStateAction.getAction(), QReward);
