@@ -1,7 +1,7 @@
 /**
  * 
  */
-package agent.learningAgent;
+package agent;
 
 import userSimulation.User;
 /**
@@ -47,16 +47,13 @@ public class State {
 			weatherName =  "Rainy";
 			break;
 		case 3:
-			weatherName =  "Fog";
-			break;
-		case 4:
 			weatherName =  "Snow";
 			break;
 		}
 		return weatherName;
 	}
 
-	public double getElectricityLevel() {
+	public int getElectricityLevel() {
 		return electricityLevel;
 	}
 
@@ -91,7 +88,7 @@ public class State {
 		this.electricityLevel = electricityLevel;
 	}
 
-	public State nextState(Action action, User user) {
+	public State nextState(User user, int nextWeather) {
 		State nextState = new State();
 		// next day
 		switch (day) {
@@ -119,17 +116,28 @@ public class State {
 		}
 		
 		//next weather 
-		nextState.setWeather(0);
+		nextState.setWeather(nextWeather);
 		
 		//next electricity level
 		double currentLevel = user.getCurrentElectricity()/user.getCar().getBatteryCapacity();
-		if (currentLevel > 0.875) {
+//		if (currentLevel > 0.875) {
+//			nextState.setElectricityLevel(5);
+//		} else if (currentLevel > 0.625) {
+//			nextState.setElectricityLevel(4);
+//		} else if (currentLevel > 0.375) {
+//			nextState.setElectricityLevel(3);
+//		} else if (currentLevel > 0.125) {
+//			nextState.setElectricityLevel(2);
+//		} else {
+//			nextState.setElectricityLevel(1);
+//		}
+		if (currentLevel > 0.99) {
 			nextState.setElectricityLevel(5);
-		} else if (currentLevel > 0.625) {
+		} else if (currentLevel > 0.75) {
 			nextState.setElectricityLevel(4);
-		} else if (currentLevel > 0.375) {
+		} else if (currentLevel > 0.5) {
 			nextState.setElectricityLevel(3);
-		} else if (currentLevel > 0.125) {
+		} else if (currentLevel > 0.25) {
 			nextState.setElectricityLevel(2);
 		} else {
 			nextState.setElectricityLevel(1);
@@ -139,11 +147,7 @@ public class State {
 	}
 
 	public boolean isEqual(State s) {
-		if (weather == 0) {
-			return ((day == s.getDay()) && (electricityLevel == s.getElectricityLevel()));
-		} else {
-			return ((day == s.getDay()) && (weather == s.getWeather()) && (electricityLevel == s.getElectricityLevel()));
-		}
+		return ((day == s.getDay()) && (weather == s.getWeather()) && (electricityLevel == s.getElectricityLevel()));
 	}
 	
 	public boolean isEmpty() {

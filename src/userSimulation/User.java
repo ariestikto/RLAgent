@@ -3,16 +3,20 @@
  */
 package userSimulation;
 
-import java.util.UUID;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-import marketFramework.Market;
+import agent.Action;
+import agent.Bid;
+import agent.Performance;
+import agent.Task;
+import agent.dynamicProgramming.ProbabilityDatabase;
+import agent.dynamicProgramming.ValueIteration;
+import agent.qLearning.QLearning;
+import marketFramework.Parameter;
 import marketFramework.Snippet;
 import marketFramework.Time;
-import agent.Bid;
-import agent.learningAgent.Task;
-import agent.learningAgent.ReinforcementLearning;
 	
 /**
  * @author pa1g15
@@ -32,11 +36,12 @@ public class User {
 //	EV user only
 	private Car car = new Car(0);
 	private boolean isEVUser = false;
-	private boolean isShop = false;
+	private boolean isAlternate = false;
 	private List<Task> taskList = new ArrayList<Task>();
-	private ReinforcementLearning agent = new ReinforcementLearning(Market.AGENT_LEARNING_RATE, Market.AGENT_DISCOUNT_FACTOR, Market.EPSILON_PARAMETER);
-	
-//	EV user constructor
+	private QLearning agent = new QLearning(Parameter.AGENT_LEARNING_RATE, Parameter.AGENT_DISCOUNT_FACTOR, Parameter.EPSILON_PARAMETER);
+	private Performance performance = new Performance();
+
+	//	EV user constructor
 	public User(int userType, int userStrategy, Car car) {
 		UID = UUID.randomUUID().toString().replaceAll("-", "").substring(0,7);
 		this.userType = userType;
@@ -79,28 +84,34 @@ public class User {
 		return car;
 	}
 	
-	public void setShop(int isShop) {
-		if (isShop == 1) {
-			this.isShop = true;
-		} else {
-			this.isShop = false;
-		}
-	}
-	
-	public boolean getShop() {
-		return isShop;
-	}
-	
 	public List<Task> getTask() {
 		return taskList;
 	}
 	
-	public ReinforcementLearning getAgent() {
+	public QLearning getAgent() {
 		return agent;
+	}
+	
+	public Performance getPerformance() {
+		return performance;
+	}
+	
+	public boolean isAlternate() {
+		return isAlternate;
 	}
 	
 	public double getBid(double currentBid, double lastBid, Time t) {
 		bid.calculateBid(currentBid, lastBid, this, t);
+		return Snippet.round(bid.getAmount());
+	}
+	
+	public double getDPBid(double currentBid, ProbabilityDatabase DB, ValueIteration DPAgent, Time t) {
+		bid.searchDPBid(currentBid, this, DB, DPAgent, t);
+		return Snippet.round(bid.getAmount());
+	}
+	
+	public double getSimulationBid(double currentBid, Action simulationAction) {
+		bid.simulationBid(currentBid, this, simulationAction);
 		return Snippet.round(bid.getAmount());
 	}
 	
@@ -130,22 +141,39 @@ public class User {
 		this.currentElectricity = Snippet.round(currentElectricity);
 	}
 	
+	public void resetElectricity() {
+		this.currentElectricity = 0;
+	}
+	
 	public void useElectricity() {
 		double needs = 0;
+		double totalValue = 0;
+		double gainedValue = 0;
 		if (isEVUser) {
+			this.performance.setFinishedTask(0);		
 			if (taskList.size() > 0) {
+//				System.out.println("=========================");
 				for (Task temp : taskList) {
 					needs = Snippet.round(temp.getNeeds()*car.getConsumption());
+					totalValue += temp.getValue();
+//					System.out.println(temp.getValue());
 					if (Snippet.round(currentElectricity) - needs >= 0) {
 						this.currentElectricity -= needs;
 						temp.finishTask();
-					}
+						gainedValue += temp.getValue();
+						this.performance.setFinishedTask(performance.getFinishedTask()+1);					}
 			    }
 			}
+			this.performance.setTotalTask(taskList.size());
+			this.performance.setMaxValue(totalValue);
+			this.performance.setGainedValue(gainedValue);
+			this.performance.setLeftoverElectricity(this.currentElectricity);
 		} else {
 			this.currentElectricity = 0;
 		}
 		this.currentElectricity = Snippet.round(currentElectricity);
+		this.performance.setActualSpending(payout());
+		
 	}
 	
 	public void addExpenses(double expense) {
@@ -187,10 +215,43 @@ public class User {
 		case 4:
 			UserModel.OtherUser(t, preferences);
 			break;
+		case 5:
+			UserModel.TestCase1EVUser(t, this, preferences, task);
+			break;
+		case 6:
+			UserModel.TestCase2EVUser(t, this, preferences, task);
+			break;
+		case 7:
+			UserModel.CompanyBuyerB(preferences);
+			break;
 		}
 		
+		this.performance.setMaxSpending(30*(car.getBatteryCapacity()-currentElectricity));
 		this.taskList = task;
 		this.dailyNeeds = preferences.getAmount();
 		this.unitBudget = preferences.getUnitPrice();
+	}
+	
+	public void copyUser(User user) {
+		this.userType = user.userType;
+		this.userStrategy = user.userStrategy;
+		this.dailyNeeds = user.dailyNeeds;
+		this.unitBudget = user.unitBudget;
+		this.currentElectricity = user.currentElectricity;
+		this.currentExpenses = user.currentExpenses;
+		this.bid = new Bid(bid.getAmount());
+		this.clinched  = new ArrayList<ElectricityBundle>();
+		
+//		EV user only
+		this.car = user.car;
+		this.isEVUser = user.isEVUser;
+		this.isAlternate = true;
+		this.taskList = new ArrayList<Task>();
+		for (Task temp : user.taskList) {
+			Task task = new Task(temp.getValue(), temp.getNeeds());
+			this.taskList.add(task);
+		}
+		this.agent = user.agent;
+		this.performance = new Performance();
 	}
 }

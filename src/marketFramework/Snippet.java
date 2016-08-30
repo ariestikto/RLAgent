@@ -5,7 +5,9 @@ package marketFramework;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
 import org.apache.commons.math3.distribution.NormalDistribution;
+
 import userSimulation.Car;
 import userSimulation.User;
 /**
@@ -25,19 +27,47 @@ public class Snippet {
 	    
 	}
 	public static User[] createUsers() {
-		User[] users = new User[Market.AUCTION_PARTICIPANT];
+		User[] users = new User[Parameter.AUCTION_PARTICIPANT];
 		
 		users[0] = new User(1, 5, new Car(3));
-		users[1] = new User(2, 2, new Car(1));
+		users[1] = new User(7, 2);
 		users[2] = new User(3, 3);
 		users[3] = new User(4, 1);
 		users[4] = new User(1, 3, new Car(2));
 		users[5] = new User(1, 2, new Car(5));
-		users[6] = new User(2, 1, new Car(6));
+		users[6] = new User(1, 1, new Car(6));
 		users[7] = new User(4, 4);
 		users[8] = new User(4, 2);
-		users[9] = new User(2, 2, new Car(3));
+		users[9] = new User(1, 2, new Car(3));
+		users[10] = new User(1, 2, new Car(1));
+		users[11] = new User(3, 2);
+
+		return users;
+	}
+	public static User[] testCaseUsers() {
+		User[] users = new User[Parameter.AUCTION_PARTICIPANT];
 		
+		users[0] = new User(6, 5, new Car(3));
+		users[1] = new User(7, 4);
+		
+		return users;
+	}
+	public static User[] DBBuilderUsers() {
+		User[] users = new User[Parameter.AUCTION_PARTICIPANT];
+		
+		users[0] = new User(1, 6, new Car(3));
+		users[1] = new User(7, 2);
+		users[2] = new User(3, 3);
+		users[3] = new User(4, 1);
+		users[4] = new User(1, 3, new Car(2));
+		users[5] = new User(1, 2, new Car(5));
+		users[6] = new User(1, 1, new Car(6));
+		users[7] = new User(4, 4);
+		users[8] = new User(4, 2);
+		users[9] = new User(1, 2, new Car(3));
+		users[10] = new User(1, 2, new Car(1));
+		users[11] = new User(3, 2);
+
 		return users;
 	}
 	public static double normDist(double mean) {
@@ -54,16 +84,28 @@ public class Snippet {
 			users[i].resetAuction();
 			users[i].generatePreferences(t);
 			if (users[i].getStrategy() == 5) {
+//				System.out.println(users[i].getUID() + ": "+ users[i].getDailyNeeds());
 				users[i].getAgent().takeAction(users[i], t);
 			}
 		}
 	}
-	public static void endOfDay (User[] users, double reward) {
+	public static void endOfDay (User[] users, Time t) {
 		for (int i = 0; i < users.length; i++) {
 			users[i].useElectricity();
 			if (users[i].getStrategy() == 5) {
-				users[i].getAgent().evaluateAction(users[i]);;
+				users[i].getAgent().evaluateAction(users[i], t.getNextWeather());
 			}
+		}
+	}
+	public static void endOfSimulation (User[] users) {
+		for (int i = 0; i < users.length; i++) {
+			users[i].useElectricity();
+		}
+	}
+	public static void resetUser (User[] users) {
+		for (int i = 0; i < users.length; i++) {
+			users[i].resetElectricity();
+			users[i].resetExpense();
 		}
 	}
 }

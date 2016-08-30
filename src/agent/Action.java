@@ -1,7 +1,7 @@
 /**
  * 
  */
-package agent.learningAgent;
+package agent;
 
 /**
  * @author pa1g15
@@ -56,16 +56,16 @@ public class Action {
 		String level = "";
 		switch (budgetLevel) {
 		case 1:
-			level = "Low (5-10 p/kWh)";
+			level = "Low (7 p/kWh)";
 			break;
 		case 2:
-			level = "Medium (10-15 p/kWh)";
+			level = "Medium (13 p/kWh)";
 			break;
 		case 3:
-			level = "High (15-20 p/kWh)";
+			level = "High (18 p/kWh)";
 			break;
 		case 4:
-			level = "Very High (20-25 p/kWh)";
+			level = "Very High (23 p/kWh)";
 			break;
 		default:
 			break;

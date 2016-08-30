@@ -1,7 +1,7 @@
 /**
  * 
  */
-package agent.learningAgent;
+package agent;
 
 /**
  * @author pa1g15
@@ -12,16 +12,16 @@ public class Task implements Comparable<Task> {
 	/**
 	 * 
 	 */
-	private int value;
+	private double value;
 	private double needs;
 	private boolean completed = false; 
 	
-	public Task(int value, double needs) {
+	public Task(double value, double needs) {
 		this.value = value;
 		this.needs = needs;
 	}
 	
-	public int getValue() {
+	public double getValue() {
 		return value;
 	}
 	
@@ -33,17 +33,20 @@ public class Task implements Comparable<Task> {
 		this.completed = true;
 	}
 	
-	public boolean isFinished() {
+	public boolean isComplete() {
 		return completed;
 	}
 	
 	@Override
     public int compareTo(Task task) {
-        int compareValue = ((Task) task).getValue();
+		double compareValue = ((Task) task).getValue();
         /* For Ascending order*/
-        return this.value - compareValue;
+		if (this.value == compareValue) {
+			return 0;
+		}
+		return this.value > compareValue ? -1 : 1;
 
         /* For Descending order do like this */
-        //  return compareValue - this.value;
+		// return this.value < compareValue ? -1 : 1;
     }
 }
