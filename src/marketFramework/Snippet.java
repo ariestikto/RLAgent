@@ -26,7 +26,7 @@ public class Snippet {
 		}
 	    
 	}
-	public static User[] createUsers() {
+	public static User[] createUsers_old() {
 		User[] users = new User[Parameter.AUCTION_PARTICIPANT];
 		
 		users[0] = new User(1, 5, new Car(3));
@@ -52,6 +52,22 @@ public class Snippet {
 		
 		return users;
 	}
+	public static User[] createUsers() {
+		User[] users = new User[Parameter.AUCTION_PARTICIPANT];
+		
+		users[0] = new User(8, 5, new Car(5));
+		users[1] = new User(11, 2.4, 3.7, new Car(1));
+		users[2] = new User(11, 5.1, 4.1, new Car(2));
+		users[3] = new User(11, 1.38, 1.5, new Car(4));
+		users[4] = new User(11, 4.1, 6.4, new Car(5));
+		users[5] = new User(11, 17.01, 16.94, new Car(6));
+		users[6] = new User(11, 17.62, 20.23, new Car(7));
+		users[7] = new User(11, 12.8, 12.93, new Car(3));
+		users[8] = new User(11, 5.43, 7.41, new Car(2));
+		users[9] = new User(11, 7.94, 7.27, new Car(5));
+		
+		return users;
+	}
 	public static User[] DBBuilderUsers() {
 		User[] users = new User[Parameter.AUCTION_PARTICIPANT];
 		
@@ -71,9 +87,13 @@ public class Snippet {
 		return users;
 	}
 	public static double normDist(double mean) {
+		double sample = 0;
 		if (mean > 0) {
 			NormalDistribution dist = new NormalDistribution(mean, 1);
-			return round(dist.sample());
+			while (sample <= 0) {
+				sample = round(dist.sample());
+			}
+			return sample;
 		} else {
 			return 0;
 		}

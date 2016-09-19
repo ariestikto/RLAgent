@@ -29,6 +29,18 @@ public class Task implements Comparable<Task> {
 		return needs;
 	}
 	
+	public void setValue(double value) {
+		this.value = value;
+	}
+
+	public void setNeeds(double needs) {
+		this.needs = needs;
+	}
+
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
+	}
+
 	public void finishTask() {
 		this.completed = true;
 	}

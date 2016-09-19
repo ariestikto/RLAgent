@@ -165,9 +165,9 @@ public class QLearning {
 	}
 	public void evaluateAction(User user, int nextWeather) {
 		double QReward = 0;
-		
+		int autoReward = 0;
 		UserSatisfaction satisfactionLevel = new UserSatisfaction();
-		satisfactionLevel.generateFeedbackPattern_6(user);
+		satisfactionLevel.generateFeedbackPatternPH(user);
 //		switch (Parameter.PATTERN) {
 //		case 1:
 //			satisfactionLevel.generateFeedbackPattern_1(user);
@@ -185,7 +185,9 @@ public class QLearning {
 //			satisfactionLevel.generateFeedbackPattern_5(user);
 //			break;
 //		}
-		this.rewardSignal = Reward.RewardPatternSlider(satisfactionLevel);
+		autoReward = (int) user.payout()/30;
+		this.rewardSignal = -(Parameter.AUTO_REWARD*autoReward) + Reward.RewardPatternMixed(satisfactionLevel);
+//		System.out.println("Reward: " + -autoReward + " + " + Reward.RewardPatternMixed(satisfactionLevel));
 //		this.rewardSignal = Reward.RealRewardPattern(user);
 		QFunction lastQ = findSAPair(lastStateAction.getState(), lastStateAction.getAction());
 		QFunction bestNextQ = findSAPair(lastStateAction.getState().nextState(user, nextWeather), bestAction(lastStateAction.getState().nextState(user, nextWeather), user));

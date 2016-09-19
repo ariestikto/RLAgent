@@ -361,4 +361,127 @@ public class UserSatisfaction {
 			}
 		}
 	}
+	
+	public void generateFeedbackPatternMixed(User user) {
+		// Mix 2 feedbacks
+		this.electricityFeedback = 0;
+		this.payoutFeedback = 0;
+		Performance p = user.getPerformance();
+		double FEEDBACK_FREQUENCY = Parameter.FEEDBACK_FREQUENCY;
+		double surplus = user.getBudget() - p.getActualSpending() ; 
+		double budgetTolerance = 50;
+		
+		noFeedback();
+		if (Math.random() <= FEEDBACK_FREQUENCY) {
+			// electricity feedback function
+			if (p.lostValue() == 0) {
+				if (surplus >= 0) {
+					this.electricityFeedback = 5;
+					this.payoutFeedback = 5;
+				} else {
+					this.electricityFeedback = 4;
+					this.payoutFeedback = 4;
+				}
+			} else if (surplus >= -budgetTolerance) {
+				this.electricityFeedback = 2;
+				this.payoutFeedback = 2;
+			} else if (surplus < -budgetTolerance) {
+				this.electricityFeedback = 1;
+				this.payoutFeedback = 1;
+			} else {
+				this.electricityFeedback = 3;
+				this.payoutFeedback = 3;
+			}
+		}
+	}
+	
+	public void generateFeedbackPatternPH(User user) {
+		// Pseudo Human Feedback
+		this.electricityFeedback = 0;
+		this.payoutFeedback = 0;
+		Performance p = user.getPerformance();
+		double FEEDBACK_FREQUENCY = Parameter.FEEDBACK_FREQUENCY;
+		double surplus = user.getBudget() - p.getActualSpending() ; 
+		double leftoverTarget = 0.25*user.getCar().getBatteryCapacity();
+		double journeyMin = 0.8;
+		double budgetApprox = 20;
+		double budgetTolerance = 50;
+		
+		noFeedback();
+		if (Math.random() <= FEEDBACK_FREQUENCY) {
+			// electricity feedback function
+			if (p.getTotalTask() > 0) {
+				if (p.lostValue() == 0) {
+					if (p.getLeftoverElectricity() >= leftoverTarget) {
+						this.electricityFeedback = 5;
+					} else {
+						this.electricityFeedback = 4;
+					}
+				} else if ((double) p.getFinishedTask()/p.getTotalTask() >= journeyMin) {
+					this.electricityFeedback = 2;
+				} else if ((double) p.getFinishedTask()/p.getTotalTask() < journeyMin) {
+					this.electricityFeedback = 1;
+				}
+			} else {
+				this.electricityFeedback = 3;
+			}
+		
+			// expense reward function
+			if (surplus >= 0) {
+				this.payoutFeedback = 5;
+			} else if (surplus >= -budgetApprox) {
+				this.payoutFeedback = 4;
+			} else if (surplus >= -budgetTolerance) {
+				this.payoutFeedback = 2;
+			} else if (surplus < -budgetTolerance) {
+				this.payoutFeedback = 1;
+			} else {
+				this.payoutFeedback = 3;
+			}
+		}
+	}
+	
+	public void generateFeedbackPatternValue(User user) {
+		//feedback with considering reward value
+		this.electricityFeedback = 0;
+		this.payoutFeedback = 0;
+		Performance p = user.getPerformance();
+		double FEEDBACK_FREQUENCY = Parameter.FEEDBACK_FREQUENCY;
+		double surplus = user.getBudget() - p.getActualSpending() ; 
+		double budgetApprox = 20;
+		double budgetTolerance = 50;
+		
+		noFeedback();
+		if (Math.random() <= FEEDBACK_FREQUENCY) {
+			// electricity feedback function
+			if (p.getTotalTask() > 0) {
+				if (p.getGainedValue() >= 191.73) {
+					this.electricityFeedback = 5;
+				} else if (p.getGainedValue() >= 158.62) {
+					this.electricityFeedback = 4;
+				} else if (p.getGainedValue() >= 23.94) {
+					this.electricityFeedback = 2;
+				} else if (p.getGainedValue() < 23.94) {
+					this.electricityFeedback = 1;
+				} else {
+					this.electricityFeedback = 3;
+				}
+			} else {
+				this.electricityFeedback = 3;
+			}
+		
+			// expense reward function
+			if (surplus >= 0) {
+				this.payoutFeedback = 5;
+			} else if (surplus >= -budgetApprox) {
+				this.payoutFeedback = 4;
+			} else if (surplus >= -budgetTolerance) {
+				this.payoutFeedback = 2;
+			} else if (surplus < -budgetTolerance) {
+				this.payoutFeedback = 1;
+			} else {
+				this.payoutFeedback = 3;
+			}
+		}
+	}
 }

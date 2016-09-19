@@ -93,12 +93,12 @@ public class QLearningMain {
 				
 				Snippet.endOfDay(users, t);
 				
-				reward = agent.getPerformance().normalizedScore();
+				reward = agent.getPerformance().score();
 //				System.out.println(reward);
 				rewards.add(reward);
 				
 				if (comparator) {
-					bestReward = bestAgent.getPerformance().normalizedScore();
+					bestReward = bestAgent.getPerformance().score();
 //					System.out.println(bestReward);
 //					System.out.println("======================");
 					bestRewards.add(bestReward);

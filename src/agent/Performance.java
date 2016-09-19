@@ -88,7 +88,8 @@ public class Performance {
 
 	public double score() {
 		double score = 0;
-		score = gainedValue - actualSpending;
+		score = gainedValue - (5*actualSpending)-this.lostValue();
+//		System.out.println(gainedValue + " - " + actualSpending + " - " + this.lostValue());
 		return score;
 	}
 	

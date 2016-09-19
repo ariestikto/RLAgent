@@ -30,6 +30,8 @@ public class User {
 	private double unitBudget = 0;
 	private double currentElectricity = 0;
 	private double currentExpenses = 0;
+	private double avNeeds = 0;
+	private double stdev = 0;
 	private Bid bid = new Bid();
 	private List<ElectricityBundle> clinched = new ArrayList<ElectricityBundle>();
 	
@@ -49,7 +51,17 @@ public class User {
 		this.car = car;
 		this.isEVUser = true;
 	}
-//	other constructor
+	//	Other EV user constructor
+	public User(int userType, double avNeeds, double stdev, Car car) {
+		UID = UUID.randomUUID().toString().replaceAll("-", "").substring(0,7);
+		this.userType = userType;
+		this.userStrategy = 2;
+		this.avNeeds = avNeeds;
+		this.stdev = stdev;
+		this.car = car;
+		this.isEVUser = false;
+	}
+	//	other constructor
 	public User(int userType, int userStrategy) {
 		UID = UUID.randomUUID().toString().replaceAll("-", "").substring(0,7);
 		this.userType = userType;
@@ -161,7 +173,8 @@ public class User {
 						this.currentElectricity -= needs;
 						temp.finishTask();
 						gainedValue += temp.getValue();
-						this.performance.setFinishedTask(performance.getFinishedTask()+1);					}
+						this.performance.setFinishedTask(performance.getFinishedTask()+1);					
+					}
 			    }
 			}
 			this.performance.setTotalTask(taskList.size());
@@ -172,7 +185,7 @@ public class User {
 			this.currentElectricity = 0;
 		}
 		this.currentElectricity = Snippet.round(currentElectricity);
-		this.performance.setActualSpending(payout());
+		this.performance.setActualSpending(this.payout());
 		
 	}
 	
@@ -204,25 +217,37 @@ public class User {
 		List<Task> task = new ArrayList<Task>();
 		switch (this.userType) {
 		case 1:
-			UserModel.EVUserA(t, this, preferences, task);
+			UserModel_old.EVUserA(t, this, preferences, task);
 			break;
 		case 2:
-			UserModel.EVUserB(t, this, preferences, task);
+			UserModel_old.EVUserB(t, this, preferences, task);
 			break;
 		case 3:
-			UserModel.CompanyBuyer(preferences);
+			UserModel_old.CompanyBuyer(preferences);
 			break;
 		case 4:
-			UserModel.OtherUser(t, preferences);
+			UserModel_old.OtherUser(t, preferences);
 			break;
 		case 5:
-			UserModel.TestCase1EVUser(t, this, preferences, task);
+			UserModel_old.TestCase1EVUser(t, this, preferences, task);
 			break;
 		case 6:
-			UserModel.TestCase2EVUser(t, this, preferences, task);
+			UserModel_old.TestCase2EVUser(t, this, preferences, task);
 			break;
 		case 7:
-			UserModel.CompanyBuyerB(preferences);
+			UserModel_old.CompanyBuyerB(preferences);
+			break;
+		case 8:
+			UserModel.EVUSer_1600(t, this, preferences, task);
+			break;
+		case 9:
+			UserModel.EVUSer_4041(t, this, preferences, task);
+			break;
+		case 10:
+			UserModel.EVUSer_3729(t, this, preferences, task);
+			break;
+		case 11:
+			UserModel.EVUSer_Other(t, this, preferences, avNeeds, stdev);
 			break;
 		}
 		

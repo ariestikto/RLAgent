@@ -387,7 +387,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		gbc_carTypeInfo.gridy = 8;
 		userPanel.add(carTypeInfo, gbc_carTypeInfo);
 		
-		carConsumptionInfo = new JLabel(activeUser.getCar().getConsumption() + " kWh/km");
+		carConsumptionInfo = new JLabel(activeUser.getCar().getConsumption() + " kWh/mile");
 		carConsumptionInfo.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints gbc_carConsumptionInfo = new GridBagConstraints();
 		gbc_carConsumptionInfo.fill = GridBagConstraints.HORIZONTAL;
@@ -564,7 +564,7 @@ public class Dashboard extends JFrame implements ActionListener {
 		trendsDataset = new XYSeriesCollection();
 		trendsDataset.addSeries(trendsData);
 		JFreeChart chart = ChartFactory.createXYLineChart(
-			"Average Performance of Last 7 Days", // Title
+			"Average Weekly Performance", // Title
 			"Time", // x-axis Label
 			"Average Performance", // y-axis Label
 			trendsDataset, // Dataset
@@ -585,11 +585,11 @@ public class Dashboard extends JFrame implements ActionListener {
 		gainedElectricityInfo.setText(activeUser.clinchedElectricity() + " kWh");
 		expenseInfo.setText(activeUser.getExpenses() + " p");
 		carTypeInfo.setText(activeUser.getCar().getCarName());
-		carConsumptionInfo.setText(activeUser.getCar().getConsumption() + " kWh/km");
+		carConsumptionInfo.setText(activeUser.getCar().getConsumption() + " kWh/mile");
 		carCapacityInfo.setText(activeUser.getCar().getBatteryCapacity() + " kWh");
 	}
 	public void updateAgentPane() {
-		reward = agent.getPerformance().normalizedScore();
+		reward = agent.getPerformance().score();
 		rewards.add(reward);
 		lblDayvalue.setText(t.getDayName());
 		lblAddedelectricityvalue.setText(agent.getAgent().getLastStateAction().getAction().getAmountPercentage());
@@ -608,8 +608,8 @@ public class Dashboard extends JFrame implements ActionListener {
 	public void updateTrendsPane() {
 		lastTenReward = 0;
 		if (t.getDay() > 6) {
-			for (int i = 1; i < 8; i++) {
-				lastTenReward += rewards.get(rewards.size() - i);
+			for (int j = 1; j < 8; j++) {
+				lastTenReward += rewards.get(rewards.size() - j);
 			}
 			rewards.remove(0);
 			trendsData.add(t.getDay(), lastTenReward/7);
